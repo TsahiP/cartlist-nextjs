@@ -4,8 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { connectToDb } from "./utils";
 import { User } from "./models";
-// import bcrypt from "bcryptjs";
-import { authConfig } from "./auth.config";
+import bcrypt from "bcryptjs";
+import { authConfig } from "./authConfig.config";
 interface ICredentials {
     username: string;
     password: string;
@@ -16,27 +16,28 @@ interface IUserFormData {
     rePassword: string;
     img?: string;
     email?: string;
-  }
+}
 export const login = async (credentials: any) => {
     try {
         connectToDb();
+        console.log("credentials", credentials);
+
         const user = await User.findOne({ username: credentials.username });
         if (!user) {
             return ({ error: "Wrong credentials!" });
         }
         console.log("user data", user);
 
-        // const isPasswordCorrect = await bcrypt.compare(
-        //     credentials.password,
-        //     user.password
-        // );
-        // console.log("here", isPasswordCorrect);
-        // if (!isPasswordCorrect) {
-        //     return ({ error: "Wrong password!" });
-        //     // throw new Error("Wrong password!");
-        // }
-        // console.log("user", user);
-        console.log(typeof user);
+        const isPasswordCorrect = await bcrypt.compare(
+            credentials.password,
+            user.password
+        );
+        console.log("here", isPasswordCorrect);
+        if (!isPasswordCorrect) {
+            return ({ error: "Wrong password!" });
+            // throw new Error("Wrong password!");
+        }
+
         return user;
     } catch (err) {
         return ({ error: "Wrong credentials!" });
@@ -51,20 +52,19 @@ export const {
     signIn,
     signOut,
 } = NextAuth({
+    ...authConfig,
     providers: [
-        // ...authConfig,
         CredentialsProvider({
 
 
             async authorize(credentials) {
                 try {
                     const user = await login(credentials);
+                    console.log("🚀 ~ authorize ~ user:", user)
 
-                    console.log("🚀 ~ authorize: ~ credentials:", credentials)
                     return user;
                 } catch (err) {
-
-
+                    // console.log(err);
                     return null;
                 }
             }
@@ -93,6 +93,6 @@ export const {
             // }
             return true;
         },
-        // ...authConfig.callbacks,
+        ...authConfig.callbacks,
     },
 });

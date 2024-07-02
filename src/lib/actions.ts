@@ -65,6 +65,8 @@ export const register = async (previousState: any, formData: any) => {
     return { error: "Something went wrong!" };
   }
 };
+
+
 export const login = async (previousState:any, formData:any) => {
   const { username, password } = Object.fromEntries(formData);
 
