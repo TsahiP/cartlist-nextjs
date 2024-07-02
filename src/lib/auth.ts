@@ -7,21 +7,20 @@ import { User } from "./models";
 // import bcrypt from "bcryptjs";
 import { authConfig } from "./auth.config";
 interface ICredentials {
-    userId: string;
+    username: string;
     password: string;
 };
-interface IUser {
-    userId: string;
+interface IUserFormData {
+    username: string;
     password: string;
-    name: string;
-    email: string;
-    img: string;
-    isAdmin: boolean;
-}
+    rePassword: string;
+    img?: string;
+    email?: string;
+  }
 export const login = async (credentials: any) => {
     try {
         connectToDb();
-        const user = await User.findOne({ userId: credentials.userId });
+        const user = await User.findOne({ username: credentials.username });
         if (!user) {
             return ({ error: "Wrong credentials!" });
         }

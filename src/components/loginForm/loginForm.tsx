@@ -19,7 +19,7 @@ const LoginForm = () => {
               placeholder="Email Address"
               className="border border-gray-300 rounded-md px-4 py-2"
               type="string"
-              name="userId"
+              name="username"
             />
           </div>
           <div>

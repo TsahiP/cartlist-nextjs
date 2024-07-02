@@ -1,10 +1,10 @@
 "use server"; // This line is a directive for the server to handle this code.
 import { revalidatePath } from "next/cache";
-import { List } from "./models";
+import { List, User } from "./models";
 import { connectToDb } from "./utils";
 import { signIn, signOut } from "./auth";
 // import { signIn, signOut } from "./auth";
-// import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 // ======================== items actions ========================
 interface ItemFormData {
@@ -18,17 +18,61 @@ interface ItemFormData {
 
 //========================= user actions =================
 interface UserFormData {
-  userId:string;
+  username:string;
   password:string;
 }
+// ======================== user actions ========================
+interface UserFormData {
+  username: string;
+  password: string;
+  rePassword: string;
+  img?: string;
+  email?: string;
+}
+export const register = async (previousState: any, formData: any) => {
+  console.log(formData);
+  const { username, password, rePassword, img, email } =
+    Object.fromEntries(formData);
+  // console.log(username, password, rePassword, img, email);
+  if (password !== rePassword) {
+    return { error: "password do not match" };
+  }
+
+  try {
+    connectToDb();
+    // check if username exists
+    const user = await User.findOne({ username: username });
+    // console.log(user);
+    if (user) {
+      // console.log("exist try other name");
+      return { error: "user already exists" };
+    }
+    // hash pass
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+    console.log("saved to db");
+
+    return { success: true };
+  } catch (e) {
+    // console.log(error);
+    return { error: "Something went wrong!" };
+  }
+};
 export const login = async (previousState:any, formData:any) => {
-  const { userId, password } = Object.fromEntries(formData);
+  const { username, password } = Object.fromEntries(formData);
 
   try {
     connectToDb();
     // check if username exists
     
-    await signIn("credentials", { userId, password });
+    await signIn("credentials", { username, password });
 
     return { success: true };
   } catch (error: any) {
