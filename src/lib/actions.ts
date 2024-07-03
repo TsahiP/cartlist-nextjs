@@ -29,6 +29,11 @@ interface UserFormData {
   img?: string;
   email?: string;
 }
+export const handleGithubSignOut = async () => {
+  "use server";
+
+  await signOut();
+};
 export const register = async (previousState: any, formData: any) => {
   console.log(formData);
   const { username, password, rePassword, img, email } =
@@ -212,3 +217,13 @@ export const createList = async (previousState: any, formData: any) => {
     throw error;
   }
 };
+export const getCarts = async () => {
+  try{
+    connectToDb();
+    const lists = await List.find();
+    return lists;
+  }catch(error){
+    console.log(error);
+    return [];
+  }
+}

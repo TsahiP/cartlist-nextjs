@@ -28,13 +28,13 @@ const Links = ({session}) => {
   ];
 
   const isAdmin = true;
-  console.log(session?.user);
+  // console.log(session?.user);
   return (
     <div className={styles.container}>
       <div className={styles.links}>
-        {links.map((link) => (
+        {/* {links.map((link) => (
           <NavLink key={link.title} item={link} />
-        ))}
+        ))} */}
 
         {session ? (
           <>
