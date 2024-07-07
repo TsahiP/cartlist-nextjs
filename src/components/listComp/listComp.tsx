@@ -22,7 +22,7 @@ const ListComp = (props:Props) => {
         router.push(`/cart?${props.list._id}`);
     };
   return (
-    <div>
+    <div key={props.index}>
       <div onClick={handleClick} key={props?.index} className="bg-white rounded shadow p-4">
         <h2 className="text-lg font-semibold mb-2">{props.list.title}</h2>
         <ul className="list-disc pl-6">

@@ -11,19 +11,18 @@ const Cart: React.FC = () => {
   
   
   return (
-<></>
-    // <div className=" shadow-md rounded-md p-4">
-    //   <h2 className="text-xl font-bold mb-4">Cart List</h2>
+    <div className=" shadow-md rounded-md p-4">
+      <h2 className="text-xl font-bold mb-4">Cart List</h2>
 
-    //   <CartList data={cartItems} />
-    //   {/* {cartItems.map((item) => (
-    //                 <li key={item.id} className="flex justify-between items-center py-2 border-b border-gray-200">
-    //                     <span>{item.name}</span>
-    //                     <span>${item.price}</span>
-    //                 </li>
-    //             ))} */}
-    //   {<AddItemDialog />}
-    // </div>
+      <CartList data={cartItems} />
+      {/* {cartItems.map((item) => (
+                    <li key={item.id} className="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span>{item.name}</span>
+                        <span>${item.price}</span>
+                    </li>
+                ))} */}
+      {<AddItemDialog />}
+    </div>
   );
 };
 

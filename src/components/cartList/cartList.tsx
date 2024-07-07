@@ -8,20 +8,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import AddItemDialog from "../addItemDialog/addItemDialog";
 
+import AddItemDialog from "../addItemDialog/addItemDialog";
+import { TbEdit } from "react-icons/tb";
 interface CartListProps {
   data: Array<{}>;
 }
+
 const CartList = (props: CartListProps) => {
   console.log("🚀 ~ CartList ~ props:", props);
 
   return (
     // <div>asdad</div>
     <Table>
-      <TableCaption>
-        {" "}
-      </TableCaption>
+      <TableCaption> </TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">מספור</TableHead>
@@ -36,10 +36,13 @@ const CartList = (props: CartListProps) => {
             <TableCell>{item.name}</TableCell>
             {/* <TableCell>Credit Card</TableCell> */}
             <TableCell>${item.price}</TableCell>
+            <TableCell>
+              <TbEdit />
+            </TableCell>
           </TableRow>
         ))}
         <TableRow className="flex flex-1 items-center p-5">
-        {/* {<AddItemDialog />} */}
+          {/* {<AddItemDialog />} */}
         </TableRow>
       </TableBody>
     </Table>

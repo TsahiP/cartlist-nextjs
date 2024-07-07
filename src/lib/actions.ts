@@ -217,10 +217,11 @@ export const createList = async (previousState: any, formData: any) => {
     throw error;
   }
 };
-export const getCarts = async () => {
+export const getCarts = async (userid:string|undefined) => {
+  if (userid === undefined) return [];
   try{
     connectToDb();
-    const lists = await List.find();
+    const lists = await List.find({creatorId: userid});
     return lists;
   }catch(error){
     console.log(error);

@@ -31,11 +31,15 @@ export const authConfig: {
         async authorized({ auth, request }) {
             const user = auth?.user;
             const isOnLoginPage = request.nextUrl?.pathname.startsWith("/login");
-
+            const isOnDeshbordPage = request.nextUrl?.pathname.startsWith("/");
             const isOnCartsPage = request.nextUrl?.pathname.startsWith("/carts");
+
             if (isOnLoginPage && user) {
                 return Response.redirect(new URL("/carts", request.nextUrl));
             }
+            // if (isOnDeshbordPage && user) {
+            //     return Response.redirect(new URL("/carts", request.nextUrl));
+            // }
             if(isOnCartsPage && !user){
                 return Response.redirect(new URL("/login", request.nextUrl));
             }
