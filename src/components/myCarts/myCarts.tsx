@@ -18,7 +18,7 @@ const MyCarts = async () => {
       <h1 className="text-2xl font-bold mb-4">My Carts</h1>
       <div className="space-y-4">
         {lists.map((list: any, index: any) => (
-          <ListComp userId={userId} index={index} list={list}/>
+          <ListComp index={index} list={list}/>
         ))}
       </div>
     </div>

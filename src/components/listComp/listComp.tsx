@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface List {
@@ -15,22 +16,19 @@ interface List {
     index: number;
     list: List;
   }
-const ListComp = (props:Props) => {
+const ListComp =  (props:Props) => {
     const router = useRouter();
     
-    const handleClick = () => {
-        router.push(`/cart?${props.list._id}`);
-    };
+    // const handleClick = () => {
+    //     router.push(`/cart?listId=${props.list._id}`);
+    // };
   return (
     <div key={props.index}>
-      <div onClick={handleClick} key={props?.index} className="bg-white rounded shadow p-4">
-        <h2 className="text-lg font-semibold mb-2">{props.list.title}</h2>
-        <ul className="list-disc pl-6">
-          {props?.list.items.map((item: any, index: any) => (
-            <li key={index} >{item}</li>
-          ))}
-        </ul>
-      </div>
+      <Link href={ {pathname:`/cart`,query:{listId:props.list._id}}}>
+        <div className="bg-white rounded shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">{props.list.title}</h2>
+        </div>
+      </Link>
     </div>
   );
 };

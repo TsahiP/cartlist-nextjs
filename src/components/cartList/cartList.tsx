@@ -8,15 +8,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import AddItemDialog from "../addItemDialog/addItemDialog";
 import { TbEdit } from "react-icons/tb";
+
 interface CartListProps {
   data: Array<{}>;
+  session: any;
 }
 
 const CartList = (props: CartListProps) => {
   console.log("🚀 ~ CartList ~ props:", props);
+  console.log(props.session.user.id);
 
   return (
     // <div>asdad</div>

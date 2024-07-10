@@ -9,7 +9,7 @@ import bcrypt from "bcryptjs";
 // ======================== items actions ========================
 interface ItemFormData {
   name: string;
-  amount: string;
+  amount: number;
   price: number;
   desc?: string;
   img?: string;
@@ -93,15 +93,17 @@ export const login = async (previousState:any, formData:any) => {
   }
 };
 // פונקציה להוספת פריט לרשימה
-export const addItemToList = async (listId: string, formData: ItemFormData) => {
+export const addItemToList = async (listId: string,userId:string, formData: ItemFormData) => {
   await connectToDb();
 
   try {
-    const list = await List.findOne({ id: listId });
+    const list = await List.findOne({ _id: listId,creatorId: userId });
+    console.log("🚀 ~ addItemToList ~ list:", list)
     if (!list) {
-      throw new Error("List not found");
+      return { error: "List not found" };
     }
-
+    
+    
     const newItem = {
       name: formData.name,
       amount: formData.amount,
@@ -114,7 +116,7 @@ export const addItemToList = async (listId: string, formData: ItemFormData) => {
     await list.save();
 
     revalidatePath(`/lists/${listId}`);
-    return list;
+    return {sucsses:"list updated"};
   } catch (error) {
     console.error("Error adding item to list:", error);
     throw error;
@@ -228,3 +230,21 @@ export const getCarts = async (userid:string|undefined) => {
     return [];
   }
 }
+
+
+// Get list by list id and user id
+export const getListByIdAndUserId = async (listId: string, userId: string) => {
+  await connectToDb();
+
+  try {
+    const list = await List.findOne({ _id: listId, creatorId: userId });
+    if (!list) {
+      throw new Error("List not found");
+    }
+
+    return list;
+  } catch (error) {
+    console.error("Error getting list by id and user id:", error);
+    throw error;
+  }
+};
