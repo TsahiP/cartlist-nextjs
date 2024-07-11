@@ -7,11 +7,11 @@ import { auth } from "@/lib/auth";
 const MyCarts = async () => {
   // const router = useRouter();
   const session = await auth();
-  console.log("🚀 ~ MyCarts ~ session:", session?.user?.id);
+  // console.log("🚀 ~ MyCarts ~ session:", session?.user?.id);
   const userId = session?.user?.id;
   // FETCH DATA WITH AN API
   const lists = await getCarts(session?.user?.id);
-  console.log("🚀 ~ MyCarts ~ lists:", lists);
+  // console.log("🚀 ~ MyCarts ~ lists:", lists);
 
   return (
     <div className="p-4">

@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import {
   Table,
   TableBody,
@@ -10,14 +10,23 @@ import {
 } from "@/components/ui/table";
 import AddItemDialog from "../addItemDialog/addItemDialog";
 import { TbEdit } from "react-icons/tb";
+interface Data {
+  _id: string;
+  title: string;
+  creatorId: string;
+  items: Array<{}>;
+  sharedWith: string[]; // Assuming sharedWith is an array of user IDs or similar identifiers
 
+}
 interface CartListProps {
-  data: Array<{}>;
+  data: Data;
   session: any;
 }
 
 const CartList = (props: CartListProps) => {
   console.log("🚀 ~ CartList ~ props:", props);
+  console.log(props.data.items);
+  
   console.log(props.session.user.id);
 
   return (
@@ -32,17 +41,16 @@ const CartList = (props: CartListProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {props.data.map((item: any, index) => (
-          <TableRow key={index}>
-            <TableCell className="font-medium">{index + 1}</TableCell>
-            <TableCell>{item.name}</TableCell>
-            {/* <TableCell>Credit Card</TableCell> */}
-            <TableCell>${item.price}</TableCell>
-            <TableCell>
-              <TbEdit />
-            </TableCell>
-          </TableRow>
-        ))}
+      {Array.isArray(props.data.items) ? props.data.items.map((item: any, index) => (
+    <TableRow key={index}>
+      <TableCell className="font-medium">{index + 1}</TableCell>
+      <TableCell>{item.name}</TableCell>
+      <TableCell>${item.price}</TableCell>
+      <TableCell>
+        <TbEdit />
+      </TableCell>
+    </TableRow>
+  )) : null}
         <TableRow className="flex flex-1 items-center p-5">
           {/* {<AddItemDialog />} */}
         </TableRow>

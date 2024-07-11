@@ -1,7 +1,6 @@
-"use client";
+
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface List {
     createdAt: Date;
@@ -17,11 +16,7 @@ interface List {
     list: List;
   }
 const ListComp =  (props:Props) => {
-    const router = useRouter();
     
-    // const handleClick = () => {
-    //     router.push(`/cart?listId=${props.list._id}`);
-    // };
   return (
     <div key={props.index}>
       <Link href={ {pathname:`/cart`,query:{listId:props.list._id}}}>
