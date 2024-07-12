@@ -10,7 +10,7 @@ const Navbar = async () => {
     <div className={styles.container}>
             {/* <Link href={"http://localhost:3000/"} className={styles.logo}>Logo</Link> */}
 
-      <Link href={"http://localhost:3000/carts"} className={styles.logo}>Logo</Link>
+      <Link href={process.env.BASE_URL+"/carts"} className={styles.logo}>Logo</Link>
       <div>
         <Links session={session} />
       </div>
