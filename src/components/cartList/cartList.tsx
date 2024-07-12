@@ -27,11 +27,9 @@ interface CartListProps {
 }
 
 const CartList = (props: CartListProps) => {
-  // console.log("🚀 ~ CartList ~ props:", props);
-  // console.log(props.data.items);
-  console.log(props.data);
+
+
   const userId = props.session.user.id;
-  // console.log(props.session.user.id);
 
   return (
     // <div>asdad</div>

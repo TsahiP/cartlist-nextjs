@@ -16,10 +16,10 @@ interface List {
     list: List;
   }
 const ListComp =  (props:Props) => {
-    
+  const listIdPlainObject = JSON.parse(JSON.stringify(props.list._id));
   return (
     <div key={props.index}>
-      <Link href={ {pathname:`/cart`,query:{listId:props.list._id}}}>
+      <Link href={ {pathname:`/cart`,query:{listId:listIdPlainObject}}}>
         <div className="bg-white rounded shadow p-4">
           <h2 className="text-lg font-semibold mb-2">{props.list.title}</h2>
         </div>

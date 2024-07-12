@@ -55,17 +55,15 @@ export const {
     ...authConfig,
     providers: [
         CredentialsProvider({
-
-
             async authorize(credentials) {
                 try {
                     const user = await login(credentials);
                     // console.log("🚀 ~ authorize ~ user:", user)
-
-                    return user;
+                    const userPlainObject = JSON.parse(JSON.stringify(user));
+                    return userPlainObject;
                 } catch (err) {
-                    // console.log(err);
-                    return null;
+                    console.log(err);
+                    // return null;
                 }
             }
         }),],
