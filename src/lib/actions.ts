@@ -13,6 +13,7 @@ interface ItemFormData {
   price: number;
   desc?: string;
   img?: string;
+  _id?:string;
 }
 
 
@@ -98,7 +99,7 @@ export const addItemToList = async (listId: string,userId:string, formData: Item
 
   try {
     const list = await List.findOne({ _id: listId,creatorId: userId });
-    console.log("🚀 ~ addItemToList ~ list:", list)
+    // console.log("🚀 ~ addItemToList ~ list:", list)
     if (!list) {
       return { error: "List not found" };
     }
@@ -126,18 +127,22 @@ export const addItemToList = async (listId: string,userId:string, formData: Item
 // פונקציה לעריכת פריט ברשימה
 export const editItemInList = async (
   listId: string,
-  itemId: string,
+  
+  userId: string,
   formData: ItemFormData
 ) => {
   await connectToDb();
 
   try {
-    const list = await List.findOne({ id: listId });
+    console.log("userId: " + userId);
+    console.log("listId: " + listId);
+    
+    const list = await List.findOne({ _id: listId, creatorId: userId});
     if (!list) {
       throw new Error("List not found");
     }
 
-    const item = list.items.find((item: any) => item.id === itemId);
+    const item = list.items.find((item: any) => item.id === formData._id);
     if (!item) {
       throw new Error("Item not found");
     }
@@ -151,19 +156,19 @@ export const editItemInList = async (
     await list.save();
 
     revalidatePath(`/lists/${listId}`);
-    return list;
+    const listPlainObject = JSON.parse(JSON.stringify(list));
+    return listPlainObject;
   } catch (error) {
-    console.error("Error editing item in list:", error);
-    throw error;
+    return({error: error});
   }
 };
 
 // פונקציה למחיקת פריט מרשימה
-export const deleteItemFromList = async (listId: string, itemId: string) => {
+export const deleteItemFromList = async (userId:string, listId: string, itemId: string) => {
   await connectToDb();
 
   try {
-    const list = await List.findOne({ id: listId });
+    const list = await List.findOne({ _id: listId,creatorId: userId  });
     if (!list) {
       throw new Error("List not found");
     }
@@ -177,7 +182,8 @@ export const deleteItemFromList = async (listId: string, itemId: string) => {
     await list.save();
 
     revalidatePath(`/lists/${listId}`);
-    return list;
+    const listPlainObject = JSON.parse(JSON.stringify(list));
+    return listPlainObject;
   } catch (error) {
     console.error("Error deleting item from list:", error);
     throw error;
@@ -194,9 +200,9 @@ interface CreateListFormData {
 export const createList = async (previousState: any, formData: any) => {
   await connectToDb();
   const { title, creatorId } = Object.fromEntries(formData);
-  console.log("formData:", formData);
-  console.log("🚀 ~ createList ~ formData:", title);
-  console.log("🚀 ~ createList ~ formData:", creatorId);
+  // console.log("formData:", formData);
+  // console.log("🚀 ~ createList ~ formData:", title);
+  // console.log("🚀 ~ createList ~ formData:", creatorId);
   // Generate a unique ID for the item
 
 

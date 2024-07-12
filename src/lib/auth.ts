@@ -60,7 +60,7 @@ export const {
             async authorize(credentials) {
                 try {
                     const user = await login(credentials);
-                    console.log("🚀 ~ authorize ~ user:", user)
+                    // console.log("🚀 ~ authorize ~ user:", user)
 
                     return user;
                 } catch (err) {

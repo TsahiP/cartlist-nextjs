@@ -1,4 +1,4 @@
-// "use client";
+
 import {
   Table,
   TableBody,
@@ -10,13 +10,16 @@ import {
 } from "@/components/ui/table";
 import AddItemDialog from "../addItemDialog/addItemDialog";
 import { TbEdit } from "react-icons/tb";
+import EditItemDialog from "../editItemDialog/editItemDialog";
+import DeleteItemButton from "../deleteItemButton/deleteItemButton";
+
 interface Data {
   _id: string;
   title: string;
+  amount: number;
   creatorId: string;
   items: Array<{}>;
   sharedWith: string[]; // Assuming sharedWith is an array of user IDs or similar identifiers
-
 }
 interface CartListProps {
   data: Data;
@@ -24,10 +27,11 @@ interface CartListProps {
 }
 
 const CartList = (props: CartListProps) => {
-  console.log("🚀 ~ CartList ~ props:", props);
-  console.log(props.data.items);
-  
-  console.log(props.session.user.id);
+  // console.log("🚀 ~ CartList ~ props:", props);
+  // console.log(props.data.items);
+  console.log(props.data);
+  const userId = props.session.user.id;
+  // console.log(props.session.user.id);
 
   return (
     // <div>asdad</div>
@@ -38,21 +42,26 @@ const CartList = (props: CartListProps) => {
           <TableHead className="w-[100px]">מספור</TableHead>
           <TableHead>מוצר</TableHead>
           <TableHead>מחיר</TableHead>
+          <TableHead>כמות</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-      {Array.isArray(props.data.items) ? props.data.items.map((item: any, index) => (
-    <TableRow key={index}>
-      <TableCell className="font-medium">{index + 1}</TableCell>
-      <TableCell>{item.name}</TableCell>
-      <TableCell>${item.price}</TableCell>
-      <TableCell>
-        <TbEdit />
-      </TableCell>
-    </TableRow>
-  )) : null}
+        {Array.isArray(props.data.items)
+          ? props.data.items.map((item: any, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell>${item.price}</TableCell>
+                <TableCell>{item.amount}</TableCell>
+
+                <TableCell>
+                  <EditItemDialog itemId={item._id} userId={userId} itemAmount={item.amount} itemPrice={item.price} itemName={item.name} listId={props.data._id} />
+                  <DeleteItemButton userId={userId} listId={props.data._id} itemId={item._id} />
+                </TableCell>
+              </TableRow>
+            ))
+          : null}
         <TableRow className="flex flex-1 items-center p-5">
-          {/* {<AddItemDialog />} */}
         </TableRow>
       </TableBody>
     </Table>

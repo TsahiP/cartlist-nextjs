@@ -16,14 +16,14 @@ const Cart = async ({ searchParams }: {
 }) => {
   const session: any = await auth();
   const userId = session.user.id;
-  console.log("🚀 ~ userId:", userId)
+  // console.log("🚀 ~ userId:", userId)
   const listId = searchParams.listId;
-  console.log("🚀 ~ listId:", listId)
+  // console.log("🚀 ~ listId:", listId)
   // console.log("🚀 ~ searchParams:", searchParams)
   // console.log("🚀 ~ constCartsession:", session);
 
   const data = await getListByIdAndUserId(searchParams.listId, session?.user?.id)
-  console.log("🚀 ~ data:", data)
+  // console.log("🚀 ~ data:", data)
 
   return (
     <div className=" shadow-md rounded-md p-4">
