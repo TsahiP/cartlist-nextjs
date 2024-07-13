@@ -38,6 +38,8 @@
     display: block;
     cursor: pointer;
     animation: bounceInRight 1s;
+    margin-right: 15px;
+
   }
 }
 

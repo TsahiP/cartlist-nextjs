@@ -13,6 +13,7 @@ import { auth } from "@/lib/auth";
 import { Button } from "../ui/button";
 import { useFormState } from "react-dom";
 import { addItemToList } from "@/lib/actions";
+import { Input } from "../ui/input";
 interface AddItemDialogProps {
   userId: string;
   listId: string;
@@ -57,7 +58,7 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
             <label className=" ml-5" htmlFor="title">
               שם המוצר
             </label>
-            <input
+            <Input
               onChange={(e) => setName(e.target.value)}
               name="title"
               type="text"
@@ -70,7 +71,7 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
             <label className="ml-5" htmlFor="quantity">
               כמות
             </label>
-            <input
+            <Input
               onChange={(e) => setAmount(e.target.valueAsNumber)}
               name="amount"
               type="number"
@@ -84,7 +85,7 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
             <label className="ml-5" htmlFor="price">
               מחיר
             </label>
-            <input
+            <Input
               onChange={(e) => setPrice(e.target.valueAsNumber)}
               name="price"
               type="number"

@@ -12,6 +12,7 @@ import {
 import { Button } from "../ui/button";
 import { TbEdit } from "react-icons/tb";
 import { editItemInList } from "@/lib/actions";
+import { Input } from "../ui/input";
 interface AddItemDialogProps {
   itemPrice: number;
   itemName: string;
@@ -35,14 +36,16 @@ const EditItemDialog = ({
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
-  const saveItem = async () => {
+  
+  const saveItem = async (e:any) => {
+    e.preventDefault();
     const item = { name: name, amount: amount, price: price, _id: itemId };
-    console.log("🚀 ~ saveItem ~ item:", item);
-    console.log(userId, listId);
+    // console.log("🚀 ~ saveItem ~ item:", item);
+    // console.log(userId, listId);
 
     await editItemInList(listId, userId, item).then((list)=>{
         console.log(list);
-        
+        closeDialog();
     })
     .catch((err) => {
       console.log(err);
@@ -50,7 +53,7 @@ const EditItemDialog = ({
     });
   };
   return (
-    <Dialog>
+        <Dialog>
       <Button asChild>
         <DialogTrigger>
           <TbEdit />
@@ -63,10 +66,15 @@ const EditItemDialog = ({
             פרטי המוצר
           </DialogDescription>
         </DialogHeader>
-        <form action={saveItem}>
-          <div>
-            <label htmlFor="title">שם המוצר</label>
-            <input
+        <form
+          dir="rtl"
+          className="flex flex-col items-center justify-center"
+          onSubmit={saveItem}
+        >
+          <div className="flex flex-col mb-4">
+            <label className="ml-5" htmlFor="title">שם המוצר</label>
+            <Input
+              className="bg-input text-foreground rounded"
               value={name}
               onChange={(e) => setName(e.target.value)}
               name="title"
@@ -74,9 +82,10 @@ const EditItemDialog = ({
               id="title"
             />
           </div>
-          <div>
-            <label htmlFor="quantity">כמות</label>
-            <input
+          <div className="flex flex-col mb-4">
+            <label className="ml-5" htmlFor="quantity">כמות</label>
+            <Input
+              className="bg-input text-foreground rounded"
               value={amount}
               onChange={(e) => setAmount(e.target.valueAsNumber)}
               name="amount"
@@ -84,9 +93,10 @@ const EditItemDialog = ({
               id="quantity"
             />
           </div>
-          <div>
-            <label htmlFor="price">מחיר</label>
-            <input
+          <div className="flex flex-col mb-4">
+            <label className="ml-5" htmlFor="price">מחיר</label>
+            <Input
+              className="bg-input text-foreground rounded"
               onChange={(e) => setPrice(e.target.valueAsNumber)}
               name="price"
               type="number"
@@ -94,10 +104,9 @@ const EditItemDialog = ({
               value={price}
             />
           </div>
-
-          <Button>עדכן מוצר</Button>
+          <Button className="bg-primary text-primary-foreground m-4">עדכן מוצר</Button>
           <DialogClose id="closeDialog" asChild>
-            <Button>סגור</Button>
+            <Button className="text-destructive-foreground">סגור</Button>
           </DialogClose>
         </form>
       </DialogContent>

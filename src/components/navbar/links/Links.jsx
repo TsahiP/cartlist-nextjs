@@ -6,6 +6,7 @@ import "./links.module.css";
 import { useState } from "react";
 import Image from "next/image";
 import { handleGithubSignOut } from "@/lib/actions";
+import { CgMenu } from "react-icons/cg";
 const Links = ({session}) => {
   const [open, setOpen] = useState(false);
   const links = [
@@ -48,13 +49,14 @@ const Links = ({session}) => {
         )}
       </div>
       <div className={styles.menuButton}>
-        <Image
+        <CgMenu  onClick={() => setOpen((prev) => !prev)}/>
+        {/* <Image
           alt="menu"
           src="/menu.png"
           width={30}
           height={30}
           onClick={() => setOpen((prev) => !prev)}
-        />
+        /> */}
       </div>
 
       {open && (

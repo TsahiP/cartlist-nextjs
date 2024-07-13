@@ -1,4 +1,3 @@
-
 import {
   Table,
   TableBody,
@@ -27,8 +26,6 @@ interface CartListProps {
 }
 
 const CartList = (props: CartListProps) => {
-
-
   const userId = props.session.user.id;
 
   return (
@@ -37,30 +34,46 @@ const CartList = (props: CartListProps) => {
       <TableCaption> </TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">מספור</TableHead>
-          <TableHead>מוצר</TableHead>
-          <TableHead>מחיר</TableHead>
-          <TableHead>כמות</TableHead>
+          <TableHead className="text-right w-[30px]">מספור</TableHead>
+          <TableHead className="text-right ">מוצר</TableHead>
+          <TableHead className="text-right">מחיר</TableHead>
+          <TableHead className="text-right">כמות</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {Array.isArray(props.data.items)
           ? props.data.items.map((item: any, index) => (
               <TableRow key={index}>
-                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell className="font-medium">
+                  {index + 1}
+                  
+                </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>${item.price}</TableCell>
                 <TableCell>{item.amount}</TableCell>
 
-                <TableCell>
-                  <EditItemDialog itemId={item._id} userId={userId} itemAmount={item.amount} itemPrice={item.price} itemName={item.name} listId={props.data._id} />
-                  <DeleteItemButton userId={userId} listId={props.data._id} itemId={item._id} />
+                <TableCell >
+                  <div className="flex flex-col justify-between gap-4 w-[45px]">
+                    <EditItemDialog
+
+                      itemId={item._id}
+                      userId={userId}
+                      itemAmount={item.amount}
+                      itemPrice={item.price}
+                      itemName={item.name}
+                      listId={props.data._id}
+                    />
+                    <DeleteItemButton
+                      userId={userId}
+                      listId={props.data._id}
+                      itemId={item._id}
+                    />
+                  </div>
                 </TableCell>
               </TableRow>
             ))
           : null}
-        <TableRow className="flex flex-1 items-center p-5">
-        </TableRow>
+        <TableRow className="flex flex-1 items-center p-5"></TableRow>
       </TableBody>
     </Table>
   );

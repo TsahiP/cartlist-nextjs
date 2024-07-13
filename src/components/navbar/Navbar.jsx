@@ -2,6 +2,8 @@ import Link from "next/link";
 import Links from "./links/Links";
 import styles from "./navbar.module.css";
 import { auth } from "@/lib/auth";
+import Image from "next/image";
+import { CgMenu } from "react-icons/cg";
 const Navbar = async () => {
   const session = await auth();
 
@@ -10,7 +12,7 @@ const Navbar = async () => {
     <div className={styles.container}>
             {/* <Link href={"http://localhost:3000/"} className={styles.logo}>Logo</Link> */}
 
-      <Link href={process.env.BASE_URL+"/carts"} className={styles.logo}>Logo</Link>
+      <Link href={process.env.BASE_URL+"/carts"} className={styles.logo}><Image src={"/logo.svg"} width={75} height={75} /></Link>
       <div>
         <Links session={session} />
       </div>

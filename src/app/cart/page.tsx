@@ -1,6 +1,6 @@
 import AddItemDialog from "@/components/addItemDialog/addItemDialog";
 import CartList from "@/components/cartList/cartList";
-import  { Suspense } from "react";
+import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { getListByIdAndUserId } from "@/lib/actions";
 const cartItems = [
@@ -9,7 +9,9 @@ const cartItems = [
   { id: 3, name: "Product 3", price: 300 },
 ];
 
-const Cart = async ({ searchParams }: {
+const Cart = async ({
+  searchParams,
+}: {
   searchParams: {
     listId: string;
   };
@@ -22,13 +24,16 @@ const Cart = async ({ searchParams }: {
   // console.log("🚀 ~ searchParams:", searchParams)
   // console.log("🚀 ~ constCartsession:", session);
 
-  const data = await getListByIdAndUserId(searchParams.listId, session?.user?.id)
+  const data = await getListByIdAndUserId(
+    searchParams.listId,
+    session?.user?.id
+  );
   // console.log("🚀 ~ data:", data)
 
   return (
     <div dir="rtl" className=" shadow-md rounded-md p-4">
       <h2 className="text-center text-xl font-bold mb-4">Cart List</h2>
-      <Suspense fallback={<div>Loading...</div>} >
+      <Suspense fallback={<div>Loading...</div>}>
         <CartList session={session} data={data} />
       </Suspense>
       {/* {cartItems.map((item) => (
@@ -37,7 +42,9 @@ const Cart = async ({ searchParams }: {
                         <span>${item.price}</span>
                     </li>
                 ))} */}
-      <AddItemDialog userId={userId} listId={listId} />
+      <div className="flex justify-center">
+        <AddItemDialog userId={userId} listId={listId} />
+      </div>
     </div>
   );
 };
