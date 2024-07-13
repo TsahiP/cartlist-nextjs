@@ -5,7 +5,7 @@ import { connectToDb } from "./utils";
 import { signIn, signOut } from "./auth";
 // import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
-
+import { AuthError } from "next-auth";
 // ======================== items actions ========================
 interface ItemFormData {
   name: string;
@@ -13,14 +13,14 @@ interface ItemFormData {
   price: number;
   desc?: string;
   img?: string;
-  _id?:string;
+  _id?: string;
 }
 
 
 //========================= user actions =================
 interface UserFormData {
-  username:string;
-  password:string;
+  username: string;
+  password: string;
 }
 // ======================== user actions ========================
 interface UserFormData {
@@ -48,9 +48,7 @@ export const register = async (previousState: any, formData: any) => {
     connectToDb();
     // check if username exists
     const user = await User.findOne({ username: username });
-    // console.log(user);
     if (user) {
-      // console.log("exist try other name");
       return { error: "user already exists" };
     }
     // hash pass
@@ -71,40 +69,64 @@ export const register = async (previousState: any, formData: any) => {
     return { error: "Something went wrong!" };
   }
 };
-
-
-export const login = async (previousState:any, formData:any) => {
+interface CustomError extends Error {
+  cause?: {
+    message: string;
+  };
+}
+export const login = async (prevState: any, formData: any) => {
   const { username, password } = Object.fromEntries(formData);
 
   try {
-    connectToDb();
-    // check if username exists
-    
     await signIn("credentials", { username, password });
+  } catch (err: any) {
+    if (err instanceof AuthError) {
+      switch (err.type) {
+        case "CredentialsSignin":
+          console.log("cred wrong1");
 
-    return { success: true };
-  } catch (error: any) {
-    console.log(error);
-    if (error.message.includes("CredentialsSignis")) {
-      return { error: "Invalid Credentials" };
+          return { msg: "Invalid credentials", status: "error" };
+        case "CredentialsSignin":
+          console.log("cred wrong2");
+          throw err;
+        default:
+          console.log("cred wrong3");
+          return { msg: "Something went wrong Invalid credentials", status: "error" };
+      }
     }
-
-
-    throw error;
+    throw err;
   }
 };
+// export const login = async (prevState:any, formData:any) => {
+//   const { username, password } = Object.fromEntries(formData);
+
+//   try {
+//     await signIn("credentials", { username, password });
+//   } catch (err:any) {
+//     console.log("here");
+
+//     const isCredentialsSigninError = err.message?.includes("CredentialsSignin") || 
+//                                      err.Cause?.err?.toString().includes("CredentialsSignin");
+
+//     if (isCredentialsSigninError) {
+//       return { error: "Invalid username or password" };
+//     }
+//     throw err;
+//   }
+// };
+
 // פונקציה להוספת פריט לרשימה
-export const addItemToList = async (listId: string,userId:string, formData: ItemFormData) => {
+export const addItemToList = async (listId: string, userId: string, formData: ItemFormData) => {
   await connectToDb();
 
   try {
-    const list = await List.findOne({ _id: listId,creatorId: userId });
+    const list = await List.findOne({ _id: listId, creatorId: userId });
     // console.log("🚀 ~ addItemToList ~ list:", list)
     if (!list) {
       return { error: "List not found" };
     }
-    
-    
+
+
     const newItem = {
       name: formData.name,
       amount: formData.amount,
@@ -117,7 +139,7 @@ export const addItemToList = async (listId: string,userId:string, formData: Item
     await list.save();
 
     revalidatePath(`/lists/${listId}`);
-    return {sucsses:"list updated"};
+    return { sucsses: "list updated" };
   } catch (error) {
     console.error("Error adding item to list:", error);
     throw error;
@@ -127,7 +149,7 @@ export const addItemToList = async (listId: string,userId:string, formData: Item
 // פונקציה לעריכת פריט ברשימה
 export const editItemInList = async (
   listId: string,
-  
+
   userId: string,
   formData: ItemFormData
 ) => {
@@ -136,8 +158,8 @@ export const editItemInList = async (
   try {
     console.log("userId: " + userId);
     console.log("listId: " + listId);
-    
-    const list = await List.findOne({ _id: listId, creatorId: userId});
+
+    const list = await List.findOne({ _id: listId, creatorId: userId });
     if (!list) {
       throw new Error("List not found");
     }
@@ -159,16 +181,16 @@ export const editItemInList = async (
     const listPlainObject = JSON.parse(JSON.stringify(list));
     return listPlainObject;
   } catch (error) {
-    return({error: error});
+    return ({ error: error });
   }
 };
 
 // פונקציה למחיקת פריט מרשימה
-export const deleteItemFromList = async (userId:string, listId: string, itemId: string) => {
+export const deleteItemFromList = async (userId: string, listId: string, itemId: string) => {
   await connectToDb();
 
   try {
-    const list = await List.findOne({ _id: listId,creatorId: userId  });
+    const list = await List.findOne({ _id: listId, creatorId: userId });
     if (!list) {
       throw new Error("List not found");
     }
@@ -219,19 +241,19 @@ export const createList = async (previousState: any, formData: any) => {
     await newList.save();
 
     revalidatePath("/carts"); // Or the path where you display the lists
-    return({status: "success"})
+    return ({ status: "success" })
   } catch (error) {
     console.error("Error creating list:", error);
     throw error;
   }
 };
-export const getCarts = async (userid:string|undefined) => {
+export const getCarts = async (userid: string | undefined) => {
   if (userid === undefined) return [];
-  try{
+  try {
     connectToDb();
-    const lists = await List.find({creatorId: userid});
+    const lists = await List.find({ creatorId: userid });
     return lists;
-  }catch(error){
+  } catch (error) {
     console.log(error);
     return [];
   }

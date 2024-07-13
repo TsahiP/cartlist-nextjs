@@ -31,6 +31,7 @@ const LoginForm = () => {
               type="password"
             />
           </div>
+          {state?.msg?.toString()}
           <Button className="w-full">Login with Credentials </Button>
         </form>
       </div>

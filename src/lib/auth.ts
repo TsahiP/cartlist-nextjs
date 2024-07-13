@@ -20,27 +20,25 @@ interface IUserFormData {
 export const login = async (credentials: any) => {
     try {
         connectToDb();
+        
         console.log("credentials", credentials);
-
+        
         const user = await User.findOne({ username: credentials.username });
-        if (!user) {
-            return ({ error: "Wrong credentials!" });
-        }
-        console.log("user data", user);
+        if (!user) throw new Error("Wrong credentials!");
+        // console.log("login func====================================");
+        // console.log("user data", user);
 
         const isPasswordCorrect = await bcrypt.compare(
             credentials.password,
             user.password
         );
-        console.log("here", isPasswordCorrect);
-        if (!isPasswordCorrect) {
-            return ({ error: "Wrong password!" });
-            // throw new Error("Wrong password!");
-        }
+        // console.log("here", isPasswordCorrect);
+        if (!isPasswordCorrect) throw new Error("Wrong credentials!");
 
         return user;
     } catch (err) {
-        return ({ error: "Wrong credentials!" });
+        console.log(err);
+        throw new Error("Failed to login!");
     }
 
 }
@@ -58,12 +56,15 @@ export const {
             async authorize(credentials) {
                 try {
                     const user = await login(credentials);
-                    // console.log("🚀 ~ authorize ~ user:", user)
+
+                    console.log("🚀 ~ authorize ~ user:", user);
                     const userPlainObject = JSON.parse(JSON.stringify(user));
-                    return userPlainObject;
+                    console.log("return");
+                    
+                    return user;
                 } catch (err) {
                     console.log(err);
-                    // return null;
+                    return null;
                 }
             }
         }),],
