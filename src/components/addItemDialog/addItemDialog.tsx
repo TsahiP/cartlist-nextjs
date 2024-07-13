@@ -39,46 +39,67 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
       <Button asChild>
         <DialogTrigger>הוסף מוצר לרשימה</DialogTrigger>
       </Button>
-      <DialogContent>
+      <DialogContent className="bg-popover text-popover-foreground">
         <DialogHeader>
           <DialogTitle className="text-center">הוסף מוצר חדש</DialogTitle>
           <DialogDescription className="text-center">
             אנא מלא את הפרטים הבאים
           </DialogDescription>
         </DialogHeader>
-        <form action={saveItem}>
-          <div>
-            <label htmlFor="title">שם המוצר</label>
+        <form
+          dir="rtl"
+          className="flex flex-col items-center justify-center"
+          onSubmit={saveItem}
+        >
+          <div className="flex flex-col mb-4">
+            {" "}
+            {/* Add Tailwind margin-bottom class */}
+            <label className=" ml-5" htmlFor="title">
+              שם המוצר
+            </label>
             <input
               onChange={(e) => setName(e.target.value)}
               name="title"
               type="text"
               id="title"
+              className="bg-input text-foreground rounded"
             />
           </div>
-          <div>
-            <label htmlFor="quantity">כמות</label>
+          <div className="flex flex-col mb-4 ">
+            {/* Add Tailwind margin-bottom class */}
+            <label className="ml-5" htmlFor="quantity">
+              כמות
+            </label>
             <input
               onChange={(e) => setAmount(e.target.valueAsNumber)}
               name="amount"
               type="number"
               id="quantity"
+              className="bg-input text-foreground rounded "
             />
           </div>
-          <div>
-            <label htmlFor="price">מחיר</label>
+          <div className="flex flex-col mb-4">
+            {" "}
+            {/* Add Tailwind margin-bottom class */}
+            <label className="ml-5" htmlFor="price">
+              מחיר
+            </label>
             <input
               onChange={(e) => setPrice(e.target.valueAsNumber)}
               name="price"
               type="number"
               id="price"
+              className="bg-input text-foreground rounded"
             />
           </div>
-          
-            <Button>הוסף מוצר</Button>
-            <DialogClose id="closeDialog" asChild>
-              <Button>סגור</Button>
-            </DialogClose>
+          <Button className="bg-primary text-primary-foreground m-4">
+            הוסף מוצר
+          </Button>
+          <DialogClose id="closeDialog" asChild>
+            <Button className=" text-destructive-foreground">
+              סגור
+            </Button>
+          </DialogClose>
         </form>
       </DialogContent>
     </Dialog>
