@@ -117,6 +117,8 @@ export const login = async (prevState: any, formData: any) => {
 
 // פונקציה להוספת פריט לרשימה
 export const addItemToList = async (listId: string, userId: string, formData: ItemFormData) => {
+  console.log("🚀 ~ addItemToList ~ userId:", userId)
+  console.log("🚀 ~ addItemToList ~ listId:", listId)
   await connectToDb();
 
   try {
@@ -269,8 +271,9 @@ export const getListByIdAndUserId = async (listId: string, userId: string) => {
     if (!list) {
       throw new Error("List not found");
     }
+    const listPlainObject = JSON.parse(JSON.stringify(list));
 
-    return list;
+    return listPlainObject;
   } catch (error) {
     console.error("Error getting list by id and user id:", error);
     throw error;

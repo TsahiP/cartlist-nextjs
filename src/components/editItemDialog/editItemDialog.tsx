@@ -41,13 +41,13 @@ const EditItemDialog = ({
     e.preventDefault();
     const item = { name: name, amount: amount, price: price, _id: itemId };
     // console.log("🚀 ~ saveItem ~ item:", item);
-    // console.log(userId, listId);
+    console.log(userId, listId);
 
-    await editItemInList(listId, userId, item).then((list)=>{
+    await editItemInList(listId, userId, item).then((list:any)=>{
         console.log(list);
         closeDialog();
     })
-    .catch((err) => {
+    .catch((err:any) => {
       console.log(err);
       setErrorFlag(true);
     });

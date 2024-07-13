@@ -28,9 +28,9 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
-  const saveItem = () => {
+  const saveItem = (e:any) => {
+    e.preventDefault();
     const item = { name: name, amount: amount, price: price };
-    console.log("🚀 ~ saveItem ~ item:", item);
     addItemToList(listId, userId, item);
     console.log("here :", userId, listId);
     closeDialog();
