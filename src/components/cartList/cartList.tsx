@@ -33,7 +33,7 @@ const CartList = (props: CartListProps) => {
 
   return (
     // <div>asdad</div>
-    <Table>
+    <Table >
       <TableCaption> </TableCaption>
       <TableHeader>
         <TableRow>

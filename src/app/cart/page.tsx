@@ -15,7 +15,7 @@ const Cart = async ({ searchParams }: {
   };
 }) => {
   const session: any = await auth();
-  const userId = session.user.id;
+  const userId = session?.user?.id;
   // console.log("🚀 ~ userId:", userId)
   const listId = searchParams.listId;
   // console.log("🚀 ~ listId:", listId)
@@ -26,8 +26,8 @@ const Cart = async ({ searchParams }: {
   // console.log("🚀 ~ data:", data)
 
   return (
-    <div className=" shadow-md rounded-md p-4">
-      <h2 className="text-xl font-bold mb-4">Cart List</h2>
+    <div dir="rtl" className=" shadow-md rounded-md p-4">
+      <h2 className="text-center text-xl font-bold mb-4">Cart List</h2>
       <Suspense fallback={<div>Loading...</div>} >
         <CartList session={session} data={data} />
       </Suspense>
