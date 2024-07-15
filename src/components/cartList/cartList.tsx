@@ -49,7 +49,7 @@ const CartList = (props: CartListProps) => {
                   
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
-                <TableCell>${item.price}</TableCell>
+                <TableCell>₪{item.price}</TableCell>
                 <TableCell>{item.amount}</TableCell>
 
                 <TableCell >

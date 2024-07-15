@@ -12,7 +12,7 @@ const Navbar = async () => {
     <div className={styles.container}>
             {/* <Link href={"http://localhost:3000/"} className={styles.logo}>Logo</Link> */}
 
-      <Link href={process.env.BASE_URL+"/carts"} className={styles.logo}><Image src={"/logo.svg"} width={75} height={75} /></Link>
+      <Link href={process.env.BASE_URL} className={styles.logo}><Image src={"/logo.svg"} width={75} height={75} /></Link>
       <div>
         <Links session={session} />
       </div>
