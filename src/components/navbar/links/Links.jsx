@@ -1,10 +1,8 @@
 "use client";
-import Link from "next/link";
 import styles from "./links.module.css";
 import NavLink from "./navLink/NavLink";
 import "./links.module.css";
 import { useState } from "react";
-import Image from "next/image";
 import { handleGithubSignOut } from "@/lib/actions";
 import { CgMenu } from "react-icons/cg";
 const Links = ({session}) => {
