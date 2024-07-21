@@ -3,6 +3,8 @@ import CartList from "@/components/cartList/cartList";
 import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { getListByIdAndUserId } from "@/lib/actions";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 const cartItems = [
   { id: 1, name: "Product 1", price: 100 },
   { id: 2, name: "Product 2", price: 200 },
@@ -26,12 +28,15 @@ const Cart = async ({
 
   return (
     <div dir="rtl" className=" shadow-md rounded-md p-4">
-      <h2 className="text-center text-xl font-bold mb-4">Cart List</h2>
+      {/* <h2 className="text-center text-xl font-bold mb-4">Cart List</h2> */}
       <Suspense fallback={<div>Loading...</div>}>
         <CartList session={session} data={data} />
       </Suspense>
-      <div className="flex justify-center">
-        <AddItemDialog userId={userId} listId={listId} />
+      <div className="flex items-center flex-col  justify-center gap-5 ">
+        <AddItemDialog   userId={userId} listId={listId} />
+        <Button className="w-36" asChild >
+          <Link  href="/carts">חזור לרשימות</Link>
+        </Button>
       </div>
     </div>
   );

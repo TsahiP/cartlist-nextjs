@@ -12,13 +12,13 @@ import {
 import { auth } from "@/lib/auth";
 import { Button } from "../ui/button";
 import { useFormState } from "react-dom";
-import { addItemToList } from "@/lib/actions";
+import { createList } from "@/lib/actions";
 import { Input } from "../ui/input";
+
 interface AddItemDialogProps {
-  userId: string;
-  listId: string;
+  userId: string|null;
 }
-const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
+const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
   const [name, setName] = useState<string>("");
   const [amount, setAmount] = useState<number | 1>(1);
   const [price, setPrice] = useState<number | 1>(1);
@@ -29,10 +29,10 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
     document.getElementById("closeDialog")?.click();
   };
   const saveItem = (e:any) => {
+    
     e.preventDefault();
-    const item = { name: name, amount: amount, price: price };
-    addItemToList(listId, userId, item);
-    console.log("here :", userId, listId);
+    const cartDetails = { title: name, creatorId: userId };
+    createList(cartDetails);
     closeDialog();
   };
   return (
@@ -107,4 +107,4 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
   );
 };
 
-export default AddItemDialog;
+export default CreateCartDialog;

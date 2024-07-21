@@ -205,9 +205,9 @@ interface CreateListFormData {
 }
 
 // פונקציה ליצירת רשימה חדשה
-export const createList = async (previousState: any, formData: any) => {
+export const createList = async ( formData: any) => {
   await connectToDb();
-  const { title, creatorId } = Object.fromEntries(formData);
+  const { title, creatorId } = formData;
   // console.log("formData:", formData);
   // console.log("🚀 ~ createList ~ formData:", title);
   // console.log("🚀 ~ createList ~ formData:", creatorId);

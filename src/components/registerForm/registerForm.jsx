@@ -16,7 +16,7 @@ const RegisterForm = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Register Form</h1>
-      <form className="flex flex-col items-center space-y-4 shadow-md p-4 rounded">
+      <form action={formAction} className="flex flex-col items-center space-y-4 shadow-md p-4 rounded">
         <input
           type="text"
           placeholder="Username"
