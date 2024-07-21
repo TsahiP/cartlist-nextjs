@@ -97,23 +97,7 @@ export const login = async (prevState: any, formData: any) => {
     throw err;
   }
 };
-// export const login = async (prevState:any, formData:any) => {
-//   const { username, password } = Object.fromEntries(formData);
 
-//   try {
-//     await signIn("credentials", { username, password });
-//   } catch (err:any) {
-//     console.log("here");
-
-//     const isCredentialsSigninError = err.message?.includes("CredentialsSignin") || 
-//                                      err.Cause?.err?.toString().includes("CredentialsSignin");
-
-//     if (isCredentialsSigninError) {
-//       return { error: "Invalid username or password" };
-//     }
-//     throw err;
-//   }
-// };
 
 // פונקציה להוספת פריט לרשימה
 export const addItemToList = async (listId: string, userId: string, formData: ItemFormData) => {

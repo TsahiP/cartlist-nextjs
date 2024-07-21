@@ -18,17 +18,11 @@ const Cart = async ({
 }) => {
   const session: any = await auth();
   const userId = session?.user?.id;
-  // console.log("🚀 ~ userId:", userId)
   const listId = searchParams.listId;
-  // console.log("🚀 ~ listId:", listId)
-  // console.log("🚀 ~ searchParams:", searchParams)
-  // console.log("🚀 ~ constCartsession:", session);
-
   const data = await getListByIdAndUserId(
     searchParams.listId,
     session?.user?.id
   );
-  // console.log("🚀 ~ data:", data)
 
   return (
     <div dir="rtl" className=" shadow-md rounded-md p-4">
@@ -36,12 +30,6 @@ const Cart = async ({
       <Suspense fallback={<div>Loading...</div>}>
         <CartList session={session} data={data} />
       </Suspense>
-      {/* {cartItems.map((item) => (
-                    <li key={item.id} className="flex justify-between items-center py-2 border-b border-gray-200">
-                        <span>{item.name}</span>
-                        <span>${item.price}</span>
-                    </li>
-                ))} */}
       <div className="flex justify-center">
         <AddItemDialog userId={userId} listId={listId} />
       </div>

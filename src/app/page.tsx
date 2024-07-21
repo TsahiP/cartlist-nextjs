@@ -13,7 +13,7 @@ export default async function Home() {
         </h1>
         <Image src="/logo.svg" alt="" width={200} height={200} />
       </div>
-      {!session ? (
+      {!session ? 
         <div className="flex gap-20 justify-center">
           <div>
             <Button asChild className="bg-accent text-card-foreground ">
@@ -28,13 +28,13 @@ export default async function Home() {
             </Button>
           </div>
         </div>
-      ) : (
+      : 
         <div className="flex justify-center">
           <Button asChild className="bg-accent text-accent-foreground">
             <Link href="/register">To Lists</Link>
           </Button>
         </div>
-      )}
+      }
     </div>
   );
 }
