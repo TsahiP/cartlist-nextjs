@@ -53,9 +53,9 @@ export function ShareWithDialog({ userId, listId }: IShareData) {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right">
+              {/* <Label htmlFor="email" className="text-right">
                 אימייל
-              </Label>
+              </Label> */}
               <Input
                 id="email"
                 defaultValue="example@example.com"

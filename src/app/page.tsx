@@ -31,7 +31,7 @@ export default async function Home() {
       : 
         <div className="flex justify-center">
           <Button asChild className="bg-accent text-accent-foreground">
-            <Link href="/register">To Lists</Link>
+            <Link href="/carts">To Lists</Link>
           </Button>
         </div>
       }

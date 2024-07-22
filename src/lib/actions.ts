@@ -171,6 +171,21 @@ export const editItemInList = async (
   }
 };
 
+//delete a list by id
+export const deleteList = async (userId: string | undefined, listId: string | undefined) => {
+  await connectToDb();
+  try {
+    const list = await List.findOneAndDelete({ _id: listId, creatorId: userId });
+    
+
+    revalidatePath("/carts");
+    return { status: "success" };
+  } catch (error) {
+    console.error("Error deleting list:", error);
+    throw error;
+  }
+}; 
+
 // פונקציה למחיקת פריט מרשימה
 export const deleteItemFromList = async (userId: string, listId: string, itemId: string) => {
   await connectToDb();

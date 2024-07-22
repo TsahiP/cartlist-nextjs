@@ -27,7 +27,7 @@ const Cart = async ({
     searchParams.listId,
     session?.user?.id
   );
-
+  
   return (
     <div dir="rtl" className="  p-4">
       {/* <h2 className="text-center text-xl font-bold mb-4">Cart List</h2> */}
