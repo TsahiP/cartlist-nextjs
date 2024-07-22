@@ -6,14 +6,12 @@ import {getSharedCarts} from "@/lib/actions";
 import CreateCartDialog from "@/components/createCartDialog/createCartDialog";
 const Carts: React.FC = async () => {
   const session = await auth();
-  const sharedCarts = await getSharedCarts(session?.user?.email );
-  console.log("🚀 ~ constCarts:React.FC= ~ sharedCarts:", sharedCarts)
 
   // console.log(session?.user?.email);
   
   return (
     <div className="   p-4">
-      <MyCarts />
+      <MyCarts  />
       <div className="flex justify-center">
         {session?.user?.id ? (
           
@@ -21,6 +19,7 @@ const Carts: React.FC = async () => {
         ) : (
           <></>
         )}
+        
       </div>
     </div>
   );
