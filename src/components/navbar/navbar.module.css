@@ -3,6 +3,7 @@ height: 100px;
 display: flex;
 align-items: center;
 justify-content: space-between;
+background: linear-gradient(to left, rgb(240, 176, 58), #8a05f7,#ab5deb, white);
 }
 .logo{
     font-size: 30px;

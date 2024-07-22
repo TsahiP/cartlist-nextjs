@@ -39,7 +39,7 @@ const Cart = async ({
         <Button className="w-36" asChild >
           <Link  href="/carts"> <IoMdListBox  />&nbsp;&nbsp;&nbsp;חזור לרשימות</Link>
         </Button>
-        <ShareWithDialog/>
+        <ShareWithDialog userId={userId} listId={listId}/>
       </div>
     </div>
   );

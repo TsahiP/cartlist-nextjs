@@ -34,9 +34,9 @@ const CartList = (props: CartListProps) => {
       <TableCaption> </TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-right w-[30px]">מספור</TableHead>
-          <TableHead className="text-right ">מוצר</TableHead>
-          <TableHead className="text-right">מחיר</TableHead>
+          <TableHead className="text-right w-[30px]">מס</TableHead>
+          <TableHead className="text-right ">שם מוצר</TableHead>
+          {/* <TableHead className="text-right">מחיר</TableHead> */}
           <TableHead className="text-right">כמות</TableHead>
         </TableRow>
       </TableHeader>
@@ -49,7 +49,7 @@ const CartList = (props: CartListProps) => {
                   
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
-                <TableCell>₪{item.price}</TableCell>
+                {/* <TableCell>₪{item.price}</TableCell> */}
                 <TableCell>{item.amount}</TableCell>
 
                 <TableCell >

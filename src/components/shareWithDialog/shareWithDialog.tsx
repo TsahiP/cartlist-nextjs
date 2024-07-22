@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,16 +11,35 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { shareList } from "@/lib/actions";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { useEffect, useState } from "react";
 import { RiUserSharedFill } from "react-icons/ri";
 
+interface IShareData {
+  userId: string;
+  listId: string;
+}
 
-export function ShareWithDialog() {
+export function ShareWithDialog({ userId, listId }: IShareData) {
+  const [email, setEmail] = useState("");
+
+  const shareClick = async () =>{
+    console.log("userId: " + userId);
+    console.log("listId: " + listId);
+    const shareProcess = await shareList(userId, listId, email);
+    console.log("🚀 ~ shareClick ~ shareProcess:", shareProcess)
+    
+  }
+  
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button > <RiUserSharedFill />
-        &nbsp;&nbsp;&nbsp;
-        שתף רשימה</Button>
+        <Button>
+          {" "}
+          <RiUserSharedFill />
+          &nbsp;&nbsp;&nbsp; שתף רשימה
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <div dir="rtl">
@@ -40,14 +60,19 @@ export function ShareWithDialog() {
                 id="email"
                 defaultValue="example@example.com"
                 className="col-span-3"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">
+            <Button onClick={shareClick} type="submit">
               <RiUserSharedFill />
               &nbsp;&nbsp;&nbsp;שתף את הרשימה
             </Button>
+            <DialogClose>
+              <Button>סגור</Button>
+            </DialogClose>
           </DialogFooter>
         </div>
       </DialogContent>

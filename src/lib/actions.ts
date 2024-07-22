@@ -259,7 +259,7 @@ export const getSharedCarts = async (email: string | undefined | null) => {
 }
 
 // share a list with chosen email
-export const shareList = async (listId: string,userId:string, email: string) => {
+export const shareList = async (userId: string,listId:string, email: string) => {
   await connectToDb();
   try {
     const list = await List.findOne({ _id: listId , creatorId:  userId });

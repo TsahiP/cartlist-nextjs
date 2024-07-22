@@ -5,6 +5,7 @@ import "./links.module.css";
 import { useState } from "react";
 import { handleGithubSignOut } from "@/lib/actions";
 import { CgMenu } from "react-icons/cg";
+import { Button } from "@/components/ui/button";
 const Links = ({session}) => {
   const [open, setOpen] = useState(false);
   const links = [
@@ -39,31 +40,14 @@ const Links = ({session}) => {
           <>
             {session.user?.isAdmin && <NavLink item={{ title: "admin", path: "/admin" }} />}
             <form action={handleGithubSignOut} >
-              <button className={styles.logout}>Logout</button>
+              <Button >Logout</Button>
             </form>
           </>
         ) : (
           <NavLink item={{ title: "Login", path: "/login" }} />
         )}
       </div>
-      <div className={styles.menuButton}>
-        <CgMenu  onClick={() => setOpen((prev) => !prev)}/>
-        {/* <Image
-          alt="menu"
-          src="/menu.png"
-          width={30}
-          height={30}
-          onClick={() => setOpen((prev) => !prev)}
-        /> */}
-      </div>
 
-      {open && (
-        <div className={styles.mobileLinks}>
-          {links.map((link) => (
-            <NavLink key={link.title} item={link} />
-          ))}
-        </div>
-      )}
     </div>
   );
 };
