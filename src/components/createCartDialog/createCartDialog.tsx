@@ -20,16 +20,10 @@ interface AddItemDialogProps {
 }
 const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
   const [name, setName] = useState<string>("");
-  const [amount, setAmount] = useState<number | 1>(1);
-  const [price, setPrice] = useState<number | 1>(1);
-  // const [state, formAction] = useFormState(addItemToList, undefined);
-  // const session = await auth();
-  // const userId = session?.user?.id;
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
   const saveItem = (e:any) => {
-    
     e.preventDefault();
     const cartDetails = { title: name, creatorId: userId };
     createList(cartDetails);
@@ -38,7 +32,7 @@ const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
   return (
     <Dialog>
       <Button className="w-36" asChild>
-        <DialogTrigger>הוסף מוצר לרשימה</DialogTrigger>
+        <DialogTrigger>צור רשימה חדשה</DialogTrigger>
       </Button>
       <DialogContent className="bg-popover text-popover-foreground">
         <DialogHeader>
@@ -53,8 +47,6 @@ const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
           onSubmit={saveItem}
         >
           <div className="flex flex-col mb-4">
-            {" "}
-            {/* Add Tailwind margin-bottom class */}
             <label className=" ml-5" htmlFor="title">
               שם המוצר
             </label>
@@ -66,22 +58,9 @@ const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
               className="bg-input text-foreground rounded"
             />
           </div>
-          <div className="flex flex-col mb-4 ">
-            {/* Add Tailwind margin-bottom class */}
-            <label className="ml-5" htmlFor="quantity">
-              כמות
-            </label>
-            <Input
-              onChange={(e) => setAmount(e.target.valueAsNumber)}
-              name="amount"
-              type="number"
-              id="quantity"
-              className="bg-input text-foreground rounded "
-            />
-          </div>
-          <div className="flex flex-col mb-4">
-            {" "}
-            {/* Add Tailwind margin-bottom class */}
+
+          {/* <div className="flex flex-col mb-4">
+
             <label className="ml-5" htmlFor="price">
               מחיר
             </label>
@@ -92,7 +71,7 @@ const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
               id="price"
               className="bg-input text-foreground rounded"
             />
-          </div>
+          </div> */}
           <Button className="bg-primary text-primary-foreground m-4">
             הוסף מוצר
           </Button>

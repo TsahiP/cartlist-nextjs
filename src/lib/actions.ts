@@ -245,6 +245,36 @@ export const getCarts = async (userid: string | undefined) => {
   }
 }
 
+// Get Shared with me carts 
+export const getSharedCarts = async (email: string | undefined | null) => {
+
+  try {
+    connectToDb();
+    const lists = await List.find({ sharedWith: email });
+    return lists;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+// share a list with chosen email
+export const shareList = async (listId: string,userId:string, email: string) => {
+  await connectToDb();
+  try {
+    const list = await List.findOne({ _id: listId , creatorId:  userId });
+    if (!list) {
+      throw new Error("List not found");
+    }
+    list.sharedWith.push(email);
+    await list.save();
+    revalidatePath(`/lists/${listId}`);
+    return { status: "success" }
+  } catch (error) {
+    console.error("Error sharing list:", error);
+    throw error;
+  }
+}
 
 // Get list by list id and user id
 export const getListByIdAndUserId = async (listId: string, userId: string) => {

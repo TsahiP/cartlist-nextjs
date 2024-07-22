@@ -5,6 +5,8 @@ import { auth } from "@/lib/auth";
 import { getListByIdAndUserId } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ShareWithDialog } from "@/components/shareWithDialog/shareWithDialog";
+import { IoMdListBox } from "react-icons/io";
 const cartItems = [
   { id: 1, name: "Product 1", price: 100 },
   { id: 2, name: "Product 2", price: 200 },
@@ -35,8 +37,9 @@ const Cart = async ({
       <div className="flex items-center flex-col  justify-center gap-5 ">
         <AddItemDialog   userId={userId} listId={listId} />
         <Button className="w-36" asChild >
-          <Link  href="/carts">חזור לרשימות</Link>
+          <Link  href="/carts"> <IoMdListBox  />&nbsp;&nbsp;&nbsp;חזור לרשימות</Link>
         </Button>
+        <ShareWithDialog/>
       </div>
     </div>
   );

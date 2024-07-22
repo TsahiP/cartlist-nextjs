@@ -13,6 +13,7 @@ import { auth } from "@/lib/auth";
 import { Button } from "../ui/button";
 import { useFormState } from "react-dom";
 import { addItemToList } from "@/lib/actions";
+import { MdOutlineLibraryAdd } from "react-icons/md";
 import { Input } from "../ui/input";
 interface AddItemDialogProps {
   userId: string;
@@ -38,7 +39,7 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
   return (
     <Dialog>
       <Button className="w-36" asChild>
-        <DialogTrigger>הוסף מוצר לרשימה</DialogTrigger>
+        <DialogTrigger><MdOutlineLibraryAdd />&nbsp;&nbsp;הוסף מוצר</DialogTrigger>
       </Button>
       <DialogContent className="bg-popover text-popover-foreground">
         <DialogHeader>
