@@ -12,7 +12,7 @@ const Carts: React.FC = async () => {
   // console.log(session?.user?.email);
   
   return (
-    <div className=" shadow-md rounded-md p-4">
+    <div className="   p-4">
       <MyCarts />
       <div className="flex justify-center">
         {session?.user?.id ? (

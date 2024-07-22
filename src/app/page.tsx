@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 export default async function Home() {
   const session = await auth();
   return (
-    <div className="text-foreground bg-background flex flex-col justify-center text-center">
+    <div className="text-foreground bg-background  flex flex-col justify-center text-center">
       <div className="flex items-center flex-col justify-center">
         <h1 className="text-primary text-3xl md:text-4xl font-bold mb-6">
           List App

@@ -29,7 +29,7 @@ const Cart = async ({
   );
 
   return (
-    <div dir="rtl" className=" shadow-md rounded-md p-4">
+    <div dir="rtl" className="  p-4">
       {/* <h2 className="text-center text-xl font-bold mb-4">Cart List</h2> */}
       <Suspense fallback={<div>Loading...</div>}>
         <CartList session={session} data={data} />
