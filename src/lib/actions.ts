@@ -176,7 +176,9 @@ export const deleteList = async (userId: string | undefined, listId: string | un
   await connectToDb();
   try {
     const list = await List.findOneAndDelete({ _id: listId, creatorId: userId });
-    
+    if(!list) {
+      throw new Error("List not found");
+    }
 
     revalidatePath("/carts");
     return { status: "success" };
@@ -298,7 +300,7 @@ export const getListByIdAndUserId = async (listId: string, userId: string) => {
   try {
     const list = await List.findOne({ _id: listId, creatorId: userId });
     if (!list) {
-      throw new Error("List not found");
+      return({error: "List not found"});
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
 

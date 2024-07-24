@@ -6,6 +6,7 @@ import { useState } from "react";
 import { handleGithubSignOut } from "@/lib/actions";
 import { CgMenu } from "react-icons/cg";
 import { Button } from "@/components/ui/button";
+import { IoEnter } from "react-icons/io5";
 const Links = ({session}) => {
   const [open, setOpen] = useState(false);
   const links = [
@@ -40,7 +41,7 @@ const Links = ({session}) => {
           <>
             {session.user?.isAdmin && <NavLink item={{ title: "admin", path: "/admin" }} />}
             <form action={handleGithubSignOut} >
-              <Button >Logout</Button>
+              <Button >Logout <IoEnter /></Button>
             </form>
           </>
         ) : (
