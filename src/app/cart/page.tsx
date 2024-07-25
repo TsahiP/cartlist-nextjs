@@ -46,7 +46,7 @@ const Cart = async ({
     <div dir="rtl" className="  p-4">
       {/* <h2 className="text-center text-xl font-bold mb-4">Cart List</h2> */}
       <Suspense fallback={<div>Loading...</div>}>
-        <CartList session={session} data={data} />
+        <CartList shared={searchParams.shared} session={session} data={data} />
       </Suspense>
       <div className="flex items-center flex-col  justify-center gap-5 ">
         <AddItemDialog userId={userId} listId={listId} />

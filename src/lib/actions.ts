@@ -176,7 +176,7 @@ export const deleteList = async (userId: string | undefined, listId: string | un
   await connectToDb();
   try {
     const list = await List.findOneAndDelete({ _id: listId, creatorId: userId });
-    if(!list) {
+    if (!list) {
       throw new Error("List not found");
     }
 
@@ -186,14 +186,18 @@ export const deleteList = async (userId: string | undefined, listId: string | un
     console.error("Error deleting list:", error);
     throw error;
   }
-}; 
+};
 
 // פונקציה למחיקת פריט מרשימה
-export const deleteItemFromList = async (userId: string, listId: string, itemId: string) => {
+export const deleteItemFromList = async (userId: string, listId: string, itemId: string, email: string, shared: string) => {
   await connectToDb();
-
+  let list:any = [];
   try {
-    const list = await List.findOne({ _id: listId, creatorId: userId });
+    if (shared === "true") {
+       list = await List.findOne({ _id: listId, sharedWith: email });
+    } else {
+       list = await List.findOne({ _id: listId, creatorId: userId });
+    }
     if (!list) {
       throw new Error("List not found");
     }
@@ -222,7 +226,7 @@ interface CreateListFormData {
 }
 
 // פונקציה ליצירת רשימה חדשה
-export const createList = async ( formData: any) => {
+export const createList = async (formData: any) => {
   await connectToDb();
   const { title, creatorId } = formData;
   // console.log("formData:", formData);
@@ -276,10 +280,10 @@ export const getSharedCarts = async (email: string | undefined | null) => {
 }
 
 // share a list with chosen email
-export const shareList = async (userId: string,listId:string, email: string) => {
+export const shareList = async (userId: string, listId: string, email: string) => {
   await connectToDb();
   try {
-    const list = await List.findOne({ _id: listId , creatorId:  userId });
+    const list = await List.findOne({ _id: listId, creatorId: userId });
     if (!list) {
       throw new Error("List not found");
     }
@@ -300,7 +304,7 @@ export const getListByIdAndUserId = async (listId: string, userId: string) => {
   try {
     const list = await List.findOne({ _id: listId, creatorId: userId });
     if (!list) {
-      return({error: "List not found"});
+      return ({ error: "List not found" });
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
 
@@ -318,8 +322,8 @@ export const getListByEmailAndListId = async (email: string, listId: string) => 
   try {
     const list = await List.findOne({ _id: listId, sharedWith: email });
     if (!list) {
-      return({error: "List not found"});
-    } 
+      return ({ error: "List not found" });
+    }
     const listPlainObject = JSON.parse(JSON.stringify(list));
     return listPlainObject;
   } catch (error) {

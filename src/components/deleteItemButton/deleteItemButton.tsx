@@ -8,11 +8,13 @@ interface AddItemDialogProps {
   listId: string;
   userId: string;
   itemId: string;
+  userEmail: string;
+  shared?: string;
 }
 const DeleteItemButto = (props: AddItemDialogProps) => {
   const deleteItem = async () => {
     console.log("deleteItem");
-    deleteItemFromList(props.userId,props.listId,props.itemId);
+    deleteItemFromList(props.userId,props.listId,props.itemId,props.userEmail,props.shared);
   };
   return (
     <form action={deleteItem}>

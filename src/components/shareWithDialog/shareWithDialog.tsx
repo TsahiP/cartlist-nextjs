@@ -24,14 +24,14 @@ interface IShareData {
 export function ShareWithDialog({ userId, listId }: IShareData) {
   const [email, setEmail] = useState("");
 
-  const shareClick = async () =>{
+  const shareClick = async () => {
     console.log("userId: " + userId);
     console.log("listId: " + listId);
     const shareProcess = await shareList(userId, listId, email);
     console.log("🚀 ~ shareClick ~ shareProcess:", shareProcess)
-    
+
   }
-  
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -51,29 +51,33 @@ export function ShareWithDialog({ userId, listId }: IShareData) {
               </DialogDescription>
             </div>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 py-7">
             <div className="grid grid-cols-4 items-center gap-4">
               {/* <Label htmlFor="email" className="text-right">
                 אימייל
               </Label> */}
               <Input
                 id="email"
+                placeholder="example@example.com"
                 defaultValue="example@example.com"
-                className="col-span-3"
+                className=" col-span-4 text-center"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
-          <DialogFooter>
+          <div className="flex justify-center items-center">
+
             <Button onClick={shareClick} type="submit">
               <RiUserSharedFill />
               &nbsp;&nbsp;&nbsp;שתף את הרשימה
             </Button>
-            <DialogClose>
+          </div>
+          {/* <DialogClose>
               <Button>סגור</Button>
-            </DialogClose>
-          </DialogFooter>
+            </DialogClose> */}
+          {/* <DialogFooter >
+          </DialogFooter> */}
         </div>
       </DialogContent>
     </Dialog>
