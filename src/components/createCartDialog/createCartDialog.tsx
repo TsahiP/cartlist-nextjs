@@ -36,7 +36,7 @@ const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
       </Button>
       <DialogContent className="bg-popover text-popover-foreground">
         <DialogHeader>
-          <DialogTitle className="text-center">הוסף מוצר חדש</DialogTitle>
+          <DialogTitle className="text-center">יצירת רשימה חדשה</DialogTitle>
           <DialogDescription className="text-center">
             אנא מלא את הפרטים הבאים
           </DialogDescription>
@@ -48,7 +48,7 @@ const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
         >
           <div className="flex flex-col mb-4">
             <label className=" ml-5" htmlFor="title">
-              שם המוצר
+              שם הרשימה
             </label>
             <Input
               onChange={(e) => setName(e.target.value)}
