@@ -23,11 +23,12 @@ interface Data {
 interface CartListProps {
   data: Data;
   session: any;
+  shared?: boolean;
 }
 
 const CartList = (props: CartListProps) => {
   const userId = props.session.user.id;
-
+  
   return (
     // <div>asdad</div>
     <Table >

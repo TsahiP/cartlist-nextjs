@@ -310,3 +310,20 @@ export const getListByIdAndUserId = async (listId: string, userId: string) => {
     throw error;
   }
 };
+
+// get list by share email and list id
+export const getListByEmailAndListId = async (email: string, listId: string) => {
+  await connectToDb();
+
+  try {
+    const list = await List.findOne({ _id: listId, sharedWith: email });
+    if (!list) {
+      return({error: "List not found"});
+    } 
+    const listPlainObject = JSON.parse(JSON.stringify(list));
+    return listPlainObject;
+  } catch (error) {
+    console.error("Error getting list by email and list id:", error);
+    throw error;
+  }
+}
