@@ -135,9 +135,10 @@ export const addItemToList = async (listId: string, userId: string, formData: It
 // פונקציה לעריכת פריט ברשימה
 export const editItemInList = async (
   listId: string,
-
   userId: string,
-  formData: ItemFormData
+  formData: ItemFormData,
+  shared?: string,
+  userEmail?: string
 ) => {
   await connectToDb();
 
@@ -145,7 +146,13 @@ export const editItemInList = async (
     console.log("userId: " + userId);
     console.log("listId: " + listId);
 
-    const list = await List.findOne({ _id: listId, creatorId: userId });
+    let list = [];
+    if (shared === "true") {
+      list = await List.findOne({ _id: listId, sharedWith: userEmail });
+    } else {
+      list = await List.findOne({ _id: listId, creatorId: userId });
+
+    }
     if (!list) {
       throw new Error("List not found");
     }
@@ -191,12 +198,12 @@ export const deleteList = async (userId: string | undefined, listId: string | un
 // פונקציה למחיקת פריט מרשימה
 export const deleteItemFromList = async (userId: string, listId: string, itemId: string, email: string, shared: string) => {
   await connectToDb();
-  let list:any = [];
+  let list: any = [];
   try {
     if (shared === "true") {
-       list = await List.findOne({ _id: listId, sharedWith: email });
+      list = await List.findOne({ _id: listId, sharedWith: email });
     } else {
-       list = await List.findOne({ _id: listId, creatorId: userId });
+      list = await List.findOne({ _id: listId, creatorId: userId });
     }
     if (!list) {
       throw new Error("List not found");
@@ -229,10 +236,7 @@ interface CreateListFormData {
 export const createList = async (formData: any) => {
   await connectToDb();
   const { title, creatorId } = formData;
-  // console.log("formData:", formData);
-  // console.log("🚀 ~ createList ~ formData:", title);
-  // console.log("🚀 ~ createList ~ formData:", creatorId);
-  // Generate a unique ID for the item
+
 
 
 
@@ -283,17 +287,31 @@ export const getSharedCarts = async (email: string | undefined | null) => {
 export const shareList = async (userId: string, listId: string, email: string) => {
   await connectToDb();
   try {
+    console.log("here")
+    // check if this email Exist in Users table
+    const user = await User.findOne({ email: email });
+    console.log("🚀 ~ shareList ~ user", user);
+   
+    if (!user) {
+      return { status: "User not found" }
+    }
+    
     const list = await List.findOne({ _id: listId, creatorId: userId });
+
     if (!list) {
       throw new Error("List not found");
     }
-    list.sharedWith.push(email);
-    await list.save();
-    revalidatePath(`/lists/${listId}`);
-    return { status: "success" }
+    // check if email allready exist in sharedWith array
+    const flag = list.sharedWith.filter((e: any) => e.email !== email);
+    if (flag.length === 0) {
+      list.sharedWith.push({email:email, permission:"1",fullName:user.username});
+      await list.save();
+      revalidatePath(`/lists/${listId}`);
+      return { status: "success" }
+    }
+    return { status: "Exist" }
   } catch (error) {
-    console.error("Error sharing list:", error);
-    throw error;
+    return { status: "error" }
   }
 }
 

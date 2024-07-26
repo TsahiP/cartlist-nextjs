@@ -32,7 +32,6 @@ export const login = async (credentials: any) => {
             credentials.password,
             user.password
         );
-        // console.log("here", isPasswordCorrect);
         if (!isPasswordCorrect) throw new Error("Wrong credentials!");
 
         return user;

@@ -29,6 +29,7 @@ interface CartListProps {
 const CartList = (props: CartListProps) => {
   const userId = props.session.user.id;
   const userEmail = props.session.user.email;
+  const shared = props.shared;
   return (
     // <div>asdad</div>
     <Table >
@@ -63,6 +64,8 @@ const CartList = (props: CartListProps) => {
                       itemPrice={item.price}
                       itemName={item.name}
                       listId={props.data._id}
+                      shared={shared}
+                      userEmail={userEmail}
                     />
                     <DeleteItemButton
                       userId={userId}

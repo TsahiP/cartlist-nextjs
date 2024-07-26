@@ -20,6 +20,8 @@ interface AddItemDialogProps {
   listId: string;
   userId: string;
   itemId: string;
+  shared?: string;
+  userEmail?: string;
 }
 const EditItemDialog = ({
   itemAmount,
@@ -28,6 +30,8 @@ const EditItemDialog = ({
   listId,
   userId,
   itemId,
+  shared,
+  userEmail
 }: AddItemDialogProps) => {
   const [name, setName] = useState<string>(itemName + "");
   const [amount, setAmount] = useState<number | 1>(itemAmount);
@@ -43,7 +47,7 @@ const EditItemDialog = ({
     // console.log("🚀 ~ saveItem ~ item:", item);
     console.log(userId, listId);
 
-    await editItemInList(listId, userId, item).then((list:any)=>{
+    await editItemInList(listId, userId, item,shared,userEmail).then((list:any)=>{
         console.log(list);
         closeDialog();
     })
@@ -93,7 +97,7 @@ const EditItemDialog = ({
               id="quantity"
             />
           </div>
-          <div className="flex flex-col mb-4">
+          {/* <div className="flex flex-col mb-4">
             <label className="ml-5" htmlFor="price">מחיר</label>
             <Input
               className="bg-input text-foreground rounded"
@@ -103,7 +107,7 @@ const EditItemDialog = ({
               id="price"
               value={price}
             />
-          </div>
+          </div> */}
           <Button className="bg-primary text-primary-foreground m-4">עדכן מוצר</Button>
           <DialogClose id="closeDialog" asChild>
             <Button className="text-destructive-foreground">סגור</Button>

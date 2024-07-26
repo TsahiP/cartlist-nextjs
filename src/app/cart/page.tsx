@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ShareWithDialog } from "@/components/shareWithDialog/shareWithDialog";
 import { IoMdListBox } from "react-icons/io";
+import ShareCart from "@/components/cartList/shareCart/shareCart";
 
 
 const Cart = async ({
@@ -20,7 +21,6 @@ const Cart = async ({
   const session: any = await auth();
   const userId = session?.user?.id;
   const listId = searchParams.listId;
-  console.log("here" , searchParams);
   
   // loadmy own list
   let data:any = [];
@@ -35,11 +35,7 @@ const Cart = async ({
     data = await getListByEmailAndListId(
       session?.user?.email,
      searchParams.listId
-   )}else{
-    console.log("else2");
-    
-   }
-   console.log("jhvsjjhb",data);
+   )};
    
  
   return (
@@ -53,8 +49,9 @@ const Cart = async ({
         <Button className="w-36" asChild >
           <Link href="/carts"> <IoMdListBox />&nbsp;&nbsp;&nbsp;חזור לרשימות</Link>
         </Button>
-        <ShareWithDialog userId={userId} listId={listId} />
+        <ShareWithDialog userId={userId} listId={listId} data={data.sharedWith} />
       </div>
+
     </div>
   );
 };

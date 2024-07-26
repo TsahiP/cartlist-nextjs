@@ -59,6 +59,26 @@ const itemSchema = new mongoose.Schema(
     { timestamps: true }
   );
   
+// sharedWith schema
+const sharedWithSchema = new mongoose.Schema(
+    {
+      email: {
+        type: String,
+        required: true,
+      },
+      permission: {
+        type: String,
+        required: true,
+      },
+      fullName: {
+        type: String,
+        required: true,
+      }
+    },
+    { timestamps: true }
+  );
+
+
   const listSchema = new mongoose.Schema(
     {
       title: {
@@ -70,10 +90,7 @@ const itemSchema = new mongoose.Schema(
         required: true,
       },
       items: [itemSchema],
-      sharedWith: {
-        type: Array,
-        default: [],
-      },
+      sharedWith: [sharedWithSchema],
     },
     { timestamps: true }
   );

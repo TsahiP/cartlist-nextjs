@@ -33,7 +33,6 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
     e.preventDefault();
     const item = { name: name, amount: amount, price: price };
     addItemToList(listId, userId, item);
-    console.log("here :", userId, listId);
     closeDialog();
   };
   return (
@@ -80,10 +79,10 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
               className="bg-input text-foreground rounded "
             />
           </div>
-          <div className="flex flex-col mb-4">
+          {/* <div className="flex flex-col mb-4">
             {" "}
             {/* Add Tailwind margin-bottom class */}
-            <label className="ml-5" htmlFor="price">
+            {/* <label className="ml-5" htmlFor="price">
               מחיר
             </label>
             <Input
@@ -92,8 +91,8 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
               type="number"
               id="price"
               className="bg-input text-foreground rounded"
-            />
-          </div>
+            /> */}
+          {/* </div>  */}
           <Button className="bg-primary text-primary-foreground m-4">
             הוסף מוצר
           </Button>
