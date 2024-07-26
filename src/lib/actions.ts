@@ -196,7 +196,7 @@ export const deleteList = async (userId: string | undefined, listId: string | un
 };
 
 // פונקציה למחיקת פריט מרשימה
-export const deleteItemFromList = async (userId: string, listId: string, itemId: string, email: string, shared: string) => {
+export const deleteItemFromList = async (userId: string, listId: string, itemId: string, email: string, shared?: string) => {
   await connectToDb();
   let list: any = [];
   try {
