@@ -2,6 +2,20 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    firstName: {
+      type: String,
+      required: true,
+      max: 20,
+      min: 3,
+      
+    },
+    lastName: {
+      type: String,
+      required: true,
+      max: 25,
+      min: 3,
+      
+    },  
     username: {
       type: String,
       unique: true,
@@ -73,7 +87,14 @@ const sharedWithSchema = new mongoose.Schema(
       fullName: {
         type: String,
         required: true,
-      }
+      },lastName: {
+        type: String,
+        required: true,
+      },
+      firstName: {
+        type: String,
+        required: true,
+      },
     },
     { timestamps: true }
   );

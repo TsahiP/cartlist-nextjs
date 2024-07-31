@@ -1,5 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { FaShareAlt } from "react-icons/fa";
+
 import {
   Dialog,
   DialogContent,
@@ -37,23 +39,53 @@ import ShareCart from "../cartList/shareCart/shareCart";
 interface ISharedWithData {
   email: string;
   permission: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
 }
 
 
 interface shareDataProps {
   userId: string;
   listId: string;
-  data:ISharedWithData;
+  data: [ISharedWithData];
 }
 
-export function ShareWithDialog({ userId, listId,data }: shareDataProps) {
+interface IShareStatus {
+  error?: string;
+  success?: string;
+}
+
+export function ShareWithDialog({ userId, listId, data }: shareDataProps) {
+  console.log("🚀 ~ ShareWithDialog ~ data:", data)
   const [email, setEmail] = useState("");
-  console.log(data);
-  
+  const [shareStatus, setShareStatus] = useState<IShareStatus>({});
+  const closeDialog = () => {
+    document.getElementById("closeDialog")?.click();
+  };
   const shareClick = async () => {
     console.log("userId: " + userId);
     console.log("listId: " + listId);
     const shareProcess = await shareList(userId, listId, email);
+    console.log(shareProcess);
+
+    if (shareProcess?.error === "Exist") {
+      setShareStatus({ error: "שגיאה,יכול להיות כי כבר שותף עם משתמש זה" });
+
+    }
+    if (shareProcess?.error === "User not found") {
+      setShareStatus({ error: "שגיאה, משתמש לא נמצא" });
+    }
+    if (shareProcess?.error === "List not found") {
+      setShareStatus({ error: "שגיאה, רשימה לא נמצאה" });
+    }
+    if (shareProcess?.status === "success") {
+      setShareStatus({ success: "השיתוף בוצע בהצלחה" });
+      setTimeout(() => {
+        // Code to be executed after one second
+        closeDialog();
+      }, 1000);
+    }
     console.log("🚀 ~ shareClick ~ shareProcess:", shareProcess)
 
   }
@@ -68,6 +100,9 @@ export function ShareWithDialog({ userId, listId,data }: shareDataProps) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
+        <DialogTitle>
+          <FaShareAlt />
+        </DialogTitle>
         <div dir="rtl">
 
           <div className="grid gap-4 ">
@@ -102,7 +137,7 @@ export function ShareWithDialog({ userId, listId,data }: shareDataProps) {
           <CardHeader>
             <CardTitle>שיתוף רשימה</CardTitle>
             <CardDescription>
-            אנא הכנס את האימייל של המשתמש איתו תרצה לשתף
+              אנא הכנס את האימייל של המשתמש איתו תרצה לשתף
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -115,7 +150,7 @@ export function ShareWithDialog({ userId, listId,data }: shareDataProps) {
                 onChange={(e) => setEmail(e.target.value)} />
               <Button onClick={shareClick} type="submit">
                 <RiUserSharedFill />
-               שתף 
+                שתף
               </Button>
             </div>
             <Separator className="my-4" />
@@ -123,31 +158,35 @@ export function ShareWithDialog({ userId, listId,data }: shareDataProps) {
               <h4 className="text-sm font-medium">אנשים בעלי גישה</h4>
               {/* {data} */}
               <div className="grid gap-6">
-                <div className="flex items-center justify-between space-x-4">
-                  <div className="flex items-center space-x-4">
-                    <Avatar>
-                      <AvatarImage src="/avatars/03.png" />
-                      <AvatarFallback>OM</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium leading-none">
-                        Olivia Martin
-                      </p>
-                      <p className="text-sm text-muted-foreground">m@example.com</p>
-                    </div>
-                  </div>
-                  <Select defaultValue="edit">
-                    <SelectTrigger className="ml-auto w-[110px]">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="edit">Can edit</SelectItem>
-                      <SelectItem value="view">Can view</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                {data.map((user, index) =>
 
-                <div className="flex items-center justify-between space-x-4">
+                  <div key={user.email} className="flex items-center justify-between space-x-4">
+                    <div className="flex items-center space-x-4">
+                      <Avatar>
+                        <AvatarImage src="/avatars/03.png" />
+                        <AvatarFallback>{(user.fullName[0] + user.lastName[0]).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium leading-none">
+                          {user.firstName + " " + user.lastName}
+                        </p>
+                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                      </div>
+                    </div>
+                    <Select defaultValue="edit">
+                      <SelectTrigger className="ml-auto w-[110px]">
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="edit">עריכה</SelectItem>
+                        <SelectItem value="view">צפייה</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                )}
+
+                {/* <div className="flex items-center justify-between space-x-4">
                   <div className="flex items-center space-x-4">
                     <Avatar>
                       <AvatarImage src="/avatars/05.png" />
@@ -192,16 +231,23 @@ export function ShareWithDialog({ userId, listId,data }: shareDataProps) {
                       <SelectItem value="view">Can view</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
               </div>
             </div>
+            <h2 className="text-red-500 ">
+              {shareStatus?.error}
+            </h2>
+            <h2 className="text-green-500 ">
+              {shareStatus?.success}
+            </h2>
+
           </CardContent>
         </Card>
         <DialogClose id="closeDialog" asChild>
-            <Button className=" text-destructive-foreground">
-              סגור
-            </Button>
-          </DialogClose>
+          <Button className=" text-destructive-foreground">
+            סגור
+          </Button>
+        </DialogClose>
       </DialogContent>
     </Dialog>
   );

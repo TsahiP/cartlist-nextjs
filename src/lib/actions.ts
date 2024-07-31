@@ -33,17 +33,21 @@ interface UserFormData {
 export const handleGithubSignOut = async () => {
   "use server";
 
+
   await signOut();
+
 };
 export const register = async (previousState: any, formData: any) => {
   console.log(formData);
-  const { username, password, rePassword, img, email } =
-    Object.fromEntries(formData);
+  const { firstName,lastName,username, password, rePassword, img, email } =
+  Object.fromEntries(formData);
   // console.log(username, password, rePassword, img, email);
   if (password !== rePassword) {
     return { error: "password do not match" };
   }
-
+  
+  console.log("🚀 ~ register ~ lastName:", lastName)
+  console.log("🚀 ~ register ~ name:", firstName)
   try {
     connectToDb();
     // check if username exists
@@ -55,12 +59,16 @@ export const register = async (previousState: any, formData: any) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new User({
+      firstName,
+      lastName,
       username,
       email,
       password: hashedPassword,
     });
 
-    await newUser.save();
+    await newUser.save().catch((e: any) => {
+      console.log(e);
+    });
     console.log("saved to db");
 
     return { success: true };
@@ -293,23 +301,23 @@ export const shareList = async (userId: string, listId: string, email: string) =
     console.log("🚀 ~ shareList ~ user", user);
    
     if (!user) {
-      return { status: "User not found" }
+      return { error: "User not found" }
     }
     
     const list = await List.findOne({ _id: listId, creatorId: userId });
 
     if (!list) {
-      throw new Error("List not found");
+      return({error:"List not found"});
     }
     // check if email allready exist in sharedWith array
-    const flag = list.sharedWith.filter((e: any) => e.email !== email);
+    const flag = list.sharedWith.filter((e: any) => e.email === email);
     if (flag.length === 0) {
-      list.sharedWith.push({email:email, permission:"1",fullName:user.username});
+      list.sharedWith.push({email:email, permission:"1",firstName:user.firstName,lastName:user.lastName,fullName:user.firstName + " " + user.lastName});
       await list.save();
       revalidatePath(`/lists/${listId}`);
       return { status: "success" }
     }
-    return { status: "Exist" }
+    return { error: "Exist" }
   } catch (error) {
     return { status: "error" }
   }
