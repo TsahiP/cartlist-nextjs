@@ -283,8 +283,11 @@ export const getSharedCarts = async (email: string | undefined | null) => {
 
   try {
     connectToDb();
-    const lists = await List.find({ sharedWith: email });
-    return lists;
+    const lists = await List.find({
+      sharedWith: {
+        $elemMatch: { email: email }
+      }
+    });    return lists;
   } catch (error) {
     console.log(error);
     return [];
