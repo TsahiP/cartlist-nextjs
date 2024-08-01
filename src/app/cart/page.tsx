@@ -45,7 +45,7 @@ const Cart = async ({
         <CartList shared={searchParams.shared} session={session} data={data} />
       </Suspense>
       <div className="flex items-center flex-col  justify-center gap-5 ">
-        <AddItemDialog userId={userId} listId={listId} />
+        <AddItemDialog userId={searchParams.shared === "true" ?  data.creatorId : userId} listId={listId} />
         <Button className="w-36" asChild >
           <Link href="/carts"> <IoMdListBox />&nbsp;&nbsp;&nbsp;חזור לרשימות</Link>
         </Button>

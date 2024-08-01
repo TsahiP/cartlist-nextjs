@@ -112,7 +112,7 @@ export const addItemToList = async (listId: string, userId: string, formData: It
   console.log("🚀 ~ addItemToList ~ userId:", userId)
   console.log("🚀 ~ addItemToList ~ listId:", listId)
   await connectToDb();
-
+  
   try {
     const list = await List.findOne({ _id: listId, creatorId: userId });
     // console.log("🚀 ~ addItemToList ~ list:", list)
@@ -209,7 +209,9 @@ export const deleteItemFromList = async (userId: string, listId: string, itemId:
   let list: any = [];
   try {
     if (shared === "true") {
-      list = await List.findOne({ _id: listId, sharedWith: email });
+      list = await List.findOne({ _id: listId, sharedWith: {
+        $elemMatch:{email:email}
+      } });
     } else {
       list = await List.findOne({ _id: listId, creatorId: userId });
     }
@@ -294,6 +296,7 @@ export const getSharedCarts = async (email: string | undefined | null) => {
   }
 }
 
+
 // share a list with chosen email
 export const shareList = async (userId: string, listId: string, email: string) => {
   await connectToDb();
@@ -349,7 +352,7 @@ export const getListByEmailAndListId = async (email: string, listId: string) => 
   await connectToDb();
 
   try {
-    const list = await List.findOne({ _id: listId, sharedWith: email });
+    const list = await List.findOne({ _id: listId, sharedWith: { $elemMatch: {email: email }} });
     if (!list) {
       return ({ error: "List not found" });
     }
