@@ -11,6 +11,7 @@ import AddItemDialog from "../addItemDialog/addItemDialog";
 import { TbEdit } from "react-icons/tb";
 import EditItemDialog from "../editItemDialog/editItemDialog";
 import DeleteItemButton from "../deleteItemButton/deleteItemButton";
+import DeletePopup from "./popup/deletePopup";
 
 interface Data {
   _id: string;
@@ -55,7 +56,9 @@ const CartList = (props: CartListProps) => {
                 <TableCell>{item.amount}</TableCell>
 
                 <TableCell >
-                  <div className="flex flex-col justify-between gap-4 w-[45px]">
+
+                  <div className="flex flex-col justify-between  w-[68px]">
+                    {/* <DeletePopup/> */}
                     <EditItemDialog
 
                       itemId={item._id}

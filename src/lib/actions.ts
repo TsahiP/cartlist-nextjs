@@ -156,7 +156,7 @@ export const editItemInList = async (
 
     let list = [];
     if (shared === "true") {
-      list = await List.findOne({ _id: listId, sharedWith: userEmail });
+      list = await List.findOne({ _id: listId, sharedWith:{ $elemMatch:{email:userEmail  }  }});
     } else {
       list = await List.findOne({ _id: listId, creatorId: userId });
 
