@@ -296,6 +296,26 @@ export const getSharedCarts = async (email: string | undefined | null) => {
   }
 }
 
+// change permission of shared user
+export const changePermission = async (userId: string, listId: string, email: string, permission: string) => {
+  await connectToDb();
+  try {
+    const list = await List.findOne({ _id: listId, creatorId: userId });
+    if (!list) {
+      return { error: "List not found" };
+    }
+    const sharedUser = list.sharedWith.find((e: any) => e.email === email);
+    if (!sharedUser) {
+      return { error: "User not found" };
+    }
+    sharedUser.permission = permission;
+    await list.save();
+    revalidatePath(`/lists/${listId}`);
+    return { status: "success" }
+  } catch (error) {
+    return { status: "error" }
+  }
+}
 
 // share a list with chosen email
 export const shareList = async (userId: string, listId: string, email: string) => {

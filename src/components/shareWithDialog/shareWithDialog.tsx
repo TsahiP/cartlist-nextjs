@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { FaShareAlt } from "react-icons/fa";
-
+import './loader.css';
 import {
   Dialog,
   DialogContent,
@@ -30,7 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label";
-import { shareList } from "@/lib/actions";
+import { shareList , changePermission} from "@/lib/actions";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 import { RiUserSharedFill } from "react-icons/ri";
@@ -60,9 +60,33 @@ export function ShareWithDialog({ userId, listId, data }: shareDataProps) {
   console.log("🚀 ~ ShareWithDialog ~ data:", data)
   const [email, setEmail] = useState("");
   const [shareStatus, setShareStatus] = useState<IShareStatus>({});
+  const [loader, setLoader] = useState(false);
   const closeDialog = () => {
+    setShareStatus({});
     document.getElementById("closeDialog")?.click();
   };
+  // change permission
+  const changePermissionHandle = async ( email:string , permission:string) => {
+    setLoader(true);
+    const permissionLevel = permission === "edit" ? "1" : "2"; 
+    const changePermissionProcess = await changePermission(userId, listId, email, permissionLevel);
+    setLoader(false);
+    console.log(changePermissionProcess);
+
+
+    if (changePermissionProcess?.error) {
+      setShareStatus({ error: "שגיאה, משו השתבש אנא נסה מאוחר יותר." });
+    }
+    if (changePermissionProcess?.status === "success") {
+      setShareStatus({ success: "השינוי בוצע בהצלחה" });
+      setTimeout(() => {
+        // Code to be executed after one second
+        // closeDialog();
+      }, 1000);
+    }
+    console.log("🚀 ~ changePermission ~ changePermissionProcess:", changePermissionProcess)
+
+  }
   const shareClick = async () => {
     console.log("userId: " + userId);
     console.log("listId: " + listId);
@@ -173,15 +197,19 @@ export function ShareWithDialog({ userId, listId, data }: shareDataProps) {
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                       </div>
                     </div>
-                    <Select defaultValue="edit">
+                    <Select defaultValue="view" value={user.permission === "2" ? "view" : "edit"} onValueChange={e => changePermissionHandle(user.email,e)}>
                       <SelectTrigger className="ml-auto w-[110px]">
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="edit">עריכה</SelectItem>
+                      <SelectContent >
+                        <SelectItem value="edit">  עריכה</SelectItem>
                         <SelectItem value="view">צפייה</SelectItem>
                       </SelectContent>
+                      {loader && <div className="loader"></div>}
                     </Select>
+                    
+                      
+
                   </div>
 
                 )}

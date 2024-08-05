@@ -12,14 +12,20 @@ import { TbEdit } from "react-icons/tb";
 import EditItemDialog from "../editItemDialog/editItemDialog";
 import DeleteItemButton from "../deleteItemButton/deleteItemButton";
 import DeletePopup from "./popup/deletePopup";
-
+interface SharedWith {
+  email: string;
+  permission: string;
+  fullName: string;
+  lastName: string;
+  firstName: string;
+}
 interface Data {
   _id: string;
   title: string;
   amount: number;
   creatorId: string;
   items: Array<{}>;
-  sharedWith: string[]; // Assuming sharedWith is an array of user IDs or similar identifiers
+  sharedWith: Array<SharedWith>; // Assuming sharedWith is an array of user IDs or similar identifiers
 }
 interface CartListProps {
   data: Data;
@@ -28,9 +34,16 @@ interface CartListProps {
 }
 
 const CartList = (props: CartListProps) => {
+  console.log("data")
+  console.log(props.data);
+  console.log(props.session.user.email); 
+  
   const userId = props.session.user.id;
   const userEmail = props.session.user.email;
   const shared = props.shared;
+  const permissionLevel = props.data.sharedWith.filter(e=>e.email === props.session.user.email)[0].permission;
+  console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel)
+  
   return (
     // <div>asdad</div>
     <Table >
@@ -60,7 +73,7 @@ const CartList = (props: CartListProps) => {
                   <div className="flex flex-col justify-between  w-[68px]">
                     {/* <DeletePopup/> */}
                     <EditItemDialog
-
+                      permissionLevel={permissionLevel}
                       itemId={item._id}
                       userId={userId}
                       itemAmount={item.amount}
@@ -76,6 +89,7 @@ const CartList = (props: CartListProps) => {
                       itemId={item._id}
                       userEmail={userEmail}
                       shared={props.shared}
+                      permissionLevel={permissionLevel}
                     />
                   </div>
                 </TableCell>

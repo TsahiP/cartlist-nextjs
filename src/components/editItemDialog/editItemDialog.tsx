@@ -22,6 +22,7 @@ interface AddItemDialogProps {
   itemId: string;
   shared?: string;
   userEmail?: string;
+  permissionLevel:string;
 }
 const EditItemDialog = ({
   itemAmount,
@@ -31,7 +32,8 @@ const EditItemDialog = ({
   userId,
   itemId,
   shared,
-  userEmail
+  userEmail,
+  permissionLevel
 }: AddItemDialogProps) => {
   const [name, setName] = useState<string>(itemName + "");
   const [amount, setAmount] = useState<number | 1>(itemAmount);
@@ -58,7 +60,7 @@ const EditItemDialog = ({
   };
   return (
         <Dialog>
-      <Button asChild>
+      <Button asChild disabled={permissionLevel !=="1"}>
         <DialogTrigger>
           <TbEdit />
         </DialogTrigger>

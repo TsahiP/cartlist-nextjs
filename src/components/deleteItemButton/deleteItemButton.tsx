@@ -13,6 +13,7 @@ interface AddItemDialogProps {
   itemId: string;
   userEmail: string;
   shared?: string;
+  permissionLevel:string;
 }
 const DeleteItemButto = (props: AddItemDialogProps) => {
   const [showWindow, setShowWindow] = useState(false);
@@ -33,7 +34,7 @@ const DeleteItemButto = (props: AddItemDialogProps) => {
       {/* <Button>
         <TbTrashXFilled />
       </Button> */}
-      <Button onClick={toggleWindow}><TbTrashXFilled/></Button>
+      <Button disabled={props.permissionLevel !== "1"} onClick={toggleWindow}><TbTrashXFilled/></Button>
       {showWindow && (
         <div className="popup">
           <button onClick={deleteItem} className="popup-button agree"><AiOutlineCheckCircle className='icon-button'/></button>
