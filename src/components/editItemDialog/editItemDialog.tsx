@@ -22,7 +22,7 @@ interface AddItemDialogProps {
   itemId: string;
   shared?: string;
   userEmail?: string;
-  permissionLevel:string;
+  permissionLevel?:string;
 }
 const EditItemDialog = ({
   itemAmount,
@@ -60,7 +60,7 @@ const EditItemDialog = ({
   };
   return (
         <Dialog>
-      <Button asChild disabled={permissionLevel !=="1"}>
+      <Button asChild disabled={shared !=="false"  || (shared !=="false" && permissionLevel !=="1")}>
         <DialogTrigger>
           <TbEdit />
         </DialogTrigger>

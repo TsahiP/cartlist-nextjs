@@ -41,7 +41,8 @@ const CartList = (props: CartListProps) => {
   const userId = props.session.user.id;
   const userEmail = props.session.user.email;
   const shared = props.shared;
-  const permissionLevel = props.data.sharedWith.filter(e=>e.email === props.session.user.email)[0].permission;
+  const permissionLevel = props.data.sharedWith.filter(e=>e.email === props.session.user.email);
+
   console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel)
   
   return (
@@ -73,7 +74,7 @@ const CartList = (props: CartListProps) => {
                   <div className="flex flex-col justify-between  w-[68px]">
                     {/* <DeletePopup/> */}
                     <EditItemDialog
-                      permissionLevel={permissionLevel}
+                      permissionLevel={permissionLevel[0]?.permission}
                       itemId={item._id}
                       userId={userId}
                       itemAmount={item.amount}
@@ -89,7 +90,7 @@ const CartList = (props: CartListProps) => {
                       itemId={item._id}
                       userEmail={userEmail}
                       shared={props.shared}
-                      permissionLevel={permissionLevel}
+                      permissionLevel={permissionLevel[0]?.permission}
                     />
                   </div>
                 </TableCell>
