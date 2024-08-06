@@ -84,7 +84,9 @@ interface CustomError extends Error {
 }
 export const login = async (prevState: any, formData: any) => {
   const { username, password } = Object.fromEntries(formData);
-
+  const user : string = username.toString().toLowerCase(); 
+  console.log(user);
+  
   try {
     await signIn("credentials", { username, password });
   } catch (err: any) {

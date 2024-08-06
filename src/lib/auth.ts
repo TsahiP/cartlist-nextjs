@@ -22,8 +22,8 @@ export const login = async (credentials: any) => {
         connectToDb();
         
         console.log("credentials", credentials);
-        
-        const user = await User.findOne({ username: credentials.username });
+        // check user id (change it to lowercase) and password
+        const user = await User.findOne({ username: credentials.username.toString().toLowerCase() });
         if (!user) throw new Error("Wrong credentials!");
         // console.log("login func====================================");
         // console.log("user data", user);
