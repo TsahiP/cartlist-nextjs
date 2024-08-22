@@ -8,9 +8,9 @@ export default async function Home() {
   return (
     <div className="text-foreground bg-background  flex flex-col justify-center text-center">
       <div className="flex items-center flex-col justify-center">
-        <h1 className="text-primary text-3xl md:text-4xl font-bold mb-6">
-          List App
-        </h1>
+        {/* <h1 className="text-primary text-3xl md:text-4xl font-bold mb-6">
+          
+        </h1> */}
         <Image src="/logo.svg" alt="" width={200} height={200} />
       </div>
       {!session ? 
@@ -29,11 +29,13 @@ export default async function Home() {
           </div>
         </div>
       : 
-        <div className="flex justify-center">
-          <Button asChild className="bg-accent text-accent-foreground">
-            <Link href="/carts">To Lists</Link>
+        <div className="flex justify-center items-center flex-col ">
+          <Button asChild className="bg-accent text-accent-foreground w-20">
+            <Link href="/carts">לרשימות</Link>
           </Button>
+
         </div>
+        
       }
     </div>
   );
