@@ -208,7 +208,7 @@ export const editItemInList = async (
 export const deleteList = async (
   userId: string | undefined,
   listId: string | undefined,
-  userEmail: string | undefined
+  userEmail: string | undefined |null
 ) => {
   await connectToDb();
   let user: any;

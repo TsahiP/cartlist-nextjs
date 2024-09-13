@@ -4,7 +4,7 @@ import { FaTrashArrowUp } from "react-icons/fa6";
 interface Props {
     userId: string | undefined;
     listId: string | undefined;
-    userEmail: string | undefined;
+    userEmail: string | undefined | null;
 }
 const DeleteListBtn = (props:Props) => {
 
