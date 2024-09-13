@@ -4,9 +4,33 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { useFormState } from "react-dom";
 import Image from "next/image";
-
+import { FcGoogle } from "react-icons/fc";
+import './loginForm.css';
+import { useEffect, useRef } from "react";
 const LoginForm = () => {
   const [state, formAction] = useFormState(login, undefined);
+
+  const textRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const handleAnimationEnd = () => {
+      if (textRef.current) {
+        textRef.current.classList.add('finished');
+      }
+    };
+
+    const textElement = textRef.current;
+    if (textElement) {
+      textElement.addEventListener('animationend', handleAnimationEnd);
+    }
+
+    return () => {
+      if (textElement) {
+        textElement.removeEventListener('animationend', handleAnimationEnd);
+      }
+    };
+  }, []);
+
   return (
     <div className="font-roboto flex-1 flex items-center justify-center mt-1/2 ">
       {/* center form */}
@@ -43,8 +67,14 @@ const LoginForm = () => {
             {state?.msg?.toString()}
             <Button className="font-semibold w-[200px] ">Submit</Button>
           </form>
-          <button onClick={() => handleGoogleLogin()}>Login with Google </button>
+          <div className=" flex items-center justify-center mt-4 ">
+            <Button className="bg-black hover:bg-appBlue gap-2 w-[200px] " onClick={() => handleGoogleLogin()}>
+
+              <FcGoogle  className=""/>
+              <span ref={textRef} className="typing-animation">Login with Google</span>
+            </Button>
           </div>
+        </div>
       </div>
     </div>
   );
