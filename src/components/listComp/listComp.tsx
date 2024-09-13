@@ -35,7 +35,7 @@ const ListComp = async (props: Props) => {
         </Link>
         {!props.sharedFlag &&
           <div className="cursor-pointer flex justify-center items-center text-white bg-destructive rounded-full w-8 h-8">
-            <DeleteListBtn userEmail={userEmail}  userId={userId} listId={props.list._id} />
+            <DeleteListBtn userEmail={userEmail ?? undefined}  userId={userId} listId={props.list._id} />
           </div>
         }
       </div>
