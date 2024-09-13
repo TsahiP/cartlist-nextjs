@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+import Google from "next-auth/providers/google";
 import { connectToDb } from "./utils";
 import { User } from "./models";
 import bcrypt from "bcryptjs";
@@ -25,8 +25,7 @@ export const login = async (credentials: any) => {
         // check user id (change it to lowercase) and password
         const user = await User.findOne({ username: credentials.username.toString().toLowerCase() });
         if (!user) throw new Error("Wrong credentials!");
-        // console.log("login func====================================");
-        // console.log("user data", user);
+
 
         const isPasswordCorrect = await bcrypt.compare(
             credentials.password,
@@ -51,6 +50,10 @@ export const {
 } = NextAuth({
     ...authConfig,
     providers: [
+        Google({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+          }),
         CredentialsProvider({
             async authorize(credentials) {
                 try {
@@ -72,23 +75,23 @@ export const {
             //   console.log("profile: ");
             //   console.log(profile);
 
-            // if (account.provider === "github") {
-            //     connectToDb();
-            //     try {
-            //         const user = await User.findOne({ email: profile.email });
-            //         if (!user) {
-            //             const newUser = new User({
-            //                 username: profile.login,
-            //                 email: profile.email,
-            //                 img: profile.avatar_url,
-            //             });
-            //             await newUser.save();
-            //         }
-            //     } catch (e) {
-            //         // console.log(e);
-            //         return false;
-            //     }
-            // }
+            if (account?.provider === "google") {
+                connectToDb();
+                try {
+                    const user = await User.findOne({ email: profile?.email });
+                    if (!user) {
+                        const newUser = new User({
+                            username: profile?.login,
+                            email: profile?.email,
+                            img: profile?.avatar_url,
+                        });
+                        await newUser.save();
+                    }
+                } catch (e) {
+                    // console.log(e);
+                    return false;
+                }
+            }
             return true;
         },
         ...authConfig.callbacks,

@@ -18,21 +18,7 @@ interface Props {
 }
 const ListComp = async (props: Props) => {
   console.log("🚀 ~ ListComp ~ props:", props)
-  // 🚀 ~ ListComp ~ props: {
-  //   index: 0,
-  //   list: {
-  //     _id: new ObjectId('669d36334458a08b42b55b4c'),
-  //     title: 'בדיקה',
-  //     creatorId: '669d2d114458a08b42b55b0d',
-  //     items: [ [Object] ],
-  //     sharedWith: [ 'etik@pahima.com', 'test@gmail.com' ],
-  //     createdAt: 2024-07-21T16:24:19.204Z,
-  //     updatedAt: 2024-07-22T19:58:24.425Z,
-  //     __v: 3
-  //   },
-  //   sharedFlag: true
-  // }
-  // const router = useRouter();
+
   const session = await auth();
   // console.log("🚀 ~ MyCarts ~ session:", session?.user?.id);
   const userId = session?.user?.id;
@@ -47,8 +33,8 @@ const ListComp = async (props: Props) => {
           <h2 className="text-lg font-semibold mb-2">{props.list.title}</h2>
         </Link>
         {!props.sharedFlag &&
-          <div>
-            <DeleteListBtn userId={userId} listId={props.list._id} />
+          <div className="cursor-pointer flex justify-center items-center text-white bg-destructive rounded-full w-8 h-8">
+            <DeleteListBtn  userId={userId} listId={props.list._id} />
           </div>
         }
       </div>

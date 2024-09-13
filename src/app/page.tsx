@@ -16,21 +16,21 @@ export default async function Home() {
       {!session ? 
         <div className="flex gap-20 justify-center">
           <div>
-            <Button asChild className="bg-accent text-card-foreground ">
-              <Link href="/login" className="">
+            <Button asChild className="bg-primary  text-card-foreground shadow-md">
+              <Link href="/login" className="text-white">
                 Login
               </Link>
             </Button>
           </div>
           <div>
-            <Button asChild className="bg-accent text-accent-foreground">
+            <Button asChild className="bg-accent text-accent-foreground shadow-md">
               <Link href="/register">Register</Link>
             </Button>
           </div>
         </div>
       : 
         <div className="flex justify-center items-center flex-col ">
-          <Button asChild className="bg-accent text-accent-foreground w-20">
+          <Button asChild className="bg-accent text-accent-foreground w-20 shadow-md">
             <Link href="/carts">לרשימות</Link>
           </Button>
 

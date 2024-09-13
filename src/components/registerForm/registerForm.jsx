@@ -16,7 +16,7 @@ const RegisterForm = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Register Form</h1>
-      <form action={formAction} className="flex flex-col items-center space-y-4 shadow-md p-4 rounded">
+      <form action={formAction} className="flex flex-col items-center space-y-4 shadow-md p-4 rounded-md">
 
         <input type="text" placeholder="Name" name="firstName" className="border border-gray-300 rounded-md px-4 py-2" />
         <input type="text" placeholder="Last Name" name="lastName" className="border border-gray-300 rounded-md px-4 py-2" />

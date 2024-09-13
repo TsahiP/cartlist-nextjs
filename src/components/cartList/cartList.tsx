@@ -33,17 +33,13 @@ interface CartListProps {
   shared?: string;
 }
 
-const CartList = (props: CartListProps) => {
-  console.log("data")
-  console.log(props.data);
-  console.log(props.session.user.email); 
-  
+const CartList = (props: CartListProps) => {  
   const userId = props.session.user.id;
   const userEmail = props.session.user.email;
   const shared = props.shared;
   const permissionLevel = props.data.sharedWith.filter(e=>e.email === props.session.user.email);
 
-  console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel)
+  // console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel)
   
   return (
     // <div>asdad</div>
@@ -69,10 +65,9 @@ const CartList = (props: CartListProps) => {
                 {/* <TableCell>₪{item.price}</TableCell> */}
                 <TableCell>{item.amount}</TableCell>
 
-                <TableCell >
+                <TableCell  >
 
-                  <div className="flex flex-col justify-between  w-[68px]">
-                    {/* <DeletePopup/> */}
+                  <div className=" flex flex-col gap-4  md:flex-row  ">
                     <EditItemDialog
                       permissionLevel={permissionLevel[0]?.permission}
                       itemId={item._id}

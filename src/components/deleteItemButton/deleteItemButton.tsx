@@ -30,11 +30,11 @@ const DeleteItemButto = (props: AddItemDialogProps) => {
 
 
   return (
-    <div>
+    <div >
       {/* <Button>
         <TbTrashXFilled />
       </Button> */}
-      <Button disabled={props.shared !=="false"  || (props.shared !=="false" && props.permissionLevel !=="1")} onClick={toggleWindow}><TbTrashXFilled/></Button>
+      <Button className="w-12 h-12"  disabled={props.shared !=="false"  || (props.shared !=="false" && props.permissionLevel !=="1")} onClick={toggleWindow}><TbTrashXFilled/></Button>
       {showWindow && (
         <div className="popup">
           <button onClick={deleteItem} className="popup-button agree"><AiOutlineCheckCircle className='icon-button'/></button>

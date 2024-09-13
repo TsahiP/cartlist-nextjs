@@ -37,6 +37,18 @@ export const handleGithubSignOut = async () => {
   await signOut();
 
 };
+
+export const handleGoogleLogin = async () => {
+  "use server";
+
+  await signIn("google");
+};
+
+export const handleGoogleSignOut = async () => {
+  "use server";
+
+  await signOut();
+};
 export const register = async (previousState: any, formData: any) => {
   console.log(formData);
   const { firstName,lastName,username, password, rePassword, img, email } =
@@ -46,8 +58,8 @@ export const register = async (previousState: any, formData: any) => {
     return { error: "password do not match" };
   }
   
-  console.log("🚀 ~ register ~ lastName:", lastName)
-  console.log("🚀 ~ register ~ name:", firstName)
+  // console.log("🚀 ~ register ~ lastName:", lastName)
+  // console.log("🚀 ~ register ~ name:", firstName)
   try {
     connectToDb();
     // check if username exists

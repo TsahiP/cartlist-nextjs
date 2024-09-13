@@ -22,7 +22,7 @@ interface AddItemDialogProps {
   itemId: string;
   shared?: string;
   userEmail?: string;
-  permissionLevel?:string;
+  permissionLevel?: string;
 }
 const EditItemDialog = ({
   itemAmount,
@@ -33,7 +33,7 @@ const EditItemDialog = ({
   itemId,
   shared,
   userEmail,
-  permissionLevel
+  permissionLevel,
 }: AddItemDialogProps) => {
   const [name, setName] = useState<string>(itemName + "");
   const [amount, setAmount] = useState<number | 1>(itemAmount);
@@ -42,28 +42,36 @@ const EditItemDialog = ({
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
-  
-  const saveItem = async (e:any) => {
+
+  const saveItem = async (e: any) => {
     e.preventDefault();
     const item = { name: name, amount: amount, price: price, _id: itemId };
     // console.log("🚀 ~ saveItem ~ item:", item);
     console.log(userId, listId);
 
-    await editItemInList(listId, userId, item,shared,userEmail).then((list:any)=>{
+    await editItemInList(listId, userId, item, shared, userEmail)
+      .then((list: any) => {
         console.log(list);
         closeDialog();
-    })
-    .catch((err:any) => {
-      console.log(err);
-      setErrorFlag(true);
-    });
+      })
+      .catch((err: any) => {
+        console.log(err);
+        setErrorFlag(true);
+      });
   };
   return (
-        <Dialog>
-      <Button asChild disabled={shared !=="false"  || (shared !=="false" && permissionLevel !=="1")}>
-        <DialogTrigger>
-          <TbEdit />
-        </DialogTrigger>
+    <Dialog>
+      <Button
+        asChild
+        disabled={
+          shared !== "false" || (shared !== "false" && permissionLevel !== "1")
+        }
+      >
+        <div className=" w-12 h-12 mr-3 mt-2.5">
+          <DialogTrigger>
+            <TbEdit />
+          </DialogTrigger>
+        </div>
       </Button>
       <DialogContent>
         <DialogHeader>
@@ -78,7 +86,9 @@ const EditItemDialog = ({
           onSubmit={saveItem}
         >
           <div className="flex flex-col mb-4">
-            <label className="ml-5" htmlFor="title">שם המוצר</label>
+            <label className="ml-5" htmlFor="title">
+              שם המוצר
+            </label>
             <Input
               className="bg-input text-foreground rounded"
               value={name}
@@ -89,7 +99,9 @@ const EditItemDialog = ({
             />
           </div>
           <div className="flex flex-col mb-4">
-            <label className="ml-5" htmlFor="quantity">כמות</label>
+            <label className="ml-5" htmlFor="quantity">
+              כמות
+            </label>
             <Input
               className="bg-input text-foreground rounded"
               value={amount}
@@ -99,18 +111,10 @@ const EditItemDialog = ({
               id="quantity"
             />
           </div>
-          {/* <div className="flex flex-col mb-4">
-            <label className="ml-5" htmlFor="price">מחיר</label>
-            <Input
-              className="bg-input text-foreground rounded"
-              onChange={(e) => setPrice(e.target.valueAsNumber)}
-              name="price"
-              type="number"
-              id="price"
-              value={price}
-            />
-          </div> */}
-          <Button className="bg-primary text-primary-foreground m-4">עדכן מוצר</Button>
+
+          <Button className="bg-primary text-primary-foreground m-4">
+            עדכן מוצר
+          </Button>
           <DialogClose id="closeDialog" asChild>
             <Button className="text-destructive-foreground">סגור</Button>
           </DialogClose>

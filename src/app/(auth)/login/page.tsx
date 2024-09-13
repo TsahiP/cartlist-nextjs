@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Login = () => {
   return (
-    <div className="border border-solid border-gray-300  flex flex-col items-center justify-center min-h-screen">
+    <div className="mt-[10%]">
       <LoginForm/>
     </div>
   );
