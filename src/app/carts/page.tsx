@@ -7,15 +7,13 @@ import CreateCartDialog from "@/components/createCartDialog/createCartDialog";
 const Carts: React.FC = async () => {
   const session = await auth();
 
-  // console.log(session?.user?.email);
-  
   return (
     <div className="   p-4">
       <MyCarts  />
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        {session?.user?.id ? (
+        {session?.user?.id || session?.user?.email ? (
           
-          <CreateCartDialog userId={session?.user?.id} />
+          <CreateCartDialog userId={session.user?.id} userEmail={session.user?.email} />
         ) : (
           <></>
         )}

@@ -20,8 +20,9 @@ const ListComp = async (props: Props) => {
   console.log("🚀 ~ ListComp ~ props:", props)
 
   const session = await auth();
-  // console.log("🚀 ~ MyCarts ~ session:", session?.user?.id);
   const userId = session?.user?.id;
+  const userEmail = session?.user?.email;
+  // console.log("🚀 ~ MyCarts ~ session:", session?.user?.id);
   const listIdPlainObject = JSON.parse(JSON.stringify(props.list._id));
     
   return (
@@ -34,7 +35,7 @@ const ListComp = async (props: Props) => {
         </Link>
         {!props.sharedFlag &&
           <div className="cursor-pointer flex justify-center items-center text-white bg-destructive rounded-full w-8 h-8">
-            <DeleteListBtn  userId={userId} listId={props.list._id} />
+            <DeleteListBtn userEmail={userEmail}  userId={userId} listId={props.list._id} />
           </div>
         }
       </div>

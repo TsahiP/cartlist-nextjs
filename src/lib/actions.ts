@@ -16,7 +16,6 @@ interface ItemFormData {
   _id?: string;
 }
 
-
 //========================= user actions =================
 interface UserFormData {
   username: string;
@@ -33,9 +32,7 @@ interface UserFormData {
 export const handleGithubSignOut = async () => {
   "use server";
 
-
   await signOut();
-
 };
 
 export const handleGoogleLogin = async () => {
@@ -51,13 +48,13 @@ export const handleGoogleSignOut = async () => {
 };
 export const register = async (previousState: any, formData: any) => {
   console.log(formData);
-  const { firstName,lastName,username, password, rePassword, img, email } =
-  Object.fromEntries(formData);
+  const { firstName, lastName, username, password, rePassword, img, email } =
+    Object.fromEntries(formData);
   // console.log(username, password, rePassword, img, email);
   if (password !== rePassword) {
     return { error: "password do not match" };
   }
-  
+
   // console.log("🚀 ~ register ~ lastName:", lastName)
   // console.log("🚀 ~ register ~ name:", firstName)
   try {
@@ -96,9 +93,9 @@ interface CustomError extends Error {
 }
 export const login = async (prevState: any, formData: any) => {
   const { username, password } = Object.fromEntries(formData);
-  const user : string = username.toString().toLowerCase(); 
+  const user: string = username.toString().toLowerCase();
   console.log(user);
-  
+
   try {
     await signIn("credentials", { username, password });
   } catch (err: any) {
@@ -113,27 +110,32 @@ export const login = async (prevState: any, formData: any) => {
           throw err;
         default:
           console.log("cred wrong3");
-          return { msg: "Something went wrong Invalid credentials", status: "error" };
+          return {
+            msg: "Something went wrong Invalid credentials",
+            status: "error",
+          };
       }
     }
     throw err;
   }
 };
 
-
 // פונקציה להוספת פריט לרשימה
-export const addItemToList = async (listId: string, userId: string, formData: ItemFormData) => {
-  console.log("🚀 ~ addItemToList ~ userId:", userId)
-  console.log("🚀 ~ addItemToList ~ listId:", listId)
+export const addItemToList = async (
+  listId: string,
+  userId: string,
+  formData: ItemFormData
+) => {
+  console.log("🚀 ~ addItemToList ~ userId:", userId);
+  console.log("🚀 ~ addItemToList ~ listId:", listId);
   await connectToDb();
-  
+
   try {
     const list = await List.findOne({ _id: listId, creatorId: userId });
     // console.log("🚀 ~ addItemToList ~ list:", list)
     if (!list) {
       return { error: "List not found" };
     }
-
 
     const newItem = {
       name: formData.name,
@@ -170,10 +172,12 @@ export const editItemInList = async (
 
     let list = [];
     if (shared === "true") {
-      list = await List.findOne({ _id: listId, sharedWith:{ $elemMatch:{email:userEmail  }  }});
+      list = await List.findOne({
+        _id: listId,
+        sharedWith: { $elemMatch: { email: userEmail } },
+      });
     } else {
       list = await List.findOne({ _id: listId, creatorId: userId });
-
     }
     if (!list) {
       throw new Error("List not found");
@@ -196,15 +200,26 @@ export const editItemInList = async (
     const listPlainObject = JSON.parse(JSON.stringify(list));
     return listPlainObject;
   } catch (error) {
-    return ({ error: error });
+    return { error: error };
   }
 };
 
 //delete a list by id
-export const deleteList = async (userId: string | undefined, listId: string | undefined) => {
+export const deleteList = async (
+  userId: string | undefined,
+  listId: string | undefined,
+  userEmail: string | undefined
+) => {
   await connectToDb();
+  let user: any;
+  if(!userId){
+    user = await User.findOne({ email: userEmail });
+  }
   try {
-    const list = await List.findOneAndDelete({ _id: listId, creatorId: userId });
+    const list = await List.findOneAndDelete({
+      _id: listId,
+      creatorId: userId ?? user._id,
+    });
     if (!list) {
       throw new Error("List not found");
     }
@@ -218,14 +233,23 @@ export const deleteList = async (userId: string | undefined, listId: string | un
 };
 
 // פונקציה למחיקת פריט מרשימה
-export const deleteItemFromList = async (userId: string, listId: string, itemId: string, email: string, shared?: string) => {
+export const deleteItemFromList = async (
+  userId: string,
+  listId: string,
+  itemId: string,
+  email: string,
+  shared?: string
+) => {
   await connectToDb();
   let list: any = [];
   try {
     if (shared === "true") {
-      list = await List.findOne({ _id: listId, sharedWith: {
-        $elemMatch:{email:email}
-      } });
+      list = await List.findOne({
+        _id: listId,
+        sharedWith: {
+          $elemMatch: { email: email },
+        },
+      });
     } else {
       list = await List.findOne({ _id: listId, creatorId: userId });
     }
@@ -259,16 +283,19 @@ interface CreateListFormData {
 // פונקציה ליצירת רשימה חדשה
 export const createList = async (formData: any) => {
   await connectToDb();
-  const { title, creatorId } = formData;
-
-
-
-
+  const { title, creatorId, creatorEmail } = formData;
+  let user: any;
+  if (!creatorId) {
+     user = await User.findOne({ email: creatorEmail });
+  } else {
+     user = await User.findOne({ _id: creatorEmail });
+  }
+  console.log("🚀 ~ createList ~ user", user);
+  
   try {
     const newList = new List({
-
       title: title,
-      creatorId: creatorId,
+      creatorId: user._id,
       items: [],
       sharedWith: [],
     });
@@ -276,42 +303,53 @@ export const createList = async (formData: any) => {
     await newList.save();
 
     revalidatePath("/carts"); // Or the path where you display the lists
-    return ({ status: "success" })
+    return { status: "success" };
   } catch (error) {
     console.error("Error creating list:", error);
     throw error;
   }
 };
-export const getCarts = async (userid: string | undefined) => {
-  if (userid === undefined) return [];
+export const getCarts = async (userid?: string,userEmail?: string ) => {
+  if (userid === undefined && userEmail === undefined) return [];
   try {
     connectToDb();
+    let user: any;
+    if(!userid){
+      user = await User.findOne({ email: userEmail });
+      const lists = await List.find({ creatorId: user._id });
+      return lists;
+    }
     const lists = await List.find({ creatorId: userid });
     return lists;
   } catch (error) {
     console.log(error);
     return [];
   }
-}
+};
 
-// Get Shared with me carts 
+// Get Shared with me carts
 export const getSharedCarts = async (email: string | undefined | null) => {
-
   try {
     connectToDb();
     const lists = await List.find({
       sharedWith: {
-        $elemMatch: { email: email }
-      }
-    });    return lists;
+        $elemMatch: { email: email },
+      },
+    });
+    return lists;
   } catch (error) {
     console.log(error);
     return [];
   }
-}
+};
 
 // change permission of shared user
-export const changePermission = async (userId: string, listId: string, email: string, permission: string) => {
+export const changePermission = async (
+  userId: string,
+  listId: string,
+  email: string,
+  permission: string
+) => {
   await connectToDb();
   try {
     const list = await List.findOne({ _id: listId, creatorId: userId });
@@ -325,43 +363,53 @@ export const changePermission = async (userId: string, listId: string, email: st
     sharedUser.permission = permission;
     await list.save();
     revalidatePath(`/lists/${listId}`);
-    return { status: "success" }
+    return { status: "success" };
   } catch (error) {
-    return { status: "error" }
+    return { status: "error" };
   }
-}
+};
 
 // share a list with chosen email
-export const shareList = async (userId: string, listId: string, email: string) => {
+export const shareList = async (
+  userId: string,
+  listId: string,
+  email: string
+) => {
   await connectToDb();
   try {
-    console.log("here")
+    console.log("here");
     // check if this email Exist in Users table
     const user = await User.findOne({ email: email });
     console.log("🚀 ~ shareList ~ user", user);
-   
+
     if (!user) {
-      return { error: "User not found" }
+      return { error: "User not found" };
     }
-    
+
     const list = await List.findOne({ _id: listId, creatorId: userId });
 
     if (!list) {
-      return({error:"List not found"});
+      return { error: "List not found" };
     }
     // check if email allready exist in sharedWith array
     const flag = list.sharedWith.filter((e: any) => e.email === email);
     if (flag.length === 0) {
-      list.sharedWith.push({email:email, permission:"1",firstName:user.firstName,lastName:user.lastName,fullName:user.firstName + " " + user.lastName});
+      list.sharedWith.push({
+        email: email,
+        permission: "1",
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: user.firstName + " " + user.lastName,
+      });
       await list.save();
       revalidatePath(`/lists/${listId}`);
-      return { status: "success" }
+      return { status: "success" };
     }
-    return { error: "Exist" }
+    return { error: "Exist" };
   } catch (error) {
-    return { status: "error" }
+    return { status: "error" };
   }
-}
+};
 
 // Get list by list id and user id
 export const getListByIdAndUserId = async (listId: string, userId: string) => {
@@ -370,7 +418,7 @@ export const getListByIdAndUserId = async (listId: string, userId: string) => {
   try {
     const list = await List.findOne({ _id: listId, creatorId: userId });
     if (!list) {
-      return ({ error: "List not found" });
+      return { error: "List not found" };
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
 
@@ -382,13 +430,19 @@ export const getListByIdAndUserId = async (listId: string, userId: string) => {
 };
 
 // get list by share email and list id
-export const getListByEmailAndListId = async (email: string, listId: string) => {
+export const getListByEmailAndListId = async (
+  email: string,
+  listId: string
+) => {
   await connectToDb();
 
   try {
-    const list = await List.findOne({ _id: listId, sharedWith: { $elemMatch: {email: email }} });
+    const list = await List.findOne({
+      _id: listId,
+      sharedWith: { $elemMatch: { email: email } },
+    });
     if (!list) {
-      return ({ error: "List not found" });
+      return { error: "List not found" };
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
     return listPlainObject;
@@ -396,4 +450,4 @@ export const getListByEmailAndListId = async (email: string, listId: string) => 
     console.error("Error getting list by email and list id:", error);
     throw error;
   }
-}
+};

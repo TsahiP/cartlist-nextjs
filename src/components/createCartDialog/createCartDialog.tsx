@@ -16,16 +16,17 @@ import { createList } from "@/lib/actions";
 import { Input } from "../ui/input";
 
 interface AddItemDialogProps {
-  userId: string|null;
+  userId?: string|null;
+  userEmail?:string|null;
 }
-const CreateCartDialog = ({ userId }: AddItemDialogProps) => {
+const CreateCartDialog = ({ userId ,userEmail}: AddItemDialogProps) => {
   const [name, setName] = useState<string>("");
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
   const saveItem = (e:any) => {
     e.preventDefault();
-    const cartDetails = { title: name, creatorId: userId };
+    const cartDetails = { title: name, creatorId: userId , creatorEmail: userEmail};
     createList(cartDetails);
     closeDialog();
   };
