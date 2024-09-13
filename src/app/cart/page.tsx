@@ -20,15 +20,19 @@ const Cart = async ({
 }) => {
   const session: any = await auth();
   const userId = session?.user?.id;
-  const listId = searchParams.listId;
+  const userEmail = session?.user?.email;
+
+  const listId = searchParams.listId.toString();
   
-  // loadmy own list
+  // load my list
   let data:any = [];
   if (searchParams.shared === "false") {
      data = await getListByIdAndUserId(
       searchParams.listId,
-      session?.user?.id
+      session?.user?.id,
+      session?.user?.email
     );
+    console.log(data);
   }
   // load shared list
   if (searchParams.shared === "true") {
@@ -36,7 +40,7 @@ const Cart = async ({
       session?.user?.email,
      searchParams.listId
    )};
-   
+
  
   return (
     <div dir="rtl" className="  p-4">
@@ -45,7 +49,7 @@ const Cart = async ({
         <CartList shared={searchParams.shared} session={session} data={data} />
       </Suspense>
       <div className="flex items-center flex-col  justify-center gap-5 ">
-        <AddItemDialog userId={searchParams.shared === "true" ?  data.creatorId : userId} listId={listId} />
+        <AddItemDialog userId={searchParams.shared === "true" ?  data.creatorId : userId ?? userEmail } listId={listId} />
         <Button className="w-36" asChild >
           <Link href="/carts"> <IoMdListBox />&nbsp;&nbsp;&nbsp;חזור לרשימות</Link>
         </Button>

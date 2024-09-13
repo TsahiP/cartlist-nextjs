@@ -32,7 +32,7 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
   const saveItem = (e:any) => {
     e.preventDefault();
     const item = { name: name, amount: amount, price: price };
-    addItemToList(listId, userId, item);
+    addItemToList(listId , item);
     closeDialog();
   };
   return (

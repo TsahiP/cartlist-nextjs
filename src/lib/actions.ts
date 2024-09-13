@@ -123,15 +123,15 @@ export const login = async (prevState: any, formData: any) => {
 // פונקציה להוספת פריט לרשימה
 export const addItemToList = async (
   listId: string,
-  userId: string,
+  // userId: string,
   formData: ItemFormData
 ) => {
-  console.log("🚀 ~ addItemToList ~ userId:", userId);
-  console.log("🚀 ~ addItemToList ~ listId:", listId);
+  // console.log("🚀 ~ addItemToList ~ userId:", userId);
+  // console.log("🚀 ~ addItemToList ~ listId:", listId);
   await connectToDb();
 
   try {
-    const list = await List.findOne({ _id: listId, creatorId: userId });
+    const list = await List.findOne({ _id: listId });
     // console.log("🚀 ~ addItemToList ~ list:", list)
     if (!list) {
       return { error: "List not found" };
@@ -411,12 +411,35 @@ export const shareList = async (
   }
 };
 
+
+// // Get list by list id and user email
+// export const getListByIdAndUserEmail = async (listId: string, userEmail: string) => {
+//   await connectToDb();
+
+//   try {
+//     const user = await User.findOne({ email: userEmail });
+//     const list = await List.findOne({ _id: listId, creatorId: user._id });
+//     if (!list) {
+//       return { error: "List not found" };
+//     }
+//     const listPlainObject = JSON.parse(JSON.stringify(list));
+
+//     return listPlainObject;
+//   } catch (error) {
+//     console.error("Error getting list by id and user id:", error);
+//     throw error;
+//   }
+// };
 // Get list by list id and user id
-export const getListByIdAndUserId = async (listId: string, userId: string) => {
+export const getListByIdAndUserId = async (listId: string, userId: string,userEmail: string) => {
   await connectToDb();
 
   try {
-    const list = await List.findOne({ _id: listId, creatorId: userId });
+    let user: any;
+    if (!userId) {
+      user = await User.findOne({ email: userEmail });
+    }
+    const list = await List.findOne({ _id: listId, creatorId: userId??user._id });
     if (!list) {
       return { error: "List not found" };
     }
