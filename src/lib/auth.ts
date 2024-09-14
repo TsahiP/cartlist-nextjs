@@ -85,11 +85,11 @@ export const {
             console.log("here");
 
             const newUser = new User({
-              firstName: profile?.given_name,
-              lastName: profile?.family_name,
+              firstName: profile?.given_name ?? "",
+              lastName: profile?.family_name ?? "",
               username: profile?.email,
               email: profile?.email,
-              img: profile?.picture,
+              img: profile?.picture ?? "",
 
             });
             console.log("here");
