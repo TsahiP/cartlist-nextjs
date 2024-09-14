@@ -49,6 +49,7 @@ interface shareDataProps {
   userId: string;
   listId: string;
   data: [ISharedWithData];
+  userEmail?: string;
 }
 
 interface IShareStatus {
@@ -56,8 +57,7 @@ interface IShareStatus {
   success?: string;
 }
 
-export function ShareWithDialog({ userId, listId, data }: shareDataProps) {
-  console.log("🚀 ~ ShareWithDialog ~ data:", data)
+export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataProps) {
   const [email, setEmail] = useState("");
   const [shareStatus, setShareStatus] = useState<IShareStatus>({});
   const [loader, setLoader] = useState(false);
@@ -88,10 +88,10 @@ export function ShareWithDialog({ userId, listId, data }: shareDataProps) {
 
   }
   const shareClick = async () => {
-    console.log("userId: " + userId);
-    console.log("listId: " + listId);
-    const shareProcess = await shareList(userId, listId, email);
-    console.log(shareProcess);
+    // console.log("userId: " + userId);
+    // console.log("listId: " + listId);
+    const shareProcess = await shareList(userId, listId, email, userEmail);
+    // console.log(shareProcess);
 
     if (shareProcess?.error === "Exist") {
       setShareStatus({ error: "שגיאה,יכול להיות כי כבר שותף עם משתמש זה" });

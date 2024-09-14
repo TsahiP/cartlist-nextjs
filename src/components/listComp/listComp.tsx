@@ -22,7 +22,6 @@ const ListComp = async (props: Props) => {
   const session = await auth();
   const userId = session?.user?.id;
   const userEmail = session?.user?.email;
-  // console.log("🚀 ~ MyCarts ~ session:", session?.user?.id);
   const listIdPlainObject = JSON.parse(JSON.stringify(props.list._id));
     
   return (

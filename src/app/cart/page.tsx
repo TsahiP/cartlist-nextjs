@@ -44,6 +44,7 @@ const Cart = async ({
  
   return (
     <div dir="rtl" className="  p-4">
+      
       {/* <h2 className="text-center text-xl font-bold mb-4">Cart List</h2> */}
       <Suspense fallback={<div>Loading...</div>}>
         <CartList shared={searchParams.shared} session={session} data={data} />
@@ -53,7 +54,7 @@ const Cart = async ({
         <Button className="w-36" asChild >
           <Link href="/carts"> <IoMdListBox />&nbsp;&nbsp;&nbsp;חזור לרשימות</Link>
         </Button>
-        <ShareWithDialog userId={userId} listId={listId} data={data.sharedWith} />
+        <ShareWithDialog userEmail={userEmail} userId={userId} listId={listId} data={data.sharedWith} />
       </div>
 
     </div>
