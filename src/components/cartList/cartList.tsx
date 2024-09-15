@@ -38,7 +38,8 @@ const CartList = (props: CartListProps) => {
   const userEmail = props.session.user.email;
   const shared = props.shared;
   const permissionLevel = props.data.sharedWith.filter(e=>e.email === props.session.user.email);
-
+  console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel);
+  
   // console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel)
   
   return (
@@ -47,10 +48,12 @@ const CartList = (props: CartListProps) => {
       <TableCaption> </TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-right w-[30px]">מס</TableHead>
-          <TableHead className="text-right ">שם מוצר</TableHead>
+          <TableHead className="text-lg text-right w-[30px] font-semibold">מס</TableHead>
+          <TableHead className="text-lg text-right font-semibold">שם מוצר</TableHead>
           {/* <TableHead className="text-right">מחיר</TableHead> */}
-          <TableHead className="text-right">כמות</TableHead>
+          <TableHead className="text-lg text-right font-semibold">כמות</TableHead>
+          <TableHead className="text-lg text-center font-semibold">פעולות</TableHead>
+
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -67,7 +70,7 @@ const CartList = (props: CartListProps) => {
 
                 <TableCell  >
 
-                  <div className=" flex flex-col gap-4  md:flex-row  ">
+                  <div className=" flex items-center justify-center flex-col gap-4  md:flex-row  ">
                     <EditItemDialog
                       permissionLevel={permissionLevel[0]?.permission}
                       itemId={item._id}

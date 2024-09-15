@@ -347,16 +347,21 @@ export const getSharedCarts = async (email: string | undefined | null) => {
 export const changePermission = async (
   userId: string,
   listId: string,
-  email: string,
-  permission: string
+  shareToEmail: string,
+  permission: string,
+  userEmail?: string
 ) => {
   await connectToDb();
   try {
-    const list = await List.findOne({ _id: listId, creatorId: userId });
+    let user: { _id: string } | null = null;
+    if (!userId) {
+      user = await User.findOne({ email: userEmail });
+    }
+    const list = await List.findOne({ _id: listId, creatorId: userId ?? user?._id });
     if (!list) {
       return { error: "List not found" };
     }
-    const sharedUser = list.sharedWith.find((e: any) => e.email === email);
+    const sharedUser = list.sharedWith.find((e: any) => e.email === shareToEmail);
     if (!sharedUser) {
       return { error: "User not found" };
     }

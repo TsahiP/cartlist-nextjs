@@ -42,7 +42,7 @@ export const authConfig: {
                 return Response.redirect(new URL("/login", request.nextUrl));
             }
             // if (isOnLoginOrReg && user) {
-            //     return Response.redirect(new URL("/carts", request.nextUrl));
+            //     return Response.redirect(new URL("/cart", request.nextUrl));
             // }
             if(isOnCartsPage && !user){
                 return Response.redirect(new URL("/login", request.nextUrl));

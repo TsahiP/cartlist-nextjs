@@ -5,9 +5,6 @@ import './loader.css';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -61,6 +58,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataPro
   const [email, setEmail] = useState("");
   const [shareStatus, setShareStatus] = useState<IShareStatus>({});
   const [loader, setLoader] = useState(false);
+
   const closeDialog = () => {
     setShareStatus({});
     document.getElementById("closeDialog")?.click();
@@ -69,7 +67,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataPro
   const changePermissionHandle = async ( email:string , permission:string) => {
     setLoader(true);
     const permissionLevel = permission === "edit" ? "1" : "2"; 
-    const changePermissionProcess = await changePermission(userId, listId, email, permissionLevel);
+    const changePermissionProcess = await changePermission(userId, listId, email, permissionLevel,userEmail);
     setLoader(false);
     console.log(changePermissionProcess);
 
@@ -127,36 +125,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataPro
         <DialogTitle>
           <FaShareAlt />
         </DialogTitle>
-        <div dir="rtl">
 
-          <div className="grid gap-4 ">
-            <div className="grid grid-cols-4 items-center gap-4">
-              {/* <Label htmlFor="email" className="text-right">
-                אימייל
-              </Label> */}
-              {/* <Input
-                id="email"
-                placeholder="example@example.com"
-                defaultValue="example@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className=" col-span-4 text-center"
-              /> */}
-            </div>
-          </div>
-          <div className="flex justify-center items-center">
-
-            {/* <Button onClick={shareClick} type="submit">
-              <RiUserSharedFill />
-              &nbsp;&nbsp;&nbsp;שתף את הרשימה
-            </Button> */}
-          </div>
-          {/* <DialogClose>
-              <Button>סגור</Button>
-            </DialogClose> */}
-          {/* <DialogFooter >
-          </DialogFooter> */}
-        </div>
         <Card dir="rtl">
           <CardHeader>
             <CardTitle>שיתוף רשימה</CardTitle>
@@ -165,7 +134,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataPro
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex space-x-2 gap-2">
+            <div className="flex items-center  gap-2">
               <Input
                 id="email"
                 placeholder="example@example.com"

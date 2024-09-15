@@ -24,6 +24,12 @@ interface AddItemDialogProps {
   userEmail?: string;
   permissionLevel?: string;
 }
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 const EditItemDialog = ({
   itemAmount,
   itemPrice,
@@ -42,11 +48,11 @@ const EditItemDialog = ({
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
+  console.log(shared, permissionLevel);
 
   const saveItem = async (e: any) => {
     e.preventDefault();
     const item = { name: name, amount: amount, price: price, _id: itemId };
-    // console.log("🚀 ~ saveItem ~ item:", item);
     console.log(userId, listId);
 
     await editItemInList(listId, userId, item, shared, userEmail)
@@ -61,18 +67,23 @@ const EditItemDialog = ({
   };
   return (
     <Dialog>
-      <Button
-        asChild
-        disabled={
-          shared !== "false" || (shared !== "false" && permissionLevel !== "1")
-        }
-      >
-        <div className=" w-12 h-12 mr-3 mt-2.5">
-          <DialogTrigger>
-            <TbEdit />
+          <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+        <Button asChild className="w-12 h-12 mr-3 mt-2.5" >
+          <DialogTrigger
+        disabled={shared === "true" && permissionLevel === "2"}
+          >
+        <TbEdit />
           </DialogTrigger>
-        </div>
       </Button>
+      </TooltipTrigger>
+        <TooltipContent>
+          <p>ערוך מוצר</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+      
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center">עדכן מוצר קיים</DialogTitle>
