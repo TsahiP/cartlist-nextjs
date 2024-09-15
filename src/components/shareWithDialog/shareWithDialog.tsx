@@ -115,10 +115,9 @@ export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataPro
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>
-          {" "}
-          <RiUserSharedFill />
-          &nbsp;&nbsp;&nbsp; שתף רשימה
+        <Button className="gap-2 w-36">
+          <RiUserSharedFill size={20} />
+          שתף רשימה
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

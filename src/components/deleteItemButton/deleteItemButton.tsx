@@ -40,11 +40,7 @@ const DeleteItemButto = (props: AddItemDialogProps) => {
   };
 
   return (
-    <div>
-      {/* <Button>
-        <TbTrashXFilled />
-      </Button> */}
-
+    <div className="relative">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -55,7 +51,7 @@ const DeleteItemButto = (props: AddItemDialogProps) => {
               }
               onClick={toggleWindow}
             >
-              <TbTrashXFilled />
+              <TbTrashXFilled size={20}/>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -64,7 +60,7 @@ const DeleteItemButto = (props: AddItemDialogProps) => {
         </Tooltip>
       </TooltipProvider>
       {showWindow && (
-        <div className="popup">
+        <div className="popup left-16">
           <button onClick={deleteItem} className="popup-button agree">
             <AiOutlineCheckCircle className="icon-button" />
           </button>

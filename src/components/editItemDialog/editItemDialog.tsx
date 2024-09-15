@@ -74,7 +74,7 @@ const EditItemDialog = ({
           <DialogTrigger
         disabled={shared === "true" && permissionLevel === "2"}
           >
-        <TbEdit />
+        <TbEdit  size={20}/>
           </DialogTrigger>
       </Button>
       </TooltipTrigger>

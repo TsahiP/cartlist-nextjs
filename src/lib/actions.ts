@@ -164,12 +164,11 @@ export const editItemInList = async (
   shared?: string,
   userEmail?: string
 ) => {
+  console.log("🚀 ~ userEmail:", userEmail)
+  console.log("userId: " + userId);
+  console.log("listId: " + listId);
   await connectToDb();
-
   try {
-    console.log("userId: " + userId);
-    console.log("listId: " + listId);
-
     let list = [];
     if (shared === "true") {
       list = await List.findOne({
@@ -177,7 +176,7 @@ export const editItemInList = async (
         sharedWith: { $elemMatch: { email: userEmail } },
       });
     } else {
-      list = await List.findOne({ _id: listId, creatorId: userId });
+      list = await List.findOne({ _id: listId });
     }
     if (!list) {
       throw new Error("List not found");
@@ -251,7 +250,7 @@ export const deleteItemFromList = async (
         },
       });
     } else {
-      list = await List.findOne({ _id: listId, creatorId: userId });
+      list = await List.findOne({ _id: listId });
     }
     if (!list) {
       throw new Error("List not found");

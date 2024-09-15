@@ -52,7 +52,7 @@ const Cart = async ({
             data={data}
           />
         </Suspense>
-        <div className="flex items-center flex-col  justify-center gap-5 ">
+        <div className="flex items-center flex-col md:flex-row  justify-center gap-5 ">
           <AddItemDialog
             userId={
               searchParams.shared === "true"
@@ -61,10 +61,10 @@ const Cart = async ({
             }
             listId={listId}
           />
-          <Button className="w-36" asChild>
+          <Button className="w-36 gap-2" asChild>
             <Link href="/carts">
-              <IoMdListBox />
-              &nbsp;&nbsp;&nbsp;חזור לרשימות
+              <IoMdListBox  size={20}/>
+             חזור לרשימות
             </Link>
           </Button>
           <ShareWithDialog

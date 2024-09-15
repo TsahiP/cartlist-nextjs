@@ -9,9 +9,9 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { auth } from "@/lib/auth";
+import { RiCloseCircleLine } from "react-icons/ri";
+import { MdAddTask } from "react-icons/md";
 import { Button } from "../ui/button";
-import { useFormState } from "react-dom";
 import { addItemToList } from "@/lib/actions";
 import { MdOutlineLibraryAdd } from "react-icons/md";
 import { Input } from "../ui/input";
@@ -37,8 +37,8 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
   };
   return (
     <Dialog>
-      <Button className="w-36" asChild>
-        <DialogTrigger><MdOutlineLibraryAdd />&nbsp;&nbsp;הוסף מוצר</DialogTrigger>
+      <Button className="w-36 gap-2" asChild>
+        <DialogTrigger><MdOutlineLibraryAdd size={20} />הוסף מוצר</DialogTrigger>
       </Button>
       <DialogContent className="bg-popover text-popover-foreground">
         <DialogHeader>
@@ -93,11 +93,14 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
               className="bg-input text-foreground rounded"
             /> */}
           {/* </div>  */}
-          <Button className="bg-primary text-primary-foreground m-4">
+          <Button className="bg-primary text-primary-foreground m-4 gap-2">
+          <MdAddTask size={20} />
             הוסף מוצר
           </Button>
           <DialogClose id="closeDialog" asChild>
-            <Button className=" text-destructive-foreground">
+            <Button className="bg-black hover:bg-destructive text-destructive-foreground gap-2">
+            <RiCloseCircleLine size={20} />
+
               סגור
             </Button>
           </DialogClose>

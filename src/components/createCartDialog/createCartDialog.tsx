@@ -14,27 +14,34 @@ import { Button } from "../ui/button";
 import { useFormState } from "react-dom";
 import { createList } from "@/lib/actions";
 import { Input } from "../ui/input";
-
+import { MdOutlinePlaylistAdd } from "react-icons/md";
 interface AddItemDialogProps {
-  userId?: string|null;
-  userEmail?:string|null;
+  userId?: string | null;
+  userEmail?: string | null;
 }
-const CreateCartDialog = ({ userId ,userEmail}: AddItemDialogProps) => {
+const CreateCartDialog = ({ userId, userEmail }: AddItemDialogProps) => {
   const [name, setName] = useState<string>("");
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
-  const saveItem = (e:any) => {
+  const saveItem = (e: any) => {
     e.preventDefault();
-    const cartDetails = { title: name, creatorId: userId , creatorEmail: userEmail};
+    const cartDetails = {
+      title: name,
+      creatorId: userId,
+      creatorEmail: userEmail,
+    };
     createList(cartDetails);
     closeDialog();
   };
   return (
     <Dialog>
-      <Button className="w-36" asChild>
-        <DialogTrigger>צור רשימה חדשה</DialogTrigger>
-      </Button>
+      <DialogTrigger asChild>
+        <Button className="gap-2">
+          <MdOutlinePlaylistAdd size={24} />
+          צור רשימה חדשה
+        </Button>
+      </DialogTrigger>
       <DialogContent className="bg-popover text-popover-foreground">
         <DialogHeader>
           <DialogTitle className="text-center">יצירת רשימה חדשה</DialogTitle>
@@ -77,9 +84,7 @@ const CreateCartDialog = ({ userId ,userEmail}: AddItemDialogProps) => {
             הוסף מוצר
           </Button>
           <DialogClose id="closeDialog" asChild>
-            <Button className=" text-destructive-foreground">
-              סגור
-            </Button>
+            <Button className=" text-destructive-foreground">סגור</Button>
           </DialogClose>
         </form>
       </DialogContent>
