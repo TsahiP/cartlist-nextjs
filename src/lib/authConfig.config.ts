@@ -30,7 +30,7 @@ export const authConfig: {
         },
         async authorized({ auth, request }) {
             const user = auth?.user;
-            const isOnLoginPage = request.nextUrl?.pathname.startsWith("/login") || request.nextUrl?.pathname.startsWith("/register") || request.nextUrl?.pathname.startsWith("/");
+            const isOnLoginPage = request.nextUrl?.pathname.startsWith("/login") || request.nextUrl?.pathname.startsWith("/register");
             const isOnCartPage = request.nextUrl?.pathname.startsWith("/cart");
             const isOnCartsPage = request.nextUrl?.pathname.startsWith("/carts");
 
@@ -39,13 +39,13 @@ export const authConfig: {
             }
             if(isOnCartPage && !user)
             {
-                return Response.redirect(new URL("/", request.nextUrl));
+                return Response.redirect(new URL("/login", request.nextUrl));
             }
             // if (isOnLoginOrReg && user) {
             //     return Response.redirect(new URL("/cart", request.nextUrl));
             // }
             if(isOnCartsPage && !user){
-                return Response.redirect(new URL("/", request.nextUrl));
+                return Response.redirect(new URL("/login", request.nextUrl));
             }
             
             return true;
