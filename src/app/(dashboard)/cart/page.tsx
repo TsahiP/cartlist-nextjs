@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ShareWithDialog } from "@/components/shareWithDialog/shareWithDialog";
 import { IoMdListBox } from "react-icons/io";
+import WhatsappBtn from "@/components/cartList/WhatsappShareBtn";
 
 const Cart = async ({
   searchParams,
@@ -21,6 +22,8 @@ const Cart = async ({
   const listId = searchParams.listId.toString();
   let permissionLevel = "";
   // load my list
+
+
   let data: any = [];
   if (searchParams.shared === "false") {
     data = await getListByIdAndUserId(
@@ -39,7 +42,8 @@ const Cart = async ({
     permissionLevel = data.sharedWith[0].permission;
     console.log("🚀 ~ permissionLevelasdsadasdsafasgasgasgasgas:", permissionLevel)
   }
-
+  
+  console.log("🚀 ~ data:", data)
   return (
     <div dir="rtl" className="flex justify-center items-center p-4">
       {/* right */}
@@ -75,6 +79,7 @@ const Cart = async ({
             data={data.sharedWith}
             disabled={searchParams.shared === "true"}
           />
+          <WhatsappBtn items={data.items}/>
         </div>
       </div>
       {/* Left */}
