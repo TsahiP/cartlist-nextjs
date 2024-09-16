@@ -70,7 +70,7 @@ const Cart = async ({
             </Link>
           </Button>
           <ShareWithDialog
-            userEmail={userEmail}
+            ownerEmail={userEmail}
             listId={listId}
             data={data.sharedWith}
             disabled={searchParams.shared === "true"}

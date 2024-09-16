@@ -46,7 +46,7 @@ interface IShareDataProps {
   listId: string;
   data: [ISharedWithData];
   disabled:boolean;
-  userEmail: string;
+  ownerEmail: string;
 }
 
 interface IShareStatus {
@@ -54,7 +54,7 @@ interface IShareStatus {
   success?: string;
 }
 
-export function ShareWithDialog({  listId, data,userEmail ,disabled }: IShareDataProps) {
+export function ShareWithDialog({  listId, data,ownerEmail ,disabled }: IShareDataProps) {
   const [email, setEmail] = useState("");
   const [shareStatus, setShareStatus] = useState<IShareStatus>({});
   const [loader, setLoader] = useState(false);
@@ -66,8 +66,8 @@ export function ShareWithDialog({  listId, data,userEmail ,disabled }: IShareDat
   // change permission
   const changePermissionHandle = async ( email:string , permission:string) => {
     setLoader(true);
-    const permissionLevel = permission === "edit" ? "1" : "2"; 
-    const changePermissionProcess = await changePermission( listId, email, permissionLevel,userEmail);
+    const permissionLevel = permission === "edit" ? "1" : permission === "view" ? "2" : "3"; 
+    const changePermissionProcess = await changePermission( listId, email, permissionLevel,ownerEmail);
     setLoader(false);
     console.log(changePermissionProcess);
 
@@ -86,29 +86,30 @@ export function ShareWithDialog({  listId, data,userEmail ,disabled }: IShareDat
 
   }
   const shareClick = async () => {
-    // console.log("userId: " + userId);
-    // console.log("listId: " + listId);
-    const shareProcess = await shareList( listId, email, userEmail);
+
+    const shareProcess = await shareList( listId, email, ownerEmail);
     // console.log(shareProcess);
 
     if (shareProcess?.error === "Exist") {
-      setShareStatus({ error: "שגיאה,יכול להיות כי כבר שותף עם משתמש זה" });
+      setShareStatus({ error: "שגיאה,יכול להיות כי כבר שותף עם משתמש זה." });
 
     }
     if (shareProcess?.error === "User not found") {
-      setShareStatus({ error: "שגיאה, משתמש לא נמצא" });
+      setShareStatus({ error: "שגיאה, משתמש לא נמצא." });
     }
     if (shareProcess?.error === "List not found") {
-      setShareStatus({ error: "שגיאה, רשימה לא נמצאה" });
+      setShareStatus({ error: "שגיאה, רשימה לא נמצאה." });
     }
+    if (shareProcess?.error === "You can't share with yourself"){
+      setShareStatus({ error: "שגיאה, לא ניתן לשתף עם עצמך." });
+    } 
     if (shareProcess?.status === "success") {
-      setShareStatus({ success: "השיתוף בוצע בהצלחה" });
+      setShareStatus({ success: "השיתוף בוצע בהצלחה!" });
       setTimeout(() => {
         // Code to be executed after one second
         closeDialog();
-      }, 1000);
+      }, 1500);
     }
-    console.log("🚀 ~ shareClick ~ shareProcess:", shareProcess)
 
   }
 
@@ -174,6 +175,7 @@ export function ShareWithDialog({  listId, data,userEmail ,disabled }: IShareDat
                       <SelectContent >
                         <SelectItem value="edit">  עריכה</SelectItem>
                         <SelectItem value="view">צפייה</SelectItem>
+                        <SelectItem value="delete">הסרה</SelectItem>
                       </SelectContent>
                     </Select>
                   }

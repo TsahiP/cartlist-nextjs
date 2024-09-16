@@ -344,18 +344,29 @@ export const changePermission = async (
   listId: string,
   shareToEmail: string,
   permission: string,
-  userEmail: string
+  ownerEmail: string
 ) => {
   await connectToDb();
   try {
     let user: { _id: string } | null = null;
-    user = await User.findOne({ email: userEmail });
+    user = await User.findOne({ email: ownerEmail });
     const list = await List.findOne({
       _id: listId,
       creatorId:user?._id,
     });
     if (!list) {
       return { error: "List not found" };
+    }
+    // if permission leve eq to 3 delete from shared list array
+    if (permission === "3") {
+      list.sharedWith = list.sharedWith.filter(
+        (e: any) => e.email !== shareToEmail
+      );
+      console.log("🚀 ~ changePermission ~ list:", list);
+      
+      await list.save();
+      revalidatePath(`/lists/${listId}`);
+      return { status: "success" };
     }
     const sharedUser = list.sharedWith.find(
       (e: any) => e.email === shareToEmail
@@ -388,10 +399,12 @@ export const shareList = async (
       const ownerUser = await User.findOne({ email: ownerEmail }); // Replace with appropriate default value or logic
       console.log("🚀 ~ user:", ownerUser);
       ownerId = ownerUser._id.toString();
-      ownerId = ownerUser._id.toString();
-    
-    // check if this email Exist in Users table
-    const user = await User.findOne({ email: email });
+      // check if the ownerEmail and email are equal
+      if (ownerEmail === email) {
+        return { error: "You can't share with yourself" };
+      }
+      // check if this email Exist in Users table
+      const user = await User.findOne({ email: email });
     if (!user) {
       return { error: "User not found" };
     }
