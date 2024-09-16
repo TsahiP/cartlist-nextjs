@@ -19,9 +19,8 @@ const Cart = async ({
   const session: any = await auth();
   const userId = session?.user?.id;
   const userEmail = session?.user?.email;
-
   const listId = searchParams.listId.toString();
-
+  let permissionLevel = "";
   // load my list
   let data: any = [];
   if (searchParams.shared === "false") {
@@ -30,7 +29,7 @@ const Cart = async ({
       session?.user?.id,
       session?.user?.email
     );
-    console.log(data);
+    console.log("🚀 ~ data:", data);
   }
   // load shared list
   if (searchParams.shared === "true") {
@@ -38,6 +37,8 @@ const Cart = async ({
       session?.user?.email,
       searchParams.listId
     );
+    console.log("🚀 ~ permission:", data.sharedWith[0].permission);
+    permissionLevel = data.sharedWith[0].permission;
   }
 
   return (
@@ -53,6 +54,7 @@ const Cart = async ({
           />
         </Suspense>
         <div className="flex items-center flex-col md:flex-row  justify-center gap-5 ">
+          
           <AddItemDialog
             userId={
               searchParams.shared === "true"
@@ -60,11 +62,12 @@ const Cart = async ({
                 : userId ?? userEmail
             }
             listId={listId}
+            
           />
           <Button className="w-36 gap-2" asChild>
             <Link href="/carts">
-              <IoMdListBox  size={20}/>
-             חזור לרשימות
+              <IoMdListBox size={20} />
+              חזור לרשימות
             </Link>
           </Button>
           <ShareWithDialog
@@ -72,6 +75,7 @@ const Cart = async ({
             userId={userId}
             listId={listId}
             data={data.sharedWith}
+            disabled={searchParams.shared === "true"}
           />
         </div>
       </div>

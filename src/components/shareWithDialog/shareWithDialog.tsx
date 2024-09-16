@@ -42,10 +42,11 @@ interface ISharedWithData {
 }
 
 
-interface shareDataProps {
+interface IShareDataProps {
   userId: string;
   listId: string;
   data: [ISharedWithData];
+  disabled:boolean;
   userEmail?: string;
 }
 
@@ -54,7 +55,7 @@ interface IShareStatus {
   success?: string;
 }
 
-export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataProps) {
+export function ShareWithDialog({ userId, listId, data,userEmail ,disabled }: IShareDataProps) {
   const [email, setEmail] = useState("");
   const [shareStatus, setShareStatus] = useState<IShareStatus>({});
   const [loader, setLoader] = useState(false);
@@ -115,7 +116,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataPro
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="gap-2 w-36">
+        <Button disabled={disabled} className="gap-2 w-36">
           <RiUserSharedFill size={20} />
           שתף רשימה
         </Button>
@@ -133,7 +134,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataPro
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center  gap-2">
+            <div className="flex flex-col md:flex-row items-center  gap-2">
               <Input
                 id="email"
                 placeholder="example@example.com"
@@ -152,7 +153,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail }: shareDataPro
               <div className="grid gap-6">
                 {data.map((user, index) =>
 
-                  <div key={user.email} className="flex items-center justify-between space-x-4">
+                  <div key={user.email} className="flex flex-col md:flex-row items-center justify-between space-x-4">
                     <div className="flex items-center space-x-4">
                       <Avatar>
                         <AvatarImage src="/avatars/03.png" />

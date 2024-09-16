@@ -42,7 +42,7 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
       </Button>
       <DialogContent className="bg-popover text-popover-foreground">
         <DialogHeader>
-          <DialogTitle className="text-center">הוסף מוצר חדש</DialogTitle>
+          <DialogTitle className="text-center text-2xl font-semibold">הוסף מוצר חדש</DialogTitle>
           <DialogDescription className="text-center">
             אנא מלא את הפרטים הבאים
           </DialogDescription>
@@ -93,12 +93,12 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
               className="bg-input text-foreground rounded"
             /> */}
           {/* </div>  */}
-          <Button className="bg-primary text-primary-foreground m-4 gap-2">
+          <Button className="w-36 bg-primary text-primary-foreground m-4 gap-2">
           <MdAddTask size={20} />
             הוסף מוצר
           </Button>
           <DialogClose id="closeDialog" asChild>
-            <Button className="bg-black hover:bg-destructive text-destructive-foreground gap-2">
+            <Button className="w-36 bg-black hover:bg-destructive text-destructive-foreground gap-2">
             <RiCloseCircleLine size={20} />
 
               סגור

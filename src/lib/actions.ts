@@ -484,6 +484,9 @@ export const getListByEmailAndListId = async (
       return { error: "List not found" };
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
+    listPlainObject.sharedWith = listPlainObject.sharedWith.filter((s: { email: string }) => s.email === email);
+    console.log("🚀 ~ getListByEmailAndListId ~ listPlainObject:", listPlainObject);
+    
     return listPlainObject;
   } catch (error) {
     console.error("Error getting list by email and list id:", error);
