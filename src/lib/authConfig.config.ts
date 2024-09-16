@@ -38,7 +38,7 @@ export const authConfig: {
         request.nextUrl?.pathname.startsWith("/register");
       const isOnCartPage = request.nextUrl?.pathname.startsWith("/cart");
       const isOnCartsPage = request.nextUrl?.pathname.startsWith("/carts");
-
+        
       if (isOnLoginPage && user) {
         return Response.redirect(new URL("/carts", request.nextUrl));
       }
@@ -51,9 +51,9 @@ export const authConfig: {
       // if (isOnLoginOrReg && user) {
       //     return Response.redirect(new URL("/cart", request.nextUrl));
       // }
-      if (isOnCartsPage && !user) {
-        return Response.redirect(new URL("/login", request.nextUrl));
-      }
+    //   if (isOnCartsPage && !user) {
+    //     return Response.redirect(new URL("/", request.nextUrl));
+    //   }
 
       return true;
     },

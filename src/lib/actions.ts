@@ -210,11 +210,11 @@ export const deleteList = async (
   userEmail: string | undefined | null
 ) => {
   await connectToDb();
+  try {
   let user: any;
   if (!userId) {
     user = await User.findOne({ email: userEmail });
   }
-  try {
     const list = await List.findOneAndDelete({
       _id: listId,
       creatorId: userId ?? user._id,
