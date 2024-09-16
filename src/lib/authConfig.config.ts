@@ -30,7 +30,7 @@ export const authConfig: {
         },
         async authorized({ auth, request }) {
             const user = auth?.user;
-            const isOnLoginPage = request.nextUrl?.pathname.startsWith("/login") || request.nextUrl?.pathname.startsWith("/register");
+            const isOnLoginPage = request.nextUrl?.pathname.startsWith("/login") || request.nextUrl?.pathname.startsWith("/register")|| request.nextUrl?.pathname.startsWith("/");
             const isOnCartPage = request.nextUrl?.pathname.startsWith("/cart");
             const isOnCartsPage = request.nextUrl?.pathname.startsWith("/carts");
 
