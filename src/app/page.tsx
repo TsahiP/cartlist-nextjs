@@ -3,17 +3,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import Login from "./(auth)/login/page";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
+  if (session) {
+    redirect("/carts");
+  }else{
+    redirect("/login");
+  }
   return (
     // <><Login/></>
 
     <div className="text-foreground bg-background  flex flex-col justify-center text-center">
       <div className="flex items-center flex-col justify-center">
-        {/* <h1 className="text-primary text-3xl md:text-4xl font-bold mb-6">
-
-        </h1> */}
         <Image src="/logo.svg" alt="" width={200} height={200} />
       </div>
       {!session ?

@@ -72,10 +72,6 @@ export const {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log("profile: ");
-      console.log(profile);
-      console.log("account: ");
-      console.log(account);
 
       if (account?.provider === "google") {
         connectToDb();

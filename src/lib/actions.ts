@@ -6,6 +6,7 @@ import { signIn, signOut } from "./auth";
 // import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
 // ======================== items actions ========================
 interface ItemFormData {
   name: string;
@@ -39,6 +40,7 @@ export const handleGoogleLogin = async () => {
   "use server";
 
   await signIn("google");
+  
 };
 
 export const handleGoogleSignOut = async () => {
