@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useFormState } from "react-dom";
 import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
-import './loginForm.css';
+import "./loginForm.css";
 import { useEffect, useRef } from "react";
 const LoginForm = () => {
   const [state, formAction] = useFormState(login, undefined);
@@ -15,18 +15,18 @@ const LoginForm = () => {
   useEffect(() => {
     const handleAnimationEnd = () => {
       if (textRef.current) {
-        textRef.current.classList.add('finished');
+        textRef.current.classList.add("finished");
       }
     };
 
     const textElement = textRef.current;
     if (textElement) {
-      textElement.addEventListener('animationend', handleAnimationEnd);
+      textElement.addEventListener("animationend", handleAnimationEnd);
     }
 
     return () => {
       if (textElement) {
-        textElement.removeEventListener('animationend', handleAnimationEnd);
+        textElement.removeEventListener("animationend", handleAnimationEnd);
       }
     };
   }, []);
@@ -65,15 +65,28 @@ const LoginForm = () => {
               />
             </div>
             {state?.msg?.toString()}
-            <Button className="font-semibold w-[200px] ">Submit</Button>
+            <Button className="font-semibold w-[200px] shadow-md">Submit</Button>
           </form>
-          <div className=" flex items-center justify-center mt-4 ">
-            <Button className="bg-black hover:bg-appBlue gap-2 w-[200px] " onClick={() => handleGoogleLogin()}>
-
-              <FcGoogle  className=""/>
-              <span ref={textRef} className="typing-animation">Login with Google</span>
+          <div className="flex items-center justify-center mt-4 ">
+            <Button
+              asChild
+              className="w-[200px]  shadow-md"
+            >
+               <Link href="/register" className="hover:text-white">Register</Link>
             </Button>
           </div>
+          <div className=" flex items-center justify-center mt-4 ">
+            <Button
+              className="bg-black hover:bg-appBlue gap-2 w-[200px] shadow-md"
+              onClick={() => handleGoogleLogin()}
+            >
+              <FcGoogle className="" />
+              <span ref={textRef} className="typing-animation">
+                Login with Google
+              </span>
+            </Button>
+          </div>
+
         </div>
       </div>
     </div>
