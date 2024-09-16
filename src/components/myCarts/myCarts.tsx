@@ -6,12 +6,10 @@ import { getSharedCarts } from "@/lib/actions";
 const MyCarts = async () => {
   // const router = useRouter();
   const session = await auth();
-  // console.log("🚀 ~ MyCarts ~ session:", session?.user?.id);
   const userId = session?.user?.id;
   const userEmail = session?.user?.email;
   // FETCH DATA WITH AN API
   const lists = await getCarts(userId ?? undefined, userEmail ?? undefined);
-  // console.log("🚀 ~ MyCarts ~ lists:", lists);
   const sharedCarts = await getSharedCarts(session?.user?.email);
 
   return (

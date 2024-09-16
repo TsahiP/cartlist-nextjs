@@ -81,7 +81,7 @@ const CreateCartDialog = ({ userId, userEmail }: AddItemDialogProps) => {
             />
           </div> */}
           <Button className="bg-primary text-primary-foreground m-4">
-            הוסף מוצר
+            הוסף רשימה
           </Button>
           <DialogClose id="closeDialog" asChild>
             <Button className=" text-destructive-foreground">סגור</Button>

@@ -24,7 +24,6 @@ const DeleteItemButto = (props: AddItemDialogProps) => {
   const [showWindow, setShowWindow] = useState(false);
 
   const deleteItem = async () => {
-    console.log("deleteItem");
     deleteItemFromList(
       props.userId,
       props.listId,

@@ -17,7 +17,6 @@ const Cart = async ({
   };
 }) => {
   const session: any = await auth();
-  const userId = session?.user?.id;
   const userEmail = session?.user?.email;
   const listId = searchParams.listId.toString();
   let permissionLevel = "";
@@ -29,7 +28,7 @@ const Cart = async ({
       session?.user?.id,
       session?.user?.email
     );
-    console.log("🚀 ~ data:", data);
+    permissionLevel = "1";
   }
   // load shared list
   if (searchParams.shared === "true") {
@@ -37,8 +36,8 @@ const Cart = async ({
       session?.user?.email,
       searchParams.listId
     );
-    console.log("🚀 ~ permission:", data.sharedWith[0].permission);
     permissionLevel = data.sharedWith[0].permission;
+    console.log("🚀 ~ permissionLevelasdsadasdsafasgasgasgasgas:", permissionLevel)
   }
 
   return (
@@ -59,10 +58,10 @@ const Cart = async ({
             userId={
               searchParams.shared === "true"
                 ? data.creatorId
-                : userId ?? userEmail
+                :  userEmail
             }
             listId={listId}
-            
+            permissionLevel={permissionLevel}
           />
           <Button className="w-36 gap-2" asChild>
             <Link href="/carts">
@@ -72,7 +71,6 @@ const Cart = async ({
           </Button>
           <ShareWithDialog
             userEmail={userEmail}
-            userId={userId}
             listId={listId}
             data={data.sharedWith}
             disabled={searchParams.shared === "true"}

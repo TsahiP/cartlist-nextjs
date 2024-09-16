@@ -43,11 +43,10 @@ interface ISharedWithData {
 
 
 interface IShareDataProps {
-  userId: string;
   listId: string;
   data: [ISharedWithData];
   disabled:boolean;
-  userEmail?: string;
+  userEmail: string;
 }
 
 interface IShareStatus {
@@ -55,7 +54,7 @@ interface IShareStatus {
   success?: string;
 }
 
-export function ShareWithDialog({ userId, listId, data,userEmail ,disabled }: IShareDataProps) {
+export function ShareWithDialog({  listId, data,userEmail ,disabled }: IShareDataProps) {
   const [email, setEmail] = useState("");
   const [shareStatus, setShareStatus] = useState<IShareStatus>({});
   const [loader, setLoader] = useState(false);
@@ -68,7 +67,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail ,disabled }: IS
   const changePermissionHandle = async ( email:string , permission:string) => {
     setLoader(true);
     const permissionLevel = permission === "edit" ? "1" : "2"; 
-    const changePermissionProcess = await changePermission(userId, listId, email, permissionLevel,userEmail);
+    const changePermissionProcess = await changePermission( listId, email, permissionLevel,userEmail);
     setLoader(false);
     console.log(changePermissionProcess);
 
@@ -89,7 +88,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail ,disabled }: IS
   const shareClick = async () => {
     // console.log("userId: " + userId);
     // console.log("listId: " + listId);
-    const shareProcess = await shareList(userId, listId, email, userEmail);
+    const shareProcess = await shareList( listId, email, userEmail);
     // console.log(shareProcess);
 
     if (shareProcess?.error === "Exist") {
@@ -122,13 +121,14 @@ export function ShareWithDialog({ userId, listId, data,userEmail ,disabled }: IS
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogTitle>
-          <FaShareAlt />
-        </DialogTitle>
+        {/* <DialogTitle>
+          
+        </DialogTitle> */}
 
         <Card dir="rtl">
           <CardHeader>
-            <CardTitle>שיתוף רשימה</CardTitle>
+          
+            <CardTitle className="flex justify-between text-primary">שיתוף רשימה<FaShareAlt /></CardTitle>
             <CardDescription>
               אנא הכנס את האימייל של המשתמש איתו תרצה לשתף
             </CardDescription>
@@ -166,6 +166,7 @@ export function ShareWithDialog({ userId, listId, data,userEmail ,disabled }: IS
                         <p className="text-sm text-muted-foreground">{user.email}</p>
                       </div>
                     </div>
+                {!loader &&
                     <Select defaultValue="view" value={user.permission === "2" ? "view" : "edit"} onValueChange={e => changePermissionHandle(user.email,e)}>
                       <SelectTrigger className="ml-auto w-[110px]">
                         <SelectValue placeholder="Select" />
@@ -174,8 +175,9 @@ export function ShareWithDialog({ userId, listId, data,userEmail ,disabled }: IS
                         <SelectItem value="edit">  עריכה</SelectItem>
                         <SelectItem value="view">צפייה</SelectItem>
                       </SelectContent>
-                      {loader && <div className="loader"></div>}
                     </Select>
+                  }
+                      {loader && <div className="loader"></div>}
                     
                       
 

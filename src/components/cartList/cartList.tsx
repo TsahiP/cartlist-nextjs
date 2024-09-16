@@ -38,12 +38,10 @@ const CartList = (props: CartListProps) => {
   const userEmail = props.session.user.email;
   const shared = props.shared;
   const permissionLevel = props.data.sharedWith.filter(e=>e.email === props.session.user.email);
-  console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel);
+  // console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel);
   
-  // console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel)
   
   return (
-    // <div>asdad</div>
     <Table >
       <TableCaption> </TableCaption>
       <TableHeader>

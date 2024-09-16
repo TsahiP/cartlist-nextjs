@@ -48,20 +48,17 @@ const EditItemDialog = ({
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
-  console.log(shared, permissionLevel);
 
   const saveItem = async (e: any) => {
     e.preventDefault();
     const item = { name: name, amount: amount, price: price, _id: itemId };
-    console.log(userId, listId);
 
     await editItemInList(listId, userId, item, shared, userEmail)
       .then((list: any) => {
-        console.log(list);
         closeDialog();
       })
       .catch((err: any) => {
-        console.log(err);
+        // console.log(err);
         setErrorFlag(true);
       });
   };

@@ -17,8 +17,6 @@ interface Props {
   sharedFlag: boolean | false;
 }
 const ListComp = async (props: Props) => {
-  console.log("🚀 ~ ListComp ~ props:", props)
-
   const session = await auth();
   const userId = session?.user?.id;
   const userEmail = session?.user?.email;

@@ -164,7 +164,7 @@ export const editItemInList = async (
   shared?: string,
   userEmail?: string
 ) => {
-  console.log("🚀 ~ userEmail:", userEmail)
+  console.log("🚀 ~ userEmail:", userEmail);
   console.log("userId: " + userId);
   console.log("listId: " + listId);
   await connectToDb();
@@ -284,11 +284,8 @@ export const createList = async (formData: any) => {
   await connectToDb();
   const { title, creatorId, creatorEmail } = formData;
   let user: any;
-  if (!creatorId) {
     user = await User.findOne({ email: creatorEmail });
-  } else {
-    user = await User.findOne({ _id: creatorEmail });
-  }
+  
   console.log("🚀 ~ createList ~ user", user);
 
   try {
@@ -344,23 +341,25 @@ export const getSharedCarts = async (email: string | undefined | null) => {
 
 // change permission of shared user
 export const changePermission = async (
-  userId: string,
   listId: string,
   shareToEmail: string,
   permission: string,
-  userEmail?: string
+  userEmail: string
 ) => {
   await connectToDb();
   try {
     let user: { _id: string } | null = null;
-    if (!userId) {
-      user = await User.findOne({ email: userEmail });
-    }
-    const list = await List.findOne({ _id: listId, creatorId: userId ?? user?._id });
+    user = await User.findOne({ email: userEmail });
+    const list = await List.findOne({
+      _id: listId,
+      creatorId:user?._id,
+    });
     if (!list) {
       return { error: "List not found" };
     }
-    const sharedUser = list.sharedWith.find((e: any) => e.email === shareToEmail);
+    const sharedUser = list.sharedWith.find(
+      (e: any) => e.email === shareToEmail
+    );
     if (!sharedUser) {
       return { error: "User not found" };
     }
@@ -375,28 +374,28 @@ export const changePermission = async (
 
 // share a list with chosen email
 export const shareList = async (
-  userId: string,
   listId: string,
   email: string,
-  ownerEmail?: string
+  ownerEmail: string
 ) => {
   await connectToDb();
   try {
     let ownerId: string;
+    let userId: string;
     // Handle the case where ownerEmail might be undefined
-    if (ownerEmail) {
+    
       // Provide a default value or handle the undefined case
-      const user = await User.findOne({ email: ownerEmail }); // Replace with appropriate default value or logic
-      console.log("🚀 ~ user:", user);
-      ownerId = user._id.toString();
-      userId = user._id.toString();
-    }
+      const ownerUser = await User.findOne({ email: ownerEmail }); // Replace with appropriate default value or logic
+      console.log("🚀 ~ user:", ownerUser);
+      ownerId = ownerUser._id.toString();
+      ownerId = ownerUser._id.toString();
+    
     // check if this email Exist in Users table
     const user = await User.findOne({ email: email });
     if (!user) {
       return { error: "User not found" };
     }
-    const list = await List.findOne({ _id: listId, creatorId: userId });
+    const list = await List.findOne({ _id: listId, creatorId: ownerId });
 
     if (!list) {
       return { error: "List not found" };
@@ -484,9 +483,14 @@ export const getListByEmailAndListId = async (
       return { error: "List not found" };
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
-    listPlainObject.sharedWith = listPlainObject.sharedWith.filter((s: { email: string }) => s.email === email);
-    console.log("🚀 ~ getListByEmailAndListId ~ listPlainObject:", listPlainObject);
-    
+    listPlainObject.sharedWith = listPlainObject.sharedWith.filter(
+      (s: { email: string }) => s.email === email
+    );
+    console.log(
+      "🚀 ~ getListByEmailAndListId ~ listPlainObject:",
+      listPlainObject
+    );
+
     return listPlainObject;
   } catch (error) {
     console.error("Error getting list by email and list id:", error);

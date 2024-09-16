@@ -18,14 +18,12 @@ import { Input } from "../ui/input";
 interface AddItemDialogProps {
   userId: string;
   listId: string;
+  permissionLevel?: string;
 }
-const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
+const AddItemDialog = ({ userId, listId,permissionLevel }: AddItemDialogProps) => {
   const [name, setName] = useState<string>("");
   const [amount, setAmount] = useState<number | 1>(1);
   const [price, setPrice] = useState<number | 1>(1);
-  // const [state, formAction] = useFormState(addItemToList, undefined);
-  // const session = await auth();
-  // const userId = session?.user?.id;
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
@@ -37,7 +35,7 @@ const AddItemDialog = ({ userId, listId }: AddItemDialogProps) => {
   };
   return (
     <Dialog>
-      <Button className="w-36 gap-2" asChild>
+      <Button disabled={permissionLevel === "1" ? false:true} className="w-36 gap-2" asChild>
         <DialogTrigger><MdOutlineLibraryAdd size={20} />הוסף מוצר</DialogTrigger>
       </Button>
       <DialogContent className="bg-popover text-popover-foreground">
