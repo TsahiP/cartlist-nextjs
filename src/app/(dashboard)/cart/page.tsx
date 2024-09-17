@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ShareWithDialog } from "@/components/shareWithDialog/shareWithDialog";
 import { IoMdListBox } from "react-icons/io";
 import WhatsappBtn from "@/components/cartList/WhatsappShareBtn";
+import MobileFabMenu from "@/components/cartList/MobileFabMenu";
 
 const Cart = async ({
   searchParams,
@@ -22,7 +23,6 @@ const Cart = async ({
   const listId = searchParams.listId.toString();
   let permissionLevel = "";
   // load my list
-
 
   let data: any = [];
   if (searchParams.shared === "false") {
@@ -40,15 +40,16 @@ const Cart = async ({
       searchParams.listId
     );
     permissionLevel = data.sharedWith[0].permission;
-    console.log("🚀 ~ permissionLevelasdsadasdsafasgasgasgasgas:", permissionLevel)
+    console.log(
+      "🚀 ~ permissionLevelasdsadasdsafasgasgasgasgas:",
+      permissionLevel
+    );
   }
-  
-  console.log("🚀 ~ data:", data)
+
+  console.log("🚀 ~ data:", data);
   return (
     <div dir="rtl" className="flex justify-center items-center p-4">
-      {/* right */}
       <div className=" w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm">
-        {/* <h2 className="text-center text-xl font-bold mb-4">Cart List</h2> */}
         <Suspense fallback={<div>Loading...</div>}>
           <CartList
             shared={searchParams.shared}
@@ -56,14 +57,10 @@ const Cart = async ({
             data={data}
           />
         </Suspense>
-        <div className="flex items-center flex-col md:flex-row  justify-center gap-5 ">
-          
+        {/* buttons */}
+        <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
           <AddItemDialog
-            userId={
-              searchParams.shared === "true"
-                ? data.creatorId
-                :  userEmail
-            }
+            userId={searchParams.shared === "true" ? data.creatorId : userEmail}
             listId={listId}
             permissionLevel={permissionLevel}
           />
@@ -79,9 +76,20 @@ const Cart = async ({
             data={data.sharedWith}
             disabled={searchParams.shared === "true"}
           />
-          <WhatsappBtn items={data.items}/>
+        </div>
+        {/* whatsapp */}
+        <div className="hidden justify-center mt-4 md:flex ">
+          <WhatsappBtn items={data.items} />
         </div>
       </div>
+      <MobileFabMenu
+        userId={searchParams.shared === "true" ? data.creatorId : userEmail}
+        listId={listId}
+        permissionLevel={permissionLevel}
+        userEmail={userEmail}
+        data={data}
+        searchParams={searchParams}
+      />
       {/* Left */}
     </div>
   );
