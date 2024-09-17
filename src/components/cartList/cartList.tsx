@@ -68,7 +68,7 @@ const CartList = (props: CartListProps) => {
 
                 <TableCell  >
 
-                  <div className=" flex items-center justify-center flex-col gap-4  md:flex-row  ">
+                  <div className=" flex items-center justify-center flex-col md:gap-4 gap-0  md:flex-row  ">
                     <EditItemDialog
                       permissionLevel={permissionLevel[0]?.permission}
                       itemId={item._id}
