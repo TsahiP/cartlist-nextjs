@@ -41,7 +41,7 @@ const WhatsappBtn = ({ items }: IWhatsappBtnProps) => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
+        <div className="absolute inset-1 flex items-center justify-center bg-black bg-opacity-50 rounded-md top-[-600px] right-[100px]">
           <div className="flex flex-col items-center bg-white p-4 rounded-md shadow-lg ">
             <h2 className="text-lg font-bold mb-4 " >הכנס מספר טלפון</h2>
             <input
@@ -109,36 +109,3 @@ export default WhatsappBtn
 
 
 
-
-
-// 'use client'
-
-// import React from 'react'
-// import { useRouter } from 'next/navigation'
-// import { FaWhatsapp } from 'react-icons/fa6'
-// interface IWhatsappBtnProps {
-//     items: {
-//         name: string;
-//         amount: string;
-//     }[];
-// }
-// const WhatsappBtn = ({ items }: IWhatsappBtnProps) => {
-
-//   const router = useRouter();
-
-//   const handleClick = async () => {
-//     console.log(items);
-    
-//   }
-
-//   return (
-//     <>
-//       <div className='bg-green-600 w-min p-2 rounded-full  
-//            cursor-pointer md:right-8' onClick={handleClick}>
-//         <FaWhatsapp color='white' className='w-7 h-7 md:w-10 md:h-10' />
-//       </div>
-//     </>
-//   )
-// }
-
-// export default WhatsappBtn
