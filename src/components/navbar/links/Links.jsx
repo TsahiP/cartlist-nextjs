@@ -7,6 +7,8 @@ import { CgMenu } from "react-icons/cg";
 import { IoEnter } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { IoMdListBox } from "react-icons/io";
 
 const Links = ({ session }) => {
   const [open, setOpen] = useState(false);
@@ -43,7 +45,9 @@ const Links = ({ session }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [open]);
-
+  const handleLogOut = () => {
+    handleGithubSignOut();
+  };
   return (
     <div className={styles.container}>
       {/* כפתור המבורגר */}
@@ -62,28 +66,35 @@ const Links = ({ session }) => {
 
         {/* כפתור יציאה במידה והמשתמש מחובר */}
         {session && (
-          <form className="gap-4 flex flex-col" action={handleGithubSignOut}>
-            <div className="flex flex-col md:flex-row items-center justify-between space-x-4 p-4">
+          <div className="gap-4 flex flex-col">
+            <div className="flex flex-col md:flex-row items-center justify-between  p-4">
               <div className="flex items-center space-x-4">
                 <Avatar>
-                  <AvatarImage src={user.image !== "" ?   user.image:"/noAvatar.png"} />
-                  <AvatarFallback >
+                  <AvatarImage
+                    src={user.image !== "" ? user.image : "/noAvatar.png"}
+                  />
+                  <AvatarFallback>
                     {(user.name[0] + user.name[1]).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium leading-none">
+                  <p className="text-lg font-medium leading-none">
                     {user.name}
                   </p>
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                 </div>
               </div>
             </div>
+            <hr className="text-center my-2 border-gray-300 w-full" />
+            
+              <Button className="text-white  gap-2" onClick={handleLogOut}>
+                התנתק <IoEnter size={20} />
+              </Button>
+              
 
-            <Button>
-              Logout <IoEnter size={20} />
-            </Button>
-          </form>
+              
+            
+          </div>
         )}
       </div>
     </div>
