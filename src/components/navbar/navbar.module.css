@@ -3,7 +3,8 @@ height: 100px;
 display: flex;
 align-items: center;
 justify-content: space-between;
-background: #07276e8c;
+/* background: #07276e8c; */
+background: #4e2f488c;
 }
 .logo{
     font-size: 30px;

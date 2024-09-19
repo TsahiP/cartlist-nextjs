@@ -42,7 +42,7 @@ const CartList = (props: CartListProps) => {
   
   
   return (
-    <Table >
+    <Table  >
       <TableCaption> </TableCaption>
       <TableHeader>
         <TableRow>
