@@ -57,8 +57,6 @@ export const {
       async authorize(credentials) {
         try {
           const user = await login(credentials);
-
-          console.log("🚀 ~ authorize ~ user:", user);
           const userPlainObject = JSON.parse(JSON.stringify(user));
           console.log("return");
 

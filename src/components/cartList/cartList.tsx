@@ -38,7 +38,6 @@ const CartList = (props: CartListProps) => {
   const userEmail = props.session.user.email;
   const shared = props.shared;
   const permissionLevel = props.data.sharedWith.filter(e=>e.email === props.session.user.email);
-  // console.log("🚀 ~ CartList ~ permissionLevel:", permissionLevel);
   
   
   return (
@@ -46,9 +45,9 @@ const CartList = (props: CartListProps) => {
       <TableCaption> </TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-lg text-right w-[30px] font-semibold">מס</TableHead>
+          <TableHead className="hidden md:table-cell text-lg text-right w-[30px] font-semibold">מס</TableHead>
           <TableHead className="text-lg text-right font-semibold">שם מוצר</TableHead>
-          {/* <TableHead className="text-right">מחיר</TableHead> */}
+          <TableHead className="text-lg text-right font-semibold">מחיר</TableHead>
           <TableHead className="text-lg text-right font-semibold">כמות</TableHead>
           <TableHead className="text-lg text-center font-semibold">פעולות</TableHead>
 
@@ -58,12 +57,12 @@ const CartList = (props: CartListProps) => {
         {Array.isArray(props.data.items)
           ? props.data.items.map((item: any, index) => (
               <TableRow key={index}>
-                <TableCell className="font-medium">
+                <TableCell className="hidden md:table-cell font-medium">
                   {index + 1}
                   
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
-                {/* <TableCell>₪{item.price}</TableCell> */}
+                <TableCell>₪{item.price}</TableCell>
                 <TableCell>{item.amount}</TableCell>
 
                 <TableCell  >

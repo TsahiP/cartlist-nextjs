@@ -82,7 +82,6 @@ export function ShareWithDialog({  listId, data,ownerEmail ,disabled }: IShareDa
         // closeDialog();
       }, 1000);
     }
-    console.log("🚀 ~ changePermission ~ changePermissionProcess:", changePermissionProcess)
 
   }
   const shareClick = async () => {

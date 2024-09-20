@@ -6,7 +6,6 @@ import { NextResponse } from 'next/server';
 export const GET = async (req:any) => {
   const { searchParams } = new URL(req.url);
   const name = searchParams.get('query') ??""; // מחלץ את הפרמטר 'query' מהכתובת
-  console.log("🚀 ~ GET ~ name:", name); // מדפיס את השם
 
   try {
     const response = await axios.get(`https://www.shufersal.co.il/online/he/search/results?q=${encodeURIComponent(name)}%3Arelevance&limit=10`);

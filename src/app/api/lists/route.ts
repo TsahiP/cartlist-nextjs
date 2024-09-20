@@ -6,7 +6,6 @@ export const GET = async (req:any) => {
     try {
         connectToDb();
         const lists = await List.find();
-        // console.log("🚀 ~ GET ~ posts:", lists)
         return NextResponse.json(lists);
     } catch (err) {
         console.log(err);

@@ -57,8 +57,6 @@ export const register = async (previousState: any, formData: any) => {
     return { error: "password do not match" };
   }
 
-  // console.log("🚀 ~ register ~ lastName:", lastName)
-  // console.log("🚀 ~ register ~ name:", firstName)
   try {
     connectToDb();
     // check if username exists
@@ -128,13 +126,11 @@ export const addItemToList = async (
   // userId: string,
   formData: ItemFormData
 ) => {
-  // console.log("🚀 ~ addItemToList ~ userId:", userId);
-  // console.log("🚀 ~ addItemToList ~ listId:", listId);
+
   await connectToDb();
 
   try {
     const list = await List.findOne({ _id: listId });
-    // console.log("🚀 ~ addItemToList ~ list:", list)
     if (!list) {
       return { error: "List not found" };
     }
@@ -166,9 +162,7 @@ export const editItemInList = async (
   shared?: string,
   userEmail?: string
 ) => {
-  console.log("🚀 ~ userEmail:", userEmail);
-  console.log("userId: " + userId);
-  console.log("listId: " + listId);
+
   await connectToDb();
   try {
     let list = [];
@@ -287,9 +281,6 @@ export const createList = async (formData: any) => {
   const { title, creatorId, creatorEmail } = formData;
   let user: any;
     user = await User.findOne({ email: creatorEmail });
-  
-  console.log("🚀 ~ createList ~ user", user);
-
   try {
     const newList = new List({
       title: title,
@@ -364,7 +355,7 @@ export const changePermission = async (
       list.sharedWith = list.sharedWith.filter(
         (e: any) => e.email !== shareToEmail
       );
-      console.log("🚀 ~ changePermission ~ list:", list);
+
       
       await list.save();
       revalidatePath(`/lists/${listId}`);
@@ -399,7 +390,7 @@ export const shareList = async (
     
       // Provide a default value or handle the undefined case
       const ownerUser = await User.findOne({ email: ownerEmail }); // Replace with appropriate default value or logic
-      console.log("🚀 ~ user:", ownerUser);
+
       ownerId = ownerUser._id.toString();
       // check if the ownerEmail and email are equal
       if (ownerEmail === email) {

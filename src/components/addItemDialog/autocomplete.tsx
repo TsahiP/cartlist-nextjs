@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import { Root } from "../../../types/shufersal";
+import { Result, Root } from "../../../types/shufersal";
+import Image from "next/image";
 
 interface AutocompleteInputProps {
   suggestions: Root | undefined;
   name: string;
+  price: number;
+  setPrice: (price: number) => void;
   setName: (name: string) => void;
 }
 
@@ -14,6 +17,7 @@ export default function AutocompleteInput({
   name,
   setName,
   suggestions,
+  setPrice,
 }: AutocompleteInputProps) {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -27,8 +31,9 @@ export default function AutocompleteInput({
     setIsOpen(e.target.value.length > 0);
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setName(suggestion);
+  const handleSuggestionClick = (suggestion: Result) => {
+    setName(suggestion.name);
+    setPrice(suggestion.price.value );
     setIsOpen(false);
     inputRef.current?.focus();
   };
@@ -48,9 +53,10 @@ export default function AutocompleteInput({
           {suggestions?.results.map((suggestion, index) => (
             <li
               key={index}
-              onClick={() => handleSuggestionClick(suggestion.name)}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              onClick={() => handleSuggestionClick(suggestion)}
+              className="flex h-16 px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
+              <Image alt="blat" src={suggestion?.images[0].url} width={40} height={20} />
               {suggestion?.name}
             </li>
           ))}

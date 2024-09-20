@@ -46,7 +46,6 @@ const Cart = async ({
     );
   }
 
-  console.log("🚀 ~ data:", data);
   return (
     <div dir="rtl" className="flex justify-center items-center p-4">
       <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm">
