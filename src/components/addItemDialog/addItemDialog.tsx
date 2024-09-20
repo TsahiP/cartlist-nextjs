@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,10 @@ import { MdAddTask } from "react-icons/md";
 import { Button } from "../ui/button";
 import { addItemToList } from "@/lib/actions";
 import { MdOutlineLibraryAdd } from "react-icons/md";
+import axios from 'axios';
 import { Input } from "../ui/input";
+import AutocompleteInput from "./autocomplete";
+import { Root } from "../../../types/shufersal";
 interface AddItemDialogProps {
   userId: string;
   listId: string;
@@ -24,9 +27,34 @@ const AddItemDialog = ({ userId, listId,permissionLevel }: AddItemDialogProps) =
   const [name, setName] = useState<string>("");
   const [amount, setAmount] = useState<number | 1>(1);
   const [price, setPrice] = useState<number | 1>(1);
+  const [suggestions, setSuggestions] = useState<Root>();
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
+
+  const getSearchProductsOptions = async () => {
+    try {
+      console.log("🚀 ~ getSearchProductsOptions ~ name:", name)
+      const response = await axios.get(`/api/shufersal?query=${name}`);
+      const products = response.data;
+      setSuggestions(products);
+      console.log(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+  
+  
+  
+
+
+
+  useEffect(() => {
+    getSearchProductsOptions();
+    console.log("here");
+    
+  },[name]);
+
   const saveItem = (e:any) => {
     e.preventDefault();
     const item = { name: name, amount: amount, price: price };
@@ -63,6 +91,7 @@ const AddItemDialog = ({ userId, listId,permissionLevel }: AddItemDialogProps) =
               id="title"
               className="bg-input text-foreground rounded"
             />
+            <AutocompleteInput suggestions={suggestions}  name={name} setName={setName} />
           </div>
           <div className="flex flex-col mb-4 ">
             {/* Add Tailwind margin-bottom class */}

@@ -13,7 +13,6 @@ import { IoMdListBox } from "react-icons/io";
 const Links = ({ session }) => {
   const [open, setOpen] = useState(false);
   const sidebarRef = useRef(null); // שימוש ב-ref לתפריט הצד
-  console.log("🚀 ~ Links ~ session:", session);
   const user = session?.user;
 
   const links = [
