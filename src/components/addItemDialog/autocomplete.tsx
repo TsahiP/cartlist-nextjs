@@ -56,7 +56,7 @@ export default function AutocompleteInput({
               onClick={() => handleSuggestionClick(suggestion)}
               className="flex h-16 px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
-              <Image alt="blat" src={suggestion?.images[0].url} width={40} height={20} />
+              {/* <Image alt="blat" src={suggestion?.images[0].url} width={40} height={20} /> */}
               {suggestion?.name}
             </li>
           ))}
