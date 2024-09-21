@@ -17,7 +17,7 @@ import { MdOutlineLibraryAdd } from "react-icons/md";
 import axios from "axios";
 import { Input } from "../ui/input";
 import AutocompleteInput from "./autocomplete";
-import { Root } from "../../../types/shufersal";
+import { Result, Root } from "../../../types/shufersal";
 interface AddItemDialogProps {
   userId: string;
   listId: string;
@@ -39,8 +39,10 @@ const AddItemDialog = ({
   const getSearchProductsOptions = async () => {
     try {
       const response = await axios.get(`/api/shufersal?query=${name}`);
-      const products = response.data;
-      setSuggestions(products);
+      const products : Result = response.data;
+      console.log("🚀 ~ getSearchProductsOptions ~ products:", products)
+
+      // setSuggestions(products);
       console.log(products);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -89,20 +91,20 @@ const AddItemDialog = ({
             <label className=" ml-5" htmlFor="title">
               שם המוצר
             </label>
-            {/* <Input
+            <Input
               onChange={(e) => setName(e.target.value)}
               name="title"
               type="text"
               id="title"
               className="bg-input text-foreground rounded"
-            /> */}
-            <AutocompleteInput
+            />
+            {/* <AutocompleteInput
               price={price}
               setPrice={setPrice}
               suggestions={suggestions}
               name={name}
               setName={setName}
-            />
+            /> */}
           </div>
           <div className="flex flex-col mb-4 ">
             {/* Add Tailwind margin-bottom class */}

@@ -22,113 +22,113 @@ export interface Root {
     baseProduct: string
     images: Image[]
     categories: any
-    reviews: any
-    classifications: any
-    potentialPromotions: any
-    variantOptions: any
-    baseOptions: any
-    volumePricesFlag: boolean
-    volumePrices: any
-    productReferences: any
-    variantMatrix: any
-    priceRange: PriceRange
-    firstCategoryNameList: any
-    multidimensional: any
-    configurable: any
-    keywords: any
-    genders: any
-    sku: string
-    commercialDepartment: any
-    brand: Brand
-    brandName: string
-    deliveryItem: any
-    associatedDeiveryItem: any
-    inventoryManagement: any
-    sellingMethod: SellingMethod
-    groupingCode: any
-    country: any
-    manufacturerInfo: any
-    privateLabel: boolean
-    newProduct: boolean
-    showOnSite: any
-    showOnMobile: any
-    searchable: any
-    indexable: any
-    packagingType: any
-    sourceOfSupply: string
-    productType: any
-    adultsOnly: boolean
-    giftProduct: any
-    productSet: any
-    minOrderWeight: any
-    maxOrderWeight: number
-    minOrderQuantity?: number
-    maxOrderQuantity: number
-    food: boolean
-    ignoreERPCategory: any
-    stockReservationMethod: any
-    ean: any
-    popularityRanking: any
-    pricePerUnit: PricePerUnit
-    categoryPrice: CategoryPrice
-    pricePerUnitWithoutDiscount: any
-    valueForComparison: number
-    unitForComparison: string
-    unitDescription: string
-    depositPrice: any
-    gallery360Images: any
-    gallery360Link: any
-    galleryAudios: any
-    galleryPdfs: any
-    galleryVideos: any
-    generalVideos: any
-    links: any
-    icon: Icon
-    numberContentUnits: any
-    unit: any
-    deliveryTime: any
-    commercialCategoryGroup: any
-    commercialCategorySubGroup: any
-    promotions: any
-    productPriceGroup: any
-    secondLevelCategory: string
-    cartStatus: CartStatus
-    promotionsDisplay: any
-    promotionMsg: any
-    promotionCharacteristicsImg: any
-    promotionCodes: any[]
-    mainPromotionCode: any
-    promotionCount: any
-    promotionCharacteristicDescription: any
-    allCategoryCodes: string[]
-    effectiveMinQuantity: any
-    effectivePrice: any
-    effectivePricePerUnit: any
-    remarks: any
-    weightConversion: any
-    baseProductImageLarge: string
-    baseProductImageMedium: string
-    baseProductImageSmall: string
-    baseProductDescription: string
-    coordinationType: any
-    canonical: any
-    supply: any
-    responsibility: any
-    noIndex: any
-    longTail: boolean
-    isBeProduct: any
-    leafletLink: any
-    modifiable: any
-    calories?: number
-    fats?: number
-    healthy: any
-    sodium: any
-    sugar: any
-    weightIncrement: number
-    maxWeight?: number
-    minWeight?: number
-    healthAttributes: HealthAttribute[]
-    healthRecommendation: any
+    // reviews: any
+    // classifications: any
+    // potentialPromotions: any
+    // variantOptions: any
+    // baseOptions: any
+    // volumePricesFlag: boolean
+    // volumePrices: any
+    // productReferences: any
+    // variantMatrix: any
+    // priceRange: PriceRange
+    // firstCategoryNameList: any
+    // multidimensional: any
+    // configurable: any
+    // keywords: any
+    // genders: any
+    // sku: string
+    // commercialDepartment: any
+    // brand: Brand
+    // brandName: string
+    // deliveryItem: any
+    // associatedDeiveryItem: any
+    // inventoryManagement: any
+    // sellingMethod: SellingMethod
+    // groupingCode: any
+    // country: any
+    // manufacturerInfo: any
+    // privateLabel: boolean
+    // newProduct: boolean
+    // showOnSite: any
+    // showOnMobile: any
+    // searchable: any
+    // indexable: any
+    // packagingType: any
+    // sourceOfSupply: string
+    // productType: any
+    // adultsOnly: boolean
+    // giftProduct: any
+    // productSet: any
+    // minOrderWeight: any
+    // maxOrderWeight: number
+    // minOrderQuantity?: number
+    // maxOrderQuantity: number
+    // food: boolean
+    // ignoreERPCategory: any
+    // stockReservationMethod: any
+    // ean: any
+    // popularityRanking: any
+    // pricePerUnit: PricePerUnit
+    // categoryPrice: CategoryPrice
+    // pricePerUnitWithoutDiscount: any
+    // valueForComparison: number
+    // unitForComparison: string
+    // unitDescription: string
+    // depositPrice: any
+    // gallery360Images: any
+    // gallery360Link: any
+    // galleryAudios: any
+    // galleryPdfs: any
+    // galleryVideos: any
+    // generalVideos: any
+    // links: any
+    // icon: Icon
+    // numberContentUnits: any
+    // unit: any
+    // deliveryTime: any
+    // commercialCategoryGroup: any
+    // commercialCategorySubGroup: any
+    // promotions: any
+    // productPriceGroup: any
+    // secondLevelCategory: string
+    // cartStatus: CartStatus
+    // promotionsDisplay: any
+    // promotionMsg: any
+    // promotionCharacteristicsImg: any
+    // promotionCodes: any[]
+    // mainPromotionCode: any
+    // promotionCount: any
+    // promotionCharacteristicDescription: any
+    // allCategoryCodes: string[]
+    // effectiveMinQuantity: any
+    // effectivePrice: any
+    // effectivePricePerUnit: any
+    // remarks: any
+    // weightConversion: any
+    // baseProductImageLarge: string
+    // baseProductImageMedium: string
+    // baseProductImageSmall: string
+    // baseProductDescription: string
+    // coordinationType: any
+    // canonical: any
+    // supply: any
+    // responsibility: any
+    // noIndex: any
+    // longTail: boolean
+    // isBeProduct: any
+    // leafletLink: any
+    // modifiable: any
+    // calories?: number
+    // fats?: number
+    // healthy: any
+    // sodium: any
+    // sugar: any
+    // weightIncrement: number
+    // maxWeight?: number
+    // minWeight?: number
+    // healthAttributes: HealthAttribute[]
+    // healthRecommendation: any
   }
   
   export interface Stock {
