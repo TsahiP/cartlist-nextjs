@@ -45,7 +45,7 @@ export default function AutocompleteInput({
         type="text"
         value={name}
         onChange={handleInputChange}
-        placeholder="Type to search..."
+        placeholder="שם מוצר"
         className="w-full"
       />
       {isOpen && (
@@ -54,9 +54,10 @@ export default function AutocompleteInput({
             <li
               key={index}
               onClick={() => handleSuggestionClick(suggestion)}
-              className="flex h-16 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              className="flex text-xs  min-h-16 px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
-              {/* <Image alt="blat" src={suggestion?.images[0].url} width={40} height={20} /> */}
+              <Image alt="blat" src={suggestion?.images[0].url} width={40} height={20} />
+              {suggestion?.price.value} ₪ - {suggestion?.name}
               {suggestion?.name}
             </li>
           ))}
