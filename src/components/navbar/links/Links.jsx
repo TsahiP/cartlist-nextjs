@@ -7,20 +7,12 @@ import { CgMenu } from "react-icons/cg";
 import { IoEnter } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Link from "next/link";
-import { IoMdListBox } from "react-icons/io";
+
 
 const Links = ({ session }) => {
   const [open, setOpen] = useState(false);
   const sidebarRef = useRef(null); // שימוש ב-ref לתפריט הצד
   const user = session?.user;
-
-  const links = [
-    { title: "Homepage", path: "/" },
-    { title: "About", path: "/about" },
-    { title: "Contact", path: "/contact" },
-    { title: "Blog", path: "/blog" },
-  ];
 
   const toggleMenu = () => {
     setOpen(!open);
