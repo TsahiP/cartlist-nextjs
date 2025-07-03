@@ -7,29 +7,8 @@ import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
-// ======================== items actions ========================
-interface ItemFormData {
-  name: string;
-  amount: number;
-  price: number;
-  desc?: string;
-  img?: string;
-  _id?: string;
-}
+import { ItemFormData } from "./types";
 
-//========================= user actions =================
-interface UserFormData {
-  username: string;
-  password: string;
-}
-// ======================== user actions ========================
-interface UserFormData {
-  username: string;
-  password: string;
-  rePassword: string;
-  img?: string;
-  email?: string;
-}
 export const handleGithubSignOut = async () => {
   "use server";
 
@@ -120,10 +99,8 @@ export const login = async (prevState: any, formData: any) => {
   }
 };
 
-// פונקציה להוספת פריט לרשימה
 export const addItemToList = async (
   listId: string,
-  // userId: string,
   formData: ItemFormData
 ) => {
 
@@ -154,7 +131,6 @@ export const addItemToList = async (
   }
 };
 
-// פונקציה לעריכת פריט ברשימה
 export const editItemInList = async (
   listId: string,
   userId: string,
@@ -227,7 +203,6 @@ export const deleteList = async (
   }
 };
 
-// פונקציה למחיקת פריט מרשימה
 export const deleteItemFromList = async (
   userId: string,
   listId: string,
