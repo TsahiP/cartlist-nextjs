@@ -8,6 +8,7 @@ const Navbar = async () => {
 
   // console.log(session);
   return (
+    
     <div className='bg-inherit h-[100px] flex items-center justify-between '>
       <Link href={process.env.BASE_URL} className={'text-3xl font-bold'}><Image alt="blat" src={"/logo.svg"} width={75} height={75} /></Link>
       <div>

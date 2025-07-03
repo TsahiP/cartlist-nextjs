@@ -9,6 +9,8 @@ import { ShareWithDialog } from "@/components/shareWithDialog/shareWithDialog";
 import { IoMdListBox } from "react-icons/io";
 import WhatsappBtn from "@/components/cartList/WhatsappShareBtn";
 import MobileFabMenu from "@/components/cartList/MobileFabMenu";
+import { ChatWithAI } from "../../../components/chat";
+import type { Cart } from "@/types/cart";
 
 const Cart = async ({
   searchParams,
@@ -24,13 +26,22 @@ const Cart = async ({
   let permissionLevel = "";
   // load my list
 
-  let data: any = [];
+  let data: Cart = {
+    _id: "",
+    title: "",
+    amount: 0,
+    creatorId: "",
+    items: [],
+    sharedWith: []
+  };
   if (searchParams.shared === "false") {
     data = await getListByIdAndUserId(
       searchParams.listId,
       session?.user?.id,
       session?.user?.email
     );
+    console.log("🚀 ~ data:", data)
+    console.log("🚀 ~ data:results", data.items.flatMap((item: any) => `מוצר: ${item.name} כמות: ${item.amount}`))
     permissionLevel = "1";
   }
   // load shared list
@@ -39,22 +50,20 @@ const Cart = async ({
       session?.user?.email,
       searchParams.listId
     );
-    permissionLevel = data.sharedWith[0].permission;
-    console.log(
-      "🚀 ~ permissionLevelasdsadasdsafasgasgasgasgas:",
-      permissionLevel
-    );
+    permissionLevel = data.sharedWith?.[0]?.permission || "";
   }
 
+  const cartItems = data.items.flatMap((item: any) => `${item.name}  ${item.amount}`);
   return (
     <div dir="rtl" className="flex justify-center items-center p-4">
-      <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm">
+      <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm ">
         <Suspense fallback={<div>Loading...</div>}>
           <CartList
             shared={searchParams.shared}
             session={session}
             data={data}
           />
+          <ChatWithAI cart={cartItems} />
         </Suspense>
         {/* buttons */}
         <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
@@ -72,7 +81,7 @@ const Cart = async ({
           <ShareWithDialog
             ownerEmail={userEmail}
             listId={listId}
-            data={data.sharedWith}
+            data={data.sharedWith as any}
             disabled={searchParams.shared === "true"}
           />
         </div>
@@ -89,7 +98,7 @@ const Cart = async ({
         data={data}
         searchParams={searchParams}
       />
-      {/* Left */}
+      
     </div>
   );
 };

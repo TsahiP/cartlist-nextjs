@@ -21,3 +21,10 @@ export interface ItemFormData {
     img?: string;
     email?: string;
   }
+
+  // ======================== ai actions ========================
+  export interface CartItem {
+    id: string
+    name: string
+    quantity: number
+  }
