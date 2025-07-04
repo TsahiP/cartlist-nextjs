@@ -11,6 +11,7 @@ import WhatsappBtn from "@/components/cartList/WhatsappShareBtn";
 import MobileFabMenu from "@/components/cartList/MobileFabMenu";
 import { ChatWithAI } from "../../../components/chat";
 import type { Cart } from "@/types/cart";
+import Chatv2 from "@/components/chatv2/chatv2";
 
 const Cart = async ({
   searchParams,
@@ -63,7 +64,8 @@ const Cart = async ({
             session={session}
             data={data}
           />
-          <ChatWithAI cart={cartItems} />
+          {/* <ChatWithAI cart={cartItems} /> */}
+          <Chatv2 />
         </Suspense>
         {/* buttons */}
         <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
