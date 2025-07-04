@@ -123,8 +123,9 @@ export const addItemToList = async (
     list.items.push(newItem);
     await list.save();
 
-    revalidatePath(`/lists/${listId}`);
-    return { sucsses: "list updated" };
+    revalidatePath(`/cart`);
+    const listObject = JSON.parse(JSON.stringify(list));
+    return listObject;
   } catch (error) {
     console.error("Error adding item to list:", error);
     throw error;
@@ -167,7 +168,7 @@ export const editItemInList = async (
 
     await list.save();
 
-    revalidatePath(`/lists/${listId}`);
+    revalidatePath(`/cart`);
     const listPlainObject = JSON.parse(JSON.stringify(list));
     return listPlainObject;
   } catch (error) {
@@ -235,7 +236,7 @@ export const deleteItemFromList = async (
     list.items.splice(itemIndex, 1); // מחיקת הפריט
     await list.save();
 
-    revalidatePath(`/lists/${listId}`);
+    revalidatePath(`/cart`);
     const listPlainObject = JSON.parse(JSON.stringify(list));
     return listPlainObject;
   } catch (error) {

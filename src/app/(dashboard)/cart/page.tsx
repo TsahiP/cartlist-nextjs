@@ -41,8 +41,6 @@ const Cart = async ({
       session?.user?.id,
       session?.user?.email
     );
-    console.log("🚀 ~ data:", data)
-    console.log("🚀 ~ data:results", data.items.flatMap((item: any) => `מוצר: ${item.name} כמות: ${item.amount}`))
     permissionLevel = "1";
   }
   // load shared list
@@ -54,7 +52,6 @@ const Cart = async ({
     permissionLevel = data.sharedWith?.[0]?.permission || "";
   }
 
-  const cartItems = data.items.flatMap((item: any) => `${item.name}  ${item.amount}`);
   return (
     <div dir="rtl" className="flex justify-center items-center p-4">
       <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm ">
