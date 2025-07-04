@@ -11,6 +11,7 @@ import WhatsappBtn from "@/components/cartList/WhatsappShareBtn";
 import MobileFabMenu from "@/components/cartList/MobileFabMenu";
 import { ChatWithAI } from "../../../components/chat";
 import type { Cart } from "@/types/cart";
+import Chatv2 from "@/components/chatv2/chatv2";
 
 const Cart = async ({
   searchParams,
@@ -40,8 +41,6 @@ const Cart = async ({
       session?.user?.id,
       session?.user?.email
     );
-    console.log("🚀 ~ data:", data)
-    console.log("🚀 ~ data:results", data.items.flatMap((item: any) => `מוצר: ${item.name} כמות: ${item.amount}`))
     permissionLevel = "1";
   }
   // load shared list
@@ -53,7 +52,6 @@ const Cart = async ({
     permissionLevel = data.sharedWith?.[0]?.permission || "";
   }
 
-  const cartItems = data.items.flatMap((item: any) => `${item.name}  ${item.amount}`);
   return (
     <div dir="rtl" className="flex justify-center items-center p-4">
       <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm ">
@@ -63,7 +61,8 @@ const Cart = async ({
             session={session}
             data={data}
           />
-          <ChatWithAI cart={cartItems} />
+          {/* <ChatWithAI cart={cartItems} /> */}
+          <Chatv2 />
         </Suspense>
         {/* buttons */}
         <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
