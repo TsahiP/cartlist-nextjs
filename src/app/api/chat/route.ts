@@ -1,4 +1,4 @@
-import { addItemToList } from '@/lib/actions';
+import { addItemToList, getListByEmailAndListId, getListByIdAndUserId } from '@/lib/actions';
 import { auth } from '@/lib/auth';
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
@@ -11,7 +11,8 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
     try {
         // check auth
-        const session = auth();
+        const session = await auth();
+        console.log("🚀 ~ POST ~ session:", session)
         if (!session) {
             return new Response('Unauthorized', { status: 401 });
         }
@@ -41,18 +42,18 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                     }),
                     execute: async ({ itemName, amount, price }: { itemName: string, amount: string, price: number }) => {
                         try {
-                            const result = await addItemToList(listId, { 
-                                name: itemName, 
-                                amount: Number(amount), 
+                            const result = await addItemToList(listId, {
+                                name: itemName,
+                                amount: Number(amount),
                                 price: price,
                                 desc: "",
                                 img: ""
                             });
-                            
+
                             if (result?.error) {
                                 return `Failed to add item: ${result.error}`;
                             }
-                            
+
                             return `Successfully added ${itemName} (${amount} units at ₪${price}) to the shopping list.`;
                         } catch (error) {
                             console.error('Error adding item to list:', error);
@@ -68,9 +69,9 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                     execute: async ({ items }: { items: { name: string, amount: string, price: number }[] }) => {
                         try {
                             for (const item of items) {
-                                await addItemToList(listId, { 
-                                    name: item.name, 
-                                    amount: Number(item.amount), 
+                                await addItemToList(listId, {
+                                    name: item.name,
+                                    amount: Number(item.amount),
                                     price: item.price,
                                     desc: "",
                                     img: ""
@@ -81,6 +82,16 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                             console.error('Error adding multiple items to list:', error);
                             return `Error adding multiple items to list: ${error}`;
                         }
+                    }
+                },
+                get_shopping_list: {
+                    description: "Get the current shopping list, and use to check product existance",
+                    parameters: z.object({}),
+                    execute: async () => {
+
+                        const list = await getListByIdAndUserId(listId,session?.user?.id as string, session?.user?.email as string)
+                        console.log("🚀 ~ execute: ~ list:", list)
+                        return `Shopping list: ${list}`;
                     }
                 }
             },

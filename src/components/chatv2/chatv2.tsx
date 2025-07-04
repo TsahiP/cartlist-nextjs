@@ -8,7 +8,6 @@ export default function Page({listId}: {listId: string}) {
     maxSteps: 5,
     api: `/api/chat`
   });
-  console.log("🚀 ~ data:", data)
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
