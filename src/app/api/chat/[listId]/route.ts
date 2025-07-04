@@ -7,8 +7,9 @@ import { z } from 'zod';
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 // Specify the runtime environment
-export const runtime = "nodejs";
-export async function POST(req: Request) {
+// export const runtime = "edge";
+
+export async function POST(req: Request, { params }: { params: { listId: string } }) {
     try {
         // check auth
         const session = auth();
@@ -16,14 +17,15 @@ export async function POST(req: Request) {
             return new Response('Unauthorized', { status: 401 });
         }
 
-        const { messages, listId } = await req.json();
+        const { messages } = await req.json();
+        const { listId } = params;
 
         const result = streamText({
             model: google('gemini-2.0-flash'),
             system: `You are a helpful AI assistant with broad knowledge and capabilities. You can:
 
 1. Have natural conversations about ANY topic - recipes, cooking, general knowledge, advice, entertainment, etc.
-2. Provide recipe suggestions and cooking tips
+2. Provide recipe suggestions and cooking tips from the internet, but only if the user asks for it.
 3. Help with meal planning and food-related questions
 4. Assist with shopping list management using tools when specifically requested
 5. Answer general questions about any subject
@@ -44,9 +46,7 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                             const result = await addItemToList(listId, { 
                                 name: itemName, 
                                 amount: Number(amount), 
-                                price: price,
-                                desc: "",
-                                img: ""
+                                price: price
                             });
                             
                             if (result?.error) {
@@ -55,7 +55,7 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                             
                             return `Successfully added ${itemName} (${amount} units at ₪${price}) to the shopping list.`;
                         } catch (error) {
-                            console.error('Error adding item to list:', error);
+                            console.error(`Error adding item to list: ${listId} Error:`, error);
                             return `Error adding item to list: ${error}`;
                         }
                     }
@@ -70,8 +70,8 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                             for (const item of items) {
                                 await addItemToList(listId, { 
                                     name: item.name, 
-                                    amount: Number(item.amount), 
-                                    price: item.price,
+                                    amount: Number(item.amount) || 1, 
+                                    price: item.price || 0,
                                     desc: "",
                                     img: ""
                                 });

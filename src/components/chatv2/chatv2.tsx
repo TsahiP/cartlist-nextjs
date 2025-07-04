@@ -3,8 +3,12 @@
 import { useChat } from "@ai-sdk/react";
 import { useState } from "react";
 
-export default function Page() {
-  const { messages, input, handleInputChange, handleSubmit, status, stop } = useChat({});
+export default function Page({listId}: {listId: string}) {
+  const { messages, input, handleInputChange, handleSubmit, status, stop ,data } = useChat({
+    maxSteps: 5,
+    api: `/api/chat`
+  });
+  console.log("🚀 ~ data:", data)
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">

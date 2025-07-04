@@ -1,4 +1,4 @@
-"use server"; // This line is a directive for the server to handle this code.
+"use server"; 
 import { revalidatePath } from "next/cache";
 import { List, User } from "./models";
 import { connectToDb } from "./utils";
