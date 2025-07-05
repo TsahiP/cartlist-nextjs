@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function Page({listId}: {listId: string}) {
   const { messages, input, handleInputChange, handleSubmit, status, stop ,data } = useChat({
     maxSteps: 5,
-    api: `/api/chat`
+    api: `/api/chat/${listId}`
   });
 
   return (

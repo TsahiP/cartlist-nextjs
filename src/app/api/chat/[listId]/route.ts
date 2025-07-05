@@ -61,7 +61,7 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                     }
                 },
                 add_many_items_to_list: {
-                    description: "Add multiple items to an existing shopping list",
+                    description: "Add multiple items to an existing shopping list, use this tool when the user asks to add multiple items to the list,or the user ask to add a list of items from recipe or other source",
                     parameters: z.object({
                         items: z.array(z.object({ name: z.string(), amount: z.string(), price: z.number() }))
                     }),
