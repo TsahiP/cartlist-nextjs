@@ -12,7 +12,6 @@ export async function POST(req: Request) {
     try {
         // check auth
         const session = await auth();
-        console.log("🚀 ~ POST ~ session:", session)
         if (!session) {
             return new Response('Unauthorized', { status: 401 });
         }
@@ -90,7 +89,6 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                     execute: async () => {
 
                         const list = await getListByIdAndUserId(listId,session?.user?.id as string, session?.user?.email as string)
-                        console.log("🚀 ~ execute: ~ list:", list)
                         return `Shopping list: ${list}`;
                     }
                 }
