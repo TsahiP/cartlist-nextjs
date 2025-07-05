@@ -40,9 +40,6 @@ const AddItemDialog = ({
     try {
       const response = await axios.get(`/api/shufersal?query=${name}`);
       const products : Result = response.data;
-      console.log("🚀 ~ getSearchProductsOptions ~ products:", products)
-
-      // setSuggestions(products);
       console.log(products);
     } catch (error) {
       console.error("Error fetching products:", error);

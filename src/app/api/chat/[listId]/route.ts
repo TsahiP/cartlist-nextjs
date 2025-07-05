@@ -1,4 +1,4 @@
-import { addItemToList, getListByEmailAndListId, getListByIdAndUserId } from '@/lib/actions';
+import { addItemToList } from '@/lib/actions';
 import { auth } from '@/lib/auth';
 import { google } from '@ai-sdk/google';
 import { streamText } from 'ai';
@@ -7,23 +7,25 @@ import { z } from 'zod';
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 // Specify the runtime environment
-export const runtime = "nodejs";
-export async function POST(req: Request) {
+// export const runtime = "edge";
+
+export async function POST(req: Request, { params }: { params: { listId: string } }) {
     try {
         // check auth
-        const session = await auth();
+        const session = auth();
         if (!session) {
             return new Response('Unauthorized', { status: 401 });
         }
 
-        const { messages, listId } = await req.json();
+        const { messages } = await req.json();
+        const { listId } = params;
 
         const result = streamText({
             model: google('gemini-2.0-flash'),
             system: `You are a helpful AI assistant with broad knowledge and capabilities. You can:
 
 1. Have natural conversations about ANY topic - recipes, cooking, general knowledge, advice, entertainment, etc.
-2. Provide recipe suggestions and cooking tips
+2. Provide recipe suggestions and cooking tips from the internet, but only if the user asks for it.
 3. Help with meal planning and food-related questions
 4. Assist with shopping list management using tools when specifically requested
 5. Answer general questions about any subject
@@ -41,37 +43,35 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                     }),
                     execute: async ({ itemName, amount, price }: { itemName: string, amount: string, price: number }) => {
                         try {
-                            const result = await addItemToList(listId, {
-                                name: itemName,
-                                amount: Number(amount),
-                                price: price,
-                                desc: "",
-                                img: ""
+                            const result = await addItemToList(listId, { 
+                                name: itemName, 
+                                amount: Number(amount), 
+                                price: price
                             });
-
+                            
                             if (result?.error) {
                                 return `Failed to add item: ${result.error}`;
                             }
-
+                            
                             return `Successfully added ${itemName} (${amount} units at ₪${price}) to the shopping list.`;
                         } catch (error) {
-                            console.error('Error adding item to list:', error);
+                            console.error(`Error adding item to list: ${listId} Error:`, error);
                             return `Error adding item to list: ${error}`;
                         }
                     }
                 },
                 add_many_items_to_list: {
-                    description: "Add multiple items to an existing shopping list",
+                    description: "Add multiple items to an existing shopping list, use this tool when the user asks to add multiple items to the list,or the user ask to add a list of items from recipe or other source",
                     parameters: z.object({
                         items: z.array(z.object({ name: z.string(), amount: z.string(), price: z.number() }))
                     }),
                     execute: async ({ items }: { items: { name: string, amount: string, price: number }[] }) => {
                         try {
                             for (const item of items) {
-                                await addItemToList(listId, {
-                                    name: item.name,
-                                    amount: Number(item.amount),
-                                    price: item.price,
+                                await addItemToList(listId, { 
+                                    name: item.name, 
+                                    amount: Number(item.amount) || 1, 
+                                    price: item.price || 0,
                                     desc: "",
                                     img: ""
                                 });
@@ -81,15 +81,6 @@ Be friendly, helpful, and conversational. If someone asks for recipes or cooking
                             console.error('Error adding multiple items to list:', error);
                             return `Error adding multiple items to list: ${error}`;
                         }
-                    }
-                },
-                get_shopping_list: {
-                    description: "Get the current shopping list, and use to check product existance",
-                    parameters: z.object({}),
-                    execute: async () => {
-
-                        const list = await getListByIdAndUserId(listId,session?.user?.id as string, session?.user?.email as string)
-                        return `Shopping list: ${list}`;
                     }
                 }
             },

@@ -62,7 +62,7 @@ const Cart = async ({
             data={data}
           />
           {/* <ChatWithAI cart={cartItems} /> */}
-          <Chatv2 />
+          <Chatv2 listId={listId} />
         </Suspense>
         {/* buttons */}
         <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
