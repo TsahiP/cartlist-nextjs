@@ -128,7 +128,7 @@ export const login = async (prevState: any, formData: FormData): Promise<ApiResp
 
 export const addItemToList = async (
   listId: string,
-  formData: FormData
+  formData: FormData|ItemFormData
 ): Promise<ApiResponse> => {
   // Convert FormData to plain object first
   const validation = validateData(itemSchema, formData);
