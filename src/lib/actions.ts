@@ -7,8 +7,21 @@ import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
-import { ItemFormData } from "./types";
-
+import {
+  registerSchema,
+  loginSchema,
+  itemSchema,
+  createListSchema,
+  shareListSchema,
+  changePermissionSchema,
+  type RegisterData,
+  type LoginData,
+  type Item,
+  type CreateListData,
+  type ShareListData,
+  type ChangePermissionData,
+} from "./schemas";
+import { ApiResponse, ItemFormData } from "@/lib/types";
 export const handleGithubSignOut = async () => {
   "use server";
 
@@ -27,108 +40,130 @@ export const handleGoogleSignOut = async () => {
 
   await signOut();
 };
-export const register = async (previousState: any, formData: any) => {
-  console.log(formData);
-  const { firstName, lastName, username, password, rePassword, img, email } =
-    Object.fromEntries(formData);
-  // console.log(username, password, rePassword, img, email);
-  if (password !== rePassword) {
-    return { error: "password do not match" };
+
+// Helper function for validation
+function validateData<T>(schema: any, data: any): ApiResponse<T> {
+  try {
+    const validatedData = schema.parse(data);
+    return { success: true, data: validatedData };
+  } catch (error: any) {
+    return { 
+      success: false, 
+      error: error.errors?.[0]?.message || "Validation failed" 
+    };
+  }
+}
+
+export const register = async (previousState: any, formData: FormData): Promise<ApiResponse> => {
+  const rawData = Object.fromEntries(formData);
+  
+  const validation = validateData(registerSchema, rawData);
+  if (!validation.success) {
+    return validation;
   }
 
+  const data = validation.data as RegisterData;
+
   try {
-    connectToDb();
-    // check if username exists
-    const user = await User.findOne({ username: username });
-    if (user) {
-      return { error: "user already exists" };
+    await connectToDb();
+    
+    // Check if user exists
+    const existingUser = await User.findOne({ 
+      $or: [{ username: data.username }, { email: data.email }] 
+    });
+    
+    if (existingUser) {
+      return { success: false, error: "User already exists" };
     }
-    // hash pass
+
+    // Hash password
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(data.password, salt);
+
     const newUser = new User({
-      firstName,
-      lastName,
-      username,
-      email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      username: data.username,
+      email: data.email,
       password: hashedPassword,
+      img: data.img,
     });
 
-    await newUser.save().catch((e: any) => {
-      console.log(e);
-    });
-    console.log("saved to db");
-
+    await newUser.save();
     return { success: true };
-  } catch (e) {
-    // console.log(error);
-    return { error: "Something went wrong!" };
+  } catch (error) {
+    console.error("Registration error:", error);
+    return { success: false, error: "Something went wrong!" };
   }
 };
-interface CustomError extends Error {
-  cause?: {
-    message: string;
-  };
-}
-export const login = async (prevState: any, formData: any) => {
-  const { username, password } = Object.fromEntries(formData);
-  const user: string = username.toString().toLowerCase();
-  console.log(user);
+
+export const login = async (prevState: any, formData: FormData): Promise<ApiResponse> => {
+  const rawData = Object.fromEntries(formData);
+  
+  const validation = validateData(loginSchema, rawData);
+  if (!validation.success) {
+    return validation;
+  }
+
+  const data = validation.data as LoginData;
 
   try {
-    await signIn("credentials", { username, password });
+    await signIn("credentials", { 
+      username: data.username, 
+      password: data.password 
+    });
+    return { success: true };
   } catch (err: any) {
     if (err instanceof AuthError) {
       switch (err.type) {
         case "CredentialsSignin":
-          console.log("cred wrong1");
-
-          return { msg: "Invalid credentials", status: "error" };
-        case "CredentialsSignin":
-          console.log("cred wrong2");
-          throw err;
+          return { success: false, error: "Invalid credentials" };
         default:
-          console.log("cred wrong3");
-          return {
-            msg: "Something went wrong Invalid credentials",
-            status: "error",
-          };
+          return { success: false, error: "Something went wrong" };
       }
     }
-    throw err;
+    return { success: false, error: "An unexpected error occurred" };
   }
 };
 
 export const addItemToList = async (
   listId: string,
-  formData: ItemFormData
-) => {
+  formData: FormData
+): Promise<ApiResponse> => {
+  // Convert FormData to plain object first
+  const validation = validateData(itemSchema, formData);
+  if (!validation.success) {
+    return validation;
+  }
 
-  await connectToDb();
+  const itemData = validation.data as Item;
 
   try {
+    await connectToDb();
+    
     const list = await List.findOne({ _id: listId });
     if (!list) {
-      return { error: "List not found" };
+      return { success: false, error: "List not found" };
     }
 
     const newItem = {
-      name: formData.name,
-      amount: formData.amount,
-      price: formData.price,
-      desc: formData.desc || "",
-      img: formData.img || "",
+      name: itemData.name,
+      amount: itemData.amount.toString(),
+      price: itemData.price,
+      desc: itemData.desc || "",
+      img: itemData.img || "",
     };
 
     list.items.push(newItem);
     await list.save();
 
     revalidatePath(`/cart`);
-    const listObject = JSON.parse(JSON.stringify(list));
-    return listObject;
+    // Convert Mongoose document to plain object to avoid circular references
+    const listPlainObject = JSON.parse(JSON.stringify(list));
+    return { success: true, data: listPlainObject };
   } catch (error) {
     console.error("Error adding item to list:", error);
-    throw error;
+    return { success: false, error: "Failed to add item" };
   }
 };
 
@@ -139,9 +174,10 @@ export const editItemInList = async (
   shared?: string,
   userEmail?: string
 ) => {
+  console.log("🚀 ~ formData:", formData)
 
-  await connectToDb();
   try {
+  await connectToDb();
     let list = [];
     if (shared === "true") {
       list = await List.findOne({
@@ -154,19 +190,33 @@ export const editItemInList = async (
     if (!list) {
       throw new Error("List not found");
     }
+    await List.updateOne(
+      { 
+        _id: listId,
+        "items._id": formData._id 
+      },
+      {
+        $set: {
+          "items.$.name": formData.name,
+          "items.$.amount": formData.amount,
+          "items.$.price": formData.price,
+          "items.$.desc": formData.desc || "",
+          "items.$.img": formData.img || ""
+        }
+      }
+    );
+    // const item = list.items.find((item: any) => item.id === formData._id);
+    // if (!item) {
+    //   throw new Error("Item not found");
+    // }
 
-    const item = list.items.find((item: any) => item.id === formData._id);
-    if (!item) {
-      throw new Error("Item not found");
-    }
+    // item.name = formData.name;
+    // item.amount = formData.amount;
+    // item.price = formData.price;
+    // item.desc = formData.desc || "";
+    // item.img = formData.img || "";
 
-    item.name = formData.name;
-    item.amount = formData.amount;
-    item.price = formData.price;
-    item.desc = formData.desc || "";
-    item.img = formData.img || "";
-
-    await list.save();
+    // await list.save();
 
     revalidatePath(`/cart`);
     const listPlainObject = JSON.parse(JSON.stringify(list));
@@ -402,24 +452,7 @@ export const shareList = async (
   }
 };
 
-// // Get list by list id and user email
-// export const getListByIdAndUserEmail = async (listId: string, userEmail: string) => {
-//   await connectToDb();
 
-//   try {
-//     const user = await User.findOne({ email: userEmail });
-//     const list = await List.findOne({ _id: listId, creatorId: user._id });
-//     if (!list) {
-//       return { error: "List not found" };
-//     }
-//     const listPlainObject = JSON.parse(JSON.stringify(list));
-
-//     return listPlainObject;
-//   } catch (error) {
-//     console.error("Error getting list by id and user id:", error);
-//     throw error;
-//   }
-// };
 // Get list by list id and user id
 export const getListByIdAndUserId = async (
   listId: string,
