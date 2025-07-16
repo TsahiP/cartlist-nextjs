@@ -18,7 +18,7 @@ export default function ChatDialog({ listId }: ChatDialogProps) {
       <DialogTrigger asChild>
         <Button variant="outline" className="gap-2 w-full sm:w-auto">
           <MessageCircle size={20} />
-          צ'אט AI
+          צ&apos;אט AI
         </Button>
       </DialogTrigger>
       
