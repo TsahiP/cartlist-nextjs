@@ -1,7 +1,7 @@
 "use client";
 import { Suspense } from "react";
 import CartList from "@/components/cartList/cartItem";
-import Chat from "@/components/chatAi/chat";
+import ChatDialog from "@/components/chatAi/ChatDialog";
 import AddItemDialog from "@/components/addItemDialog/addItemDialog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -46,7 +46,9 @@ export default function CartContent({
             session={session}
             data={listData}
           />
-          <Chat listId={listId} />
+          <div className="mt-4">
+            <ChatDialog listId={listId} />
+          </div>
         </Suspense>
         
         {/* Desktop buttons */}

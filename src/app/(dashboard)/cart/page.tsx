@@ -68,8 +68,6 @@ const Cart = async ({
   };
 }) => {
   const session: any = await auth();
-  const userEmail = session?.user?.email;
-  const listId = searchParams.listId.toString();
   let permissionLevel = "";
   let listData: CartData | null = null;
   
