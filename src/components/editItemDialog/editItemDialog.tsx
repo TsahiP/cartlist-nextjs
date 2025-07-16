@@ -29,6 +29,7 @@ interface EditItemDialogProps {
   shared?: string;
   userEmail?: string;
   permissionLevel?: string;
+  disabled?: boolean;
 }
 
 import {
@@ -49,6 +50,7 @@ const EditItemDialog = (props: EditItemDialogProps) => {
     shared,
     userEmail,
     permissionLevel,
+    disabled = false,
   } = props;
   const [errorFlag, setErrorFlag] = useState<boolean>(false);
   
@@ -84,6 +86,8 @@ const EditItemDialog = (props: EditItemDialogProps) => {
     }
   };
 
+  const isButtonDisabled = disabled || (shared === "true" && permissionLevel === "2");
+
   return (
     <Dialog>
       <TooltipProvider>
@@ -91,7 +95,7 @@ const EditItemDialog = (props: EditItemDialogProps) => {
           <TooltipTrigger asChild>
             <Button asChild className="w-12 h-12 mr-3 mt-2.5">
               <DialogTrigger
-                disabled={shared === "true" && permissionLevel === "2"}
+                disabled={isButtonDisabled}
                 onClick={() => {
                   reset();
                 }}
@@ -101,7 +105,7 @@ const EditItemDialog = (props: EditItemDialogProps) => {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>ערוך מוצר</p>
+            <p>{disabled ? "לא ניתן לערוך" : "ערוך מוצר"}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -130,6 +134,7 @@ const EditItemDialog = (props: EditItemDialogProps) => {
               name="name"
               type="text"
               id="name"
+              disabled={isSubmitting}
             />
             {errors.name && (
               <span className="text-red-500 text-sm mr-5 mt-1">
@@ -151,6 +156,7 @@ const EditItemDialog = (props: EditItemDialogProps) => {
               type="number"
               id="amount"
               min="1"
+              disabled={isSubmitting}
             />
             {errors.amount && (
               <span className="text-red-500 text-sm mr-5 mt-1">
@@ -173,6 +179,7 @@ const EditItemDialog = (props: EditItemDialogProps) => {
               id="price"
               min="0"
               step="0.01"
+              disabled={isSubmitting}
             />
             {errors.price && (
               <span className="text-red-500 text-sm mr-5 mt-1">

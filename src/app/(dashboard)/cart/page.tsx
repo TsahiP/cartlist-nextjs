@@ -12,6 +12,8 @@ import MobileFabMenu from "@/components/cartList/MobileFabMenu";
 import { ChatWithAI } from "../../../components/chat";
 import type { Cart } from "@/types/cart";
 import Chat from "@/components/chatAi/chat";
+import CartContent from "@/components/cart/CartContent";
+import { OptimisticCart, OptimisticItem } from "@/types/cart";
 
 // Define the proper interface for the cart data matching what components expect
 interface CartData {
@@ -36,6 +38,27 @@ interface CartData {
   }>;
 }
 
+// Transform server data to optimistic cart format
+function transformToOptimisticCart(data: CartData): OptimisticCart {
+  return {
+    _id: data._id,
+    title: data.title,
+    amount: data.amount,
+    creatorId: data.creatorId,
+    items: data.items.map(item => ({
+      _id: item._id,
+      name: item.name,
+      amount: item.amount,
+      price: item.price,
+      desc: item.desc || "",
+      img: item.img || "",
+      isOptimistic: false,
+      isDeleting: false,
+    })),
+    sharedWith: data.sharedWith,
+  };
+}
+
 const Cart = async ({
   searchParams,
 }: {
@@ -48,9 +71,8 @@ const Cart = async ({
   const userEmail = session?.user?.email;
   const listId = searchParams.listId.toString();
   let permissionLevel = "";
-  // load my list
-
   let listData: CartData | null = null;
+  
   if (searchParams.shared === "false") {
     const response = await getListByIdAndUserId(
       searchParams.listId,
@@ -60,6 +82,7 @@ const Cart = async ({
     listData = response.success ? (response.data as unknown as CartData) : null;
     permissionLevel = "1";
   }
+  
   // load shared list
   if (searchParams.shared === "true") {
     const response = await getListByEmailAndListId(
@@ -71,54 +94,26 @@ const Cart = async ({
   }
   
   if (!listData) {
-    return <div>List not found</div>;
+    return (
+      <div dir="rtl" className="flex justify-center items-center p-4">
+        <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm">
+          <div className="text-center text-red-500 text-lg">רשימה לא נמצאה</div>
+        </div>
+      </div>
+    );
   }
+  
+  // Transform data to optimistic format
+  const optimisticCart = transformToOptimisticCart(listData);
   
   return (
     <div dir="rtl" className="flex justify-center items-center p-4">
-      <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm ">
-        <Suspense fallback={<div>Loading...</div>}>
-          <CartList
-            shared={searchParams.shared}
-            session={session}
-            data={listData}
-          />
-          <Chat listId={listId} />
-        </Suspense>
-        {/* buttons */}
-        <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
-          <AddItemDialog
-            userId={searchParams.shared === "true" ? listData.creatorId : userEmail}
-            listId={listId}
-            permissionLevel={permissionLevel}
-          />
-          <Button className="w-36 gap-2" asChild>
-            <Link href="/carts">
-              <IoMdListBox size={20} />
-              חזור לרשימות
-            </Link>
-          </Button>
-          <ShareWithDialog
-            ownerEmail={userEmail}
-            listId={listId}
-            data={listData.sharedWith as any}
-            disabled={searchParams.shared === "true"}
-          />
-        </div>
-        {/* whatsapp */}
-        <div className="hidden justify-center mt-4 md:flex ">
-          <WhatsappBtn items={listData.items} />
-        </div>
-      </div>
-      <MobileFabMenu
-        userId={searchParams.shared === "true" ? listData.creatorId : userEmail}
-        listId={listId}
-        permissionLevel={permissionLevel}
-        userEmail={userEmail}
-        data={listData}
+      <CartContent
+        listData={optimisticCart}
+        session={session}
         searchParams={searchParams}
+        permissionLevel={permissionLevel}
       />
-      
     </div>
   );
 };
