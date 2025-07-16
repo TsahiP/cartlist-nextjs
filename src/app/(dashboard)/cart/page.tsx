@@ -13,6 +13,29 @@ import { ChatWithAI } from "../../../components/chat";
 import type { Cart } from "@/types/cart";
 import Chatv2 from "@/components/chatv2/chatv2";
 
+// Define the proper interface for the cart data matching what components expect
+interface CartData {
+  _id: string;
+  title: string;
+  amount: number;
+  creatorId: string;
+  items: Array<{
+    _id: string;
+    name: string;
+    amount: string;
+    price: number;
+    desc?: string;
+    img?: string;
+  }>;
+  sharedWith: Array<{
+    email: string;
+    permission: string;
+    fullName: string;
+    lastName: string;
+    firstName: string;
+  }>;
+}
+
 const Cart = async ({
   searchParams,
 }: {
@@ -27,31 +50,30 @@ const Cart = async ({
   let permissionLevel = "";
   // load my list
 
-  let data: Cart = {
-    _id: "",
-    title: "",
-    amount: 0,
-    creatorId: "",
-    items: [],
-    sharedWith: []
-  };
+  let listData: CartData | null = null;
   if (searchParams.shared === "false") {
-    data = await getListByIdAndUserId(
+    const response = await getListByIdAndUserId(
       searchParams.listId,
       session?.user?.id,
       session?.user?.email
     );
+    listData = response.success ? (response.data as unknown as CartData) : null;
     permissionLevel = "1";
   }
   // load shared list
   if (searchParams.shared === "true") {
-    data = await getListByEmailAndListId(
+    const response = await getListByEmailAndListId(
       session?.user?.email,
       searchParams.listId
     );
-    permissionLevel = data.sharedWith?.[0]?.permission || "";
+    listData = response.success ? (response.data as unknown as CartData) : null;
+    permissionLevel = listData?.sharedWith?.[0]?.permission || "";
   }
-
+  
+  if (!listData) {
+    return <div>List not found</div>;
+  }
+  
   return (
     <div dir="rtl" className="flex justify-center items-center p-4">
       <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm ">
@@ -59,7 +81,7 @@ const Cart = async ({
           <CartList
             shared={searchParams.shared}
             session={session}
-            data={data}
+            data={listData}
           />
           {/* <ChatWithAI cart={cartItems} /> */}
           <Chatv2 listId={listId} />
@@ -67,7 +89,7 @@ const Cart = async ({
         {/* buttons */}
         <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
           <AddItemDialog
-            userId={searchParams.shared === "true" ? data.creatorId : userEmail}
+            userId={searchParams.shared === "true" ? listData.creatorId : userEmail}
             listId={listId}
             permissionLevel={permissionLevel}
           />
@@ -80,21 +102,21 @@ const Cart = async ({
           <ShareWithDialog
             ownerEmail={userEmail}
             listId={listId}
-            data={data.sharedWith as any}
+            data={listData.sharedWith as any}
             disabled={searchParams.shared === "true"}
           />
         </div>
         {/* whatsapp */}
         <div className="hidden justify-center mt-4 md:flex ">
-          <WhatsappBtn items={data.items} />
+          <WhatsappBtn items={listData.items} />
         </div>
       </div>
       <MobileFabMenu
-        userId={searchParams.shared === "true" ? data.creatorId : userEmail}
+        userId={searchParams.shared === "true" ? listData.creatorId : userEmail}
         listId={listId}
         permissionLevel={permissionLevel}
         userEmail={userEmail}
-        data={data}
+        data={listData}
         searchParams={searchParams}
       />
       

@@ -17,6 +17,7 @@ import {
   type RegisterData,
   type LoginData,
   type Item,
+  type List as ListType,
   type CreateListData,
   type ShareListData,
   type ChangePermissionData,
@@ -458,7 +459,7 @@ export const getListByIdAndUserId = async (
   listId: string,
   userId: string,
   userEmail: string
-) => {
+): Promise<ApiResponse<ListType>> => {
   await connectToDb();
 
   try {
@@ -471,14 +472,15 @@ export const getListByIdAndUserId = async (
       creatorId: userId ?? user._id,
     });
     if (!list) {
-      return { error: "List not found" };
+      return { success: false, error: "List not found" };
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
+    console.log("🚀 ~ listPlainObject:", listPlainObject)
 
-    return listPlainObject;
+    return { success: true, data: listPlainObject };
   } catch (error) {
     console.error("Error getting list by id and user id:", error);
-    throw error;
+    return { success: false, error: "Failed to get list" };
   }
 };
 
@@ -486,7 +488,7 @@ export const getListByIdAndUserId = async (
 export const getListByEmailAndListId = async (
   email: string,
   listId: string
-) => {
+): Promise<ApiResponse<ListType>> => {
   await connectToDb();
 
   try {
@@ -495,9 +497,10 @@ export const getListByEmailAndListId = async (
       sharedWith: { $elemMatch: { email: email } },
     });
     if (!list) {
-      return { error: "List not found" };
+      return { success: false, error: "List not found" };
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
+    console.log("🚀 ~ listPlainObject:", listPlainObject)
     listPlainObject.sharedWith = listPlainObject.sharedWith.filter(
       (s: { email: string }) => s.email === email
     );
@@ -506,9 +509,9 @@ export const getListByEmailAndListId = async (
       listPlainObject
     );
 
-    return listPlainObject;
+    return { success: true, data: listPlainObject };
   } catch (error) {
     console.error("Error getting list by email and list id:", error);
-    throw error;
+    return { success: false, error: "Failed to get list" };
   }
 };
