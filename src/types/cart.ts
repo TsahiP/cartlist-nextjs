@@ -1,28 +1,19 @@
-export interface CartItem {
-  name: string;
-  amount: string;
-  price: number;
-  desc: string;
-  img: string;
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
+import { Item, SharedWith, List } from "@/lib/schemas";
+
+// Re-export the main types
+export type { Item as CartItem, SharedWith, List as Cart };
+
+// Additional cart-specific types if needed
+export interface CartSummary {
+  totalItems: number;
+  totalPrice: number;
+  itemCount: number;
 }
 
-export interface SharedWith {
-  email: string;
-  permission: string;
-  fullName: string;
-  lastName: string;
-  firstName: string;
-}
-
-export interface Cart {
-  _id: string;
-  title: string;
-  amount: number;
-  creatorId: string;
-  items: CartItem[];
-  sharedWith: SharedWith[];
-  results?: CartItem[];
+export interface CartFilters {
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sortBy?: "name" | "price" | "createdAt";
+  sortOrder?: "asc" | "desc";
 } 

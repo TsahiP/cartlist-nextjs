@@ -55,7 +55,7 @@ interface IShareStatus {
 }
 
 export function ShareWithDialog({  listId, data,ownerEmail ,disabled }: IShareDataProps) {
-  const [email, setEmail] = useState("");
+    const [email, setEmail] = useState("");
   const [shareStatus, setShareStatus] = useState<IShareStatus>({});
   const [loader, setLoader] = useState(false);
 
@@ -153,7 +153,7 @@ export function ShareWithDialog({  listId, data,ownerEmail ,disabled }: IShareDa
               <div className="grid gap-6">
                 {data.map((user, index) =>
 
-                  <div key={user.email} className="flex flex-col md:flex-row items-center justify-between space-x-4">
+                  <div key={user.email+index} className="flex flex-col md:flex-row items-center justify-between space-x-4">
                     <div className="flex items-center space-x-4">
                       <Avatar>
                         <AvatarImage src="/avatars/03.png" />
