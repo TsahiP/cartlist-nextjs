@@ -175,7 +175,6 @@ export const editItemInList = async (
   shared?: string,
   userEmail?: string
 ) => {
-  console.log("🚀 ~ formData:", formData)
 
   try {
   await connectToDb();
@@ -475,7 +474,6 @@ export const getListByIdAndUserId = async (
       return { success: false, error: "List not found" };
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
-    console.log("🚀 ~ listPlainObject:", listPlainObject)
 
     return { success: true, data: listPlainObject };
   } catch (error) {
@@ -500,13 +498,8 @@ export const getListByEmailAndListId = async (
       return { success: false, error: "List not found" };
     }
     const listPlainObject = JSON.parse(JSON.stringify(list));
-    console.log("🚀 ~ listPlainObject:", listPlainObject)
     listPlainObject.sharedWith = listPlainObject.sharedWith.filter(
       (s: { email: string }) => s.email === email
-    );
-    console.log(
-      "🚀 ~ getListByEmailAndListId ~ listPlainObject:",
-      listPlainObject
     );
 
     return { success: true, data: listPlainObject };
