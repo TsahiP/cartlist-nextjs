@@ -1,5 +1,5 @@
 import AddItemDialog from "@/components/addItemDialog/addItemDialog";
-import CartList from "@/components/cartList/cartList";
+import CartList from "@/components/cartList/cartItem";
 import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { getListByEmailAndListId, getListByIdAndUserId } from "@/lib/actions";
@@ -11,7 +11,7 @@ import WhatsappBtn from "@/components/cartList/WhatsappShareBtn";
 import MobileFabMenu from "@/components/cartList/MobileFabMenu";
 import { ChatWithAI } from "../../../components/chat";
 import type { Cart } from "@/types/cart";
-import Chatv2 from "@/components/chatv2/chatv2";
+import Chat from "@/components/chatAi/chat";
 
 // Define the proper interface for the cart data matching what components expect
 interface CartData {
@@ -83,8 +83,7 @@ const Cart = async ({
             session={session}
             data={listData}
           />
-          {/* <ChatWithAI cart={cartItems} /> */}
-          <Chatv2 listId={listId} />
+          <Chat listId={listId} />
         </Suspense>
         {/* buttons */}
         <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
