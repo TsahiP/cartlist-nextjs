@@ -64,7 +64,7 @@ const LoginForm = () => {
                 type="password"
               />
             </div>
-            {state?.msg?.toString()}
+            {state?.error?.toString()}
             <Button className="font-semibold w-[200px] shadow-md">Submit</Button>
           </form>
           <div className="flex items-center justify-center mt-4 ">
