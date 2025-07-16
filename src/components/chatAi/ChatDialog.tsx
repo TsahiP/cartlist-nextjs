@@ -26,7 +26,7 @@ export default function ChatDialog({ listId }: ChatDialogProps) {
         <DialogHeader className="px-4 sm:px-6 py-4 border-b flex-shrink-0">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg sm:text-xl font-semibold text-muted-foreground">
-              עוזר צ'אט AI
+              עוזר צ&apos;אט AI
             </DialogTitle>
             <Button
               variant="ghost"

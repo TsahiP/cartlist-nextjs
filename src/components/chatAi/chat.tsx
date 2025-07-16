@@ -19,7 +19,7 @@ export default function Page({ listId, isInDialog = false }: ChatProps) {
       {!isInDialog && (
         <div className="bg-white border-b border-gray-200 px-6 py-4">
           <h1 className="text-xl font-semibold text-gray-900">
-            עוזר צ'אט AI עגלת קניות
+            עוזר צ&apos;אט AI עגלת קניות
           </h1>
           <p className="text-sm text-gray-500">מופעל על ידי Google Gemini</p>
         </div>
