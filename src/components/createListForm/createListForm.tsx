@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createList } from "@/lib/actions";
+import { createListAction } from "@/lib/actions";
 import { useFormState } from "react-dom";
 
 const CreateListForm = () => {
-  const [state, formAction] = useFormState(createList, undefined);
+  const [state, formAction] = useFormState(createListAction, undefined);
   const router = useRouter();
 
   // const [error, setError] = useState('');
@@ -32,20 +32,6 @@ const CreateListForm = () => {
           <input
             id="title"
             name="title"
-            type="text"
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 font-medium mb-2"
-            htmlFor="creatorId"
-          >
-            Creator ID
-          </label>
-          <input
-            name="creatorId"
-            id="creatorId"
             type="text"
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
           />

@@ -212,7 +212,6 @@ export const editItemInList = async (
   }
 };
 
-//delete a list by id
 export const deleteList = async (listId: string) => {
   const session = await auth();
 
@@ -316,6 +315,18 @@ export const createList = async (title: string): Promise<ApiResponse> => {
     console.error("Error creating list:", error);
     return { success: false, error: "Failed to create list" };
   }
+};
+
+// Wrapper for useFormState / form actions
+export const createListAction = async (
+  _prevState: ApiResponse | undefined,
+  formData: FormData
+): Promise<ApiResponse> => {
+  const title = formData.get("title")?.toString().trim() || "";
+  if (!title) {
+    return { success: false, error: "Title is required" };
+  }
+  return await createList(title);
 };
 
 // Fetch carts that belong to the currently authenticated user

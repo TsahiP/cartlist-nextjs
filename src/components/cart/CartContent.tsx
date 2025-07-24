@@ -28,10 +28,9 @@ export default function CartContent({
   searchParams, 
   permissionLevel 
 }: CartContentProps) {
-  // const userEmail = session?.user?.email;
-  // Not needed for item actions
-  const listId = searchParams.listId.toString();
 
+  const listId = searchParams.listId.toString();
+  
   return (
     <CartOptimisticProvider
       initialCart={listData}
