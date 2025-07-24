@@ -4,29 +4,26 @@ import { FaTrash } from "react-icons/fa";
 import { useState } from "react";
 
 interface Props {
-    userId: string | undefined;
-    listId: string | undefined;
-    userEmail: string | undefined | null;
+    listId: string;
 }
 
-const DeleteListBtn = (props: Props) => {
+const DeleteListBtn = ({ listId }: Props) => {
     const [isDeleting, setIsDeleting] = useState(false);
 
     const deleteListClicked = async () => {
         if (isDeleting) return;
-        
+
         setIsDeleting(true);
         try {
-            await deleteList(props.userId, props.listId, props.userEmail);
+            await deleteList(listId);
             // Optionally refresh the page or update the UI
             window.location.reload();
         } catch (error) {
-            console.error('Error deleting list:', error);
-            // You could add a toast notification here
+            console.error("Error deleting list:", error);
         } finally {
             setIsDeleting(false);
         }
-    }
+    };
 
     return (
         <button
@@ -38,6 +35,6 @@ const DeleteListBtn = (props: Props) => {
             <FaTrash className="text-sm" />
         </button>
     );
-}
+};
 
 export default DeleteListBtn;

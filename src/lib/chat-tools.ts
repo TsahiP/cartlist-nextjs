@@ -105,18 +105,13 @@ export const chatTools = {
             try {
                 // Get current user session for permission checks
                 const session = await auth();
-                console.log("🚀 ~ session:", session)
-                const userId = (session as any)?.user?.id as string | undefined;
-                const userEmail = (session as any)?.user?.email as string | undefined;
-
-                // Retrieve the list to determine shared status and locate item ID
+                // Retrieve the list to locate item ID
                 const listRes = await getListById(listId);
                 if (listRes.error || !listRes.data) {
                     return `Failed to fetch list: ${listRes.error}`;
                 }
 
                 const list = listRes.data;
-                const sharedFlag = list.creatorId !== userId ? "true" : undefined;
 
                 const item = list.items.find((i: any) =>
                     i.name.toLowerCase() === name.toLowerCase()
@@ -127,11 +122,8 @@ export const chatTools = {
                 }
 
                 const result = await deleteItemFromList(
-                    userId ?? "",
                     listId,
-                    (item as any)._id ?? (item as any).id,
-                    userEmail ?? "",
-                    sharedFlag
+                    (item as any)._id ?? (item as any).id
                 );
 
                 if (result?.error) {

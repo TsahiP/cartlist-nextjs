@@ -45,8 +45,7 @@ interface ISharedWithData {
 interface IShareDataProps {
   listId: string;
   data: [ISharedWithData];
-  disabled:boolean;
-  ownerEmail: string;
+  disabled: boolean;
 }
 
 interface IShareStatus {
@@ -54,7 +53,7 @@ interface IShareStatus {
   success?: string;
 }
 
-export function ShareWithDialog({  listId, data,ownerEmail ,disabled }: IShareDataProps) {
+export function ShareWithDialog({  listId, data, disabled }: IShareDataProps) {
     const [email, setEmail] = useState("");
   const [shareStatus, setShareStatus] = useState<IShareStatus>({});
   const [loader, setLoader] = useState(false);
@@ -67,7 +66,7 @@ export function ShareWithDialog({  listId, data,ownerEmail ,disabled }: IShareDa
   const changePermissionHandle = async ( email:string , permission:string) => {
     setLoader(true);
     const permissionLevel = permission === "edit" ? "1" : permission === "view" ? "2" : "3"; 
-    const changePermissionProcess = await changePermission( listId, email, permissionLevel,ownerEmail);
+    const changePermissionProcess = await changePermission( listId, email, permissionLevel);
     setLoader(false);
     console.log(changePermissionProcess);
 
@@ -86,7 +85,7 @@ export function ShareWithDialog({  listId, data,ownerEmail ,disabled }: IShareDa
   }
   const shareClick = async () => {
 
-    const shareProcess = await shareList( listId, email, ownerEmail);
+    const shareProcess = await shareList( listId, email);
     // console.log(shareProcess);
 
     if (shareProcess?.error === "Exist") {

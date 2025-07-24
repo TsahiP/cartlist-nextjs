@@ -10,19 +10,15 @@ import WhatsappBtn from "./WhatsappShareBtn";
 import ChatDialog from "../chatAi/ChatDialog";
 
 interface IMobileFabMenuProps {
-  userId: string;
   listId: string;
   permissionLevel: string;
-  userEmail: string;
   data: any;
   searchParams: any;
 }
 
 const MobileFabMenu: React.FC<IMobileFabMenuProps> = ({
-  userId,
   listId,
   permissionLevel,
-  userEmail,
   data,
   searchParams,
 }) => {
@@ -85,9 +81,6 @@ const MobileFabMenu: React.FC<IMobileFabMenuProps> = ({
             style={{ transitionDelay: isOpen ? "100ms" : "0ms" }}
           >
             <AddItemDialog
-              userId={
-                searchParams.shared === "true" ? data.creatorId : userEmail
-              }
               listId={listId}
               permissionLevel={permissionLevel}
             />
@@ -116,7 +109,6 @@ const MobileFabMenu: React.FC<IMobileFabMenuProps> = ({
             style={{ transitionDelay: isOpen ? "200ms" : "0ms" }}
           >
             <ShareWithDialog
-              ownerEmail={userEmail}
               listId={listId}
               data={data.sharedWith}
               disabled={searchParams.shared === "true"}

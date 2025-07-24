@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {  FaShoppingCart, FaUsers, FaCalendarAlt } from "react-icons/fa";
 import DeleteListBtn from "./deleteListBtn/deleteListBtn";
-import { auth } from "@/lib/auth";
 
 interface List {
   createdAt: Date;
@@ -19,9 +18,6 @@ interface Props {
 }
 
 const ListComp = async (props: Props) => {
-  const session = await auth();
-  const userId = session?.user?.id;
-  const userEmail = session?.user?.email;
   const listIdPlainObject = JSON.parse(JSON.stringify(props.list._id));
   
   // Format creation date
@@ -103,7 +99,7 @@ const ListComp = async (props: Props) => {
         {!props.sharedFlag && (
           <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <div className="cursor-pointer flex justify-center items-center text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-lg w-8 h-8 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105">
-              <DeleteListBtn userEmail={userEmail ?? undefined} userId={userId} listId={props.list._id} />
+              <DeleteListBtn listId={props.list._id} />
             </div>
           </div>
         )}

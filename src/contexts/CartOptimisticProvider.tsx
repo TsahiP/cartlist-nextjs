@@ -72,18 +72,12 @@ interface CartOptimisticProviderProps {
   children: React.ReactNode;
   initialCart: OptimisticCart;
   listId: string;
-  userId: string;
-  userEmail: string;
-  shared?: string;
 }
 
 export function CartOptimisticProvider({ 
   children, 
   initialCart, 
-  listId, 
-  userId, 
-  userEmail, 
-  shared 
+  listId
 }: CartOptimisticProviderProps) {
   const [isPending, startTransition] = useTransition();
   const [optimisticCart, setOptimisticCart] = useOptimistic(initialCart, cartReducer);
@@ -134,9 +128,9 @@ export function CartOptimisticProvider({
     });
 
     try {
-      const result = await deleteItemFromList(userId, listId, itemId, userEmail, shared);
+      const result = await deleteItemFromList(listId, itemId);
       
-      if (result) {
+      if (result && result.success) {
         startTransition(() => {
           setOptimisticCart({ type: 'CONFIRM_DELETE_ITEM', payload: { itemId } });
         });
@@ -154,7 +148,7 @@ export function CartOptimisticProvider({
       toast.error('שגיאה במחיקת המוצר');
       console.error('Error deleting item:', error);
     }
-  }, [userId, listId, userEmail, shared, setOptimisticCart]);
+  }, [listId, setOptimisticCart]);
 
   const contextValue: CartContextType = {
     cart: optimisticCart,

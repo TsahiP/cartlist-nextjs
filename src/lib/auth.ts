@@ -70,27 +70,28 @@ export const {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-
       if (account?.provider === "google") {
         connectToDb();
         try {
-          const user = await User.findOne({ email: profile?.email });
-          if (!user) {
-            console.log("here");
-
+          // Ensure a corresponding user exists in our DB
+          let dbUser = await User.findOne({ email: profile?.email });
+          if (!dbUser) {
             const newUser = new User({
               firstName: profile?.given_name ?? "",
               lastName: profile?.family_name ?? "",
               username: profile?.email,
               email: profile?.email,
               img: profile?.picture ?? "",
-
             });
-            console.log("here");
-            await newUser.save();
+            dbUser = await newUser.save();
           }
+
+          // Attach the MongoDB id and admin flag so the JWT callback sees them
+          // and writes them into `token.userId`
+          (user as any)._id = dbUser._id;
+          (user as any).isAdmin = dbUser.isAdmin;
         } catch (e) {
-          // console.log(e);
+          console.error("Google signIn error", e);
           return false;
         }
       }
