@@ -66,7 +66,6 @@ export default function CartContent({
             </Link>
           </Button>
           <ShareWithDialog
-            ownerEmail={email}
             listId={listId}
             data={listData.sharedWith as any}
             disabled={searchParams.shared === "true"}

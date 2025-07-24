@@ -13,7 +13,7 @@ interface IMobileFabMenuProps {
   userId: string;
   listId: string;
   permissionLevel: string;
-  userEmail: string;
+  userEmail: string; // still used for WhatsappBtn maybe but not for ShareWithDialog
   data: any;
   searchParams: any;
 }
@@ -116,7 +116,6 @@ const MobileFabMenu: React.FC<IMobileFabMenuProps> = ({
             style={{ transitionDelay: isOpen ? "200ms" : "0ms" }}
           >
             <ShareWithDialog
-              ownerEmail={userEmail}
               listId={listId}
               data={data.sharedWith}
               disabled={searchParams.shared === "true"}
