@@ -6,11 +6,9 @@ import { FaShoppingCart, FaUsers } from "react-icons/fa";
 
 const MyCarts = async () => {
   const session = await auth();
-  const userId = session?.user?.id;
-  const userEmail = session?.user?.email;
-  // FETCH DATA WITH AN API
-  const lists = await getCarts(userId ?? undefined, userEmail ?? undefined);
-  const sharedCarts = await getSharedCarts(session?.user?.email);
+  // No need to pass identifiers – the server actions derive them from the session
+  const lists = await getCarts();
+  const sharedCarts = await getSharedCarts();
 
   return (
     <div dir="rtl" className="min-h-screen">

@@ -9,29 +9,20 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { auth } from "@/lib/auth";
 import { Button } from "../ui/button";
-import { useFormState } from "react-dom";
 import { createList } from "@/lib/actions";
 import { Input } from "../ui/input";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
-interface AddItemDialogProps {
-  userId?: string | null;
-  userEmail?: string | null;
-}
-const CreateCartDialog = ({ userId, userEmail }: AddItemDialogProps) => {
+
+const CreateCartDialog = () => {
   const [name, setName] = useState<string>("");
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
   const saveItem = (e: any) => {
     e.preventDefault();
-    const cartDetails = {
-      title: name,
-      creatorId: userId,
-      creatorEmail: userEmail,
-    };
-    createList(cartDetails);
+    if (!name) return;
+    createList(name);
     closeDialog();
   };
   return (

@@ -1,5 +1,5 @@
 import AddItemDialog from "@/components/addItemDialog/addItemDialog";
-import CartList from "@/components/cartList/cartList";
+import CartList from "@/components/cartList/cartItem";
 import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { getListByEmailAndListId, getListByIdAndUserId } from "@/lib/actions";
@@ -11,6 +11,53 @@ import WhatsappBtn from "@/components/cartList/WhatsappShareBtn";
 import MobileFabMenu from "@/components/cartList/MobileFabMenu";
 import { ChatWithAI } from "../../../components/chat";
 import type { Cart } from "@/types/cart";
+import Chat from "@/components/chatAi/chat";
+import CartContent from "@/components/cart/CartContent";
+import { OptimisticCart, OptimisticItem } from "@/types/cart";
+
+// Define the proper interface for the cart data matching what components expect
+interface CartData {
+  _id: string;
+  title: string;
+  amount: number;
+  creatorId: string;
+  items: Array<{
+    _id: string;
+    name: string;
+    amount: string;
+    price: number;
+    desc?: string;
+    img?: string;
+  }>;
+  sharedWith: Array<{
+    email: string;
+    permission: string;
+    fullName: string;
+    lastName: string;
+    firstName: string;
+  }>;
+}
+
+// Transform server data to optimistic cart format
+function transformToOptimisticCart(data: CartData): OptimisticCart {
+  return {
+    _id: data._id,
+    title: data.title,
+    amount: data.amount,
+    creatorId: data.creatorId,
+    items: data.items.map(item => ({
+      _id: item._id,
+      name: item.name,
+      amount: item.amount,
+      price: item.price,
+      desc: item.desc || "",
+      img: item.img || "",
+      isOptimistic: false,
+      isDeleting: false,
+    })),
+    sharedWith: data.sharedWith,
+  };
+}
 
 const Cart = async ({
   searchParams,
@@ -21,84 +68,50 @@ const Cart = async ({
   };
 }) => {
   const session: any = await auth();
-  const userEmail = session?.user?.email;
-  const listId = searchParams.listId.toString();
   let permissionLevel = "";
-  // load my list
-
-  let data: Cart = {
-    _id: "",
-    title: "",
-    amount: 0,
-    creatorId: "",
-    items: [],
-    sharedWith: []
-  };
+  let listData: CartData | null = null;
+  
   if (searchParams.shared === "false") {
-    data = await getListByIdAndUserId(
+    const response = await getListByIdAndUserId(
       searchParams.listId,
-      session?.user?.id,
+      session?.user?.userId,
       session?.user?.email
     );
-    console.log("🚀 ~ data:", data)
-    console.log("🚀 ~ data:results", data.items.flatMap((item: any) => `מוצר: ${item.name} כמות: ${item.amount}`))
+    listData = response.success ? (response.data as unknown as CartData) : null;
     permissionLevel = "1";
   }
+  
   // load shared list
   if (searchParams.shared === "true") {
-    data = await getListByEmailAndListId(
+    const response = await getListByEmailAndListId(
       session?.user?.email,
       searchParams.listId
     );
-    permissionLevel = data.sharedWith?.[0]?.permission || "";
+    listData = response.success ? (response.data as unknown as CartData) : null;
+    permissionLevel = listData?.sharedWith?.[0]?.permission || "";
   }
-
-  const cartItems = data.items.flatMap((item: any) => `${item.name}  ${item.amount}`);
-  return (
-    <div dir="rtl" className="flex justify-center items-center p-4">
-      <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm ">
-        <Suspense fallback={<div>Loading...</div>}>
-          <CartList
-            shared={searchParams.shared}
-            session={session}
-            data={data}
-          />
-          <ChatWithAI cart={cartItems} />
-        </Suspense>
-        {/* buttons */}
-        <div className="hidden items-center flex-col md:flex-row  justify-center gap-5  md:flex  ">
-          <AddItemDialog
-            userId={searchParams.shared === "true" ? data.creatorId : userEmail}
-            listId={listId}
-            permissionLevel={permissionLevel}
-          />
-          <Button className="w-36 gap-2" asChild>
-            <Link href="/carts">
-              <IoMdListBox size={20} />
-              חזור לרשימות
-            </Link>
-          </Button>
-          <ShareWithDialog
-            ownerEmail={userEmail}
-            listId={listId}
-            data={data.sharedWith as any}
-            disabled={searchParams.shared === "true"}
-          />
-        </div>
-        {/* whatsapp */}
-        <div className="hidden justify-center mt-4 md:flex ">
-          <WhatsappBtn items={data.items} />
+  
+  if (!listData) {
+    return (
+      <div dir="rtl" className="flex justify-center items-center p-4">
+        <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm">
+          <div className="text-center text-red-500 text-lg">רשימה לא נמצאה</div>
         </div>
       </div>
-      <MobileFabMenu
-        userId={searchParams.shared === "true" ? data.creatorId : userEmail}
-        listId={listId}
-        permissionLevel={permissionLevel}
-        userEmail={userEmail}
-        data={data}
+    );
+  }
+  
+  // Transform data to optimistic format
+  const optimisticCart = transformToOptimisticCart(listData);
+  
+  return (
+    <div dir="rtl" className="flex justify-center items-center p-4">
+      <CartContent
+        listData={optimisticCart}
+        session={session}
         searchParams={searchParams}
+        permissionLevel={permissionLevel}
       />
-      
     </div>
   );
 };

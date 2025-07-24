@@ -13,74 +13,99 @@ import { Button } from "../ui/button";
 import { TbEdit } from "react-icons/tb";
 import { editItemInList } from "@/lib/actions";
 import { Input } from "../ui/input";
-interface AddItemDialogProps {
+import { itemSchema, type Item } from "@/lib/schemas";
+import { ItemFormData } from "@/lib/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+interface EditItemDialogProps {
   itemPrice: number;
   itemName: string;
   itemAmount: number;
   listId: string;
-  userId: string;
   itemId: string;
   shared?: string;
-  userEmail?: string;
   permissionLevel?: string;
+  disabled?: boolean;
 }
+
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-const EditItemDialog = ({
-  itemAmount,
-  itemPrice,
-  itemName,
-  listId,
-  userId,
-  itemId,
-  shared,
-  userEmail,
-  permissionLevel,
-}: AddItemDialogProps) => {
-  const [name, setName] = useState<string>(itemName + "");
-  const [amount, setAmount] = useState<number | 1>(itemAmount);
-  const [price, setPrice] = useState<number | 1>(itemPrice);
+
+const EditItemDialog = (props: EditItemDialogProps) => {
+  const {
+    itemAmount,
+    itemPrice,
+    itemName,
+    listId,
+    itemId,
+    shared,
+    permissionLevel,
+    disabled = false,
+  } = props;
   const [errorFlag, setErrorFlag] = useState<boolean>(false);
+  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<ItemFormData>({
+    resolver: zodResolver(itemSchema),
+    defaultValues: {
+      name: itemName,
+      amount: itemAmount,
+      price: itemPrice,
+      _id: itemId,
+    },
+  });
+
   const closeDialog = () => {
     document.getElementById("closeDialog")?.click();
   };
 
-  const saveItem = async (e: any) => {
-    e.preventDefault();
-    const item = { name: name, amount: amount, price: price, _id: itemId };
-
-    await editItemInList(listId, userId, item, shared, userEmail)
-      .then((list: any) => {
-        closeDialog();
-      })
-      .catch((err: any) => {
-        // console.log(err);
-        setErrorFlag(true);
-      });
+  const onSubmit = async (data: ItemFormData) => {
+    try {
+      await editItemInList(listId, data);
+      toast.success("מוצר עודכן בהצלחה");
+      reset();
+      closeDialog();
+    } catch (error) {
+      console.error("Error updating item:", error);
+      setErrorFlag(true);
+      toast.error("שגיאה בעדכון המוצר");
+    }
   };
+
+  const isButtonDisabled = disabled || (shared === "true" && permissionLevel === "2");
+
   return (
     <Dialog>
-          <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-        <Button asChild className="w-12 h-12 mr-3 mt-2.5" >
-          <DialogTrigger
-        disabled={shared === "true" && permissionLevel === "2"}
-          >
-        <TbEdit  size={20}/>
-          </DialogTrigger>
-      </Button>
-      </TooltipTrigger>
-        <TooltipContent>
-          <p>ערוך מוצר</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button asChild className="w-12 h-12 mr-3 mt-2.5">
+              <DialogTrigger
+                disabled={isButtonDisabled}
+                onClick={() => {
+                  reset();
+                }}
+              >
+                <TbEdit size={20} />
+              </DialogTrigger>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{disabled ? "לא ניתן לערוך" : "ערוך מוצר"}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center">עדכן מוצר קיים</DialogTitle>
@@ -91,40 +116,86 @@ const EditItemDialog = ({
         <form
           dir="rtl"
           className="flex flex-col items-center justify-center"
-          onSubmit={saveItem}
+          onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex flex-col mb-4">
-            <label className="ml-5" htmlFor="title">
+          <div className="flex flex-col mb-4 w-full">
+            <label className="ml-5 mb-2" htmlFor="name">
               שם המוצר
             </label>
             <Input
-              className="bg-input text-foreground rounded"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              name="title"
+              className={`bg-input text-foreground rounded ${
+                errors.name ? "border-red-500" : ""
+              }`}
+              {...register("name")}
+              name="name"
               type="text"
-              id="title"
+              id="name"
+              disabled={isSubmitting}
             />
+            {errors.name && (
+              <span className="text-red-500 text-sm mr-5 mt-1">
+                {errors.name.message}
+              </span>
+            )}
           </div>
-          <div className="flex flex-col mb-4">
-            <label className="ml-5" htmlFor="quantity">
+
+          <div className="flex flex-col mb-4 w-full">
+            <label className="ml-5 mb-2" htmlFor="amount">
               כמות
             </label>
             <Input
-              className="bg-input text-foreground rounded"
-              value={amount}
-              onChange={(e) => setAmount(e.target.valueAsNumber)}
+              className={`bg-input text-foreground rounded ${
+                errors.amount ? "border-red-500" : ""
+              }`}
+              {...register("amount", { valueAsNumber: true })}
               name="amount"
               type="number"
-              id="quantity"
+              id="amount"
+              min="1"
+              disabled={isSubmitting}
             />
+            {errors.amount && (
+              <span className="text-red-500 text-sm mr-5 mt-1">
+                {errors.amount.message}
+              </span>
+            )}
           </div>
 
-          <Button className="bg-primary text-primary-foreground m-4">
-            עדכן מוצר
+          <div className="flex flex-col mb-4 w-full">
+            <label className="ml-5 mb-2" htmlFor="price">
+              מחיר
+            </label>
+            <Input
+              className={`bg-input text-foreground rounded ${
+                errors.price ? "border-red-500" : ""
+              }`}
+              {...register("price", { valueAsNumber: true })}
+              name="price"
+              type="number"
+              id="price"
+              min="0"
+              step="0.01"
+              disabled={isSubmitting}
+            />
+            {errors.price && (
+              <span className="text-red-500 text-sm mr-5 mt-1">
+                {errors.price.message}
+              </span>
+            )}
+          </div>
+
+          <Button 
+            type="submit" 
+            className="bg-primary text-primary-foreground m-4"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "מעדכן..." : "עדכן מוצר"}
           </Button>
+          
           <DialogClose id="closeDialog" asChild>
-            <Button className="text-destructive-foreground">סגור</Button>
+            <Button type="button" className="text-destructive-foreground">
+              סגור
+            </Button>
           </DialogClose>
         </form>
       </DialogContent>
