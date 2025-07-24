@@ -6,7 +6,7 @@ import { FaShoppingCart, FaUsers } from "react-icons/fa";
 
 const MyCarts = async () => {
   const session = await auth();
-  const userId = session?.user?.id;
+  const userId = session?.user?.userId;
   const userEmail = session?.user?.email;
   // FETCH DATA WITH AN API
   const lists = await getCarts(userId ?? undefined, userEmail ?? undefined);

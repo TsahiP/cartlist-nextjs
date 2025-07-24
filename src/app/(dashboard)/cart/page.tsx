@@ -74,7 +74,7 @@ const Cart = async ({
   if (searchParams.shared === "false") {
     const response = await getListByIdAndUserId(
       searchParams.listId,
-      session?.user?.id,
+      session?.user?.userId,
       session?.user?.email
     );
     listData = response.success ? (response.data as unknown as CartData) : null;

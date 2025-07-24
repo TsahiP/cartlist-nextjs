@@ -136,7 +136,7 @@ export function CartOptimisticProvider({
     try {
       const result = await deleteItemFromList(userId, listId, itemId, userEmail, shared);
       
-      if (result) {
+      if (result && result.success) {
         startTransition(() => {
           setOptimisticCart({ type: 'CONFIRM_DELETE_ITEM', payload: { itemId } });
         });

@@ -20,7 +20,7 @@ interface Props {
 
 const ListComp = async (props: Props) => {
   const session = await auth();
-  const userId = session?.user?.id;
+  const userId = session?.user?.userId;
   const userEmail = session?.user?.email;
   const listIdPlainObject = JSON.parse(JSON.stringify(props.list._id));
   

@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { List, User } from "./models";
 import { connectToDb } from "./utils";
-import { signIn, signOut } from "./auth";
+import { auth, signIn, signOut } from "./auth";
 // import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
@@ -132,6 +132,7 @@ export const addItemToList = async (
   formData: FormData|ItemFormData
 ): Promise<ApiResponse> => {
   // Convert FormData to plain object first
+  const user = await auth();
   const validation = validateData(itemSchema, formData);
   if (!validation.success) {
     return validation;
@@ -205,18 +206,6 @@ export const editItemInList = async (
         }
       }
     );
-    // const item = list.items.find((item: any) => item.id === formData._id);
-    // if (!item) {
-    //   throw new Error("Item not found");
-    // }
-
-    // item.name = formData.name;
-    // item.amount = formData.amount;
-    // item.price = formData.price;
-    // item.desc = formData.desc || "";
-    // item.img = formData.img || "";
-
-    // await list.save();
 
     revalidatePath(`/cart`);
     const listPlainObject = JSON.parse(JSON.stringify(list));

@@ -106,7 +106,7 @@ export const chatTools = {
                 // Get current user session for permission checks
                 const session = await auth();
                 console.log("🚀 ~ session:", session)
-                const userId = (session as any)?.user?.id as string | undefined;
+                const userId = (session as any)?.user?.userId as string | undefined;
                 const userEmail = (session as any)?.user?.email as string | undefined;
 
                 // Retrieve the list to determine shared status and locate item ID

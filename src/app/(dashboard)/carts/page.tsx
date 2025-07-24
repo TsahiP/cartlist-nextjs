@@ -10,7 +10,7 @@ const Carts: React.FC = async () => {
     <div className="p-4">
       <MyCarts  />
       <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <CreateCartDialog userId={session?.user?.id} userEmail={session?.user?.email} />
+          <CreateCartDialog userId={session?.user?.userId} userEmail={session?.user?.email} />
       </div>
     </div>
   );

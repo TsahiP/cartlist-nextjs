@@ -41,7 +41,7 @@ interface CartListProps {
 
 const CartList = (props: CartListProps) => {  
   const { cart, isLoading } = useCartOptimistic();
-  const userId = props.session.user.id;
+  const userId = props.session.user.userId;
   const userEmail = props.session.user.email;
   const shared = props.shared;
   const permissionLevel = props.data.sharedWith.filter(e => e.email === props.session.user.email);
