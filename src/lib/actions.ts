@@ -260,38 +260,57 @@ export const deleteItemFromList = async (
   itemId: string,
   email: string,
   shared?: string
-) => {
+): Promise<ApiResponse> => {
   await connectToDb();
-  let list: any = [];
+
   try {
+    // Build query based on ownership vs. shared access
+    let baseQuery: any = { _id: listId };
+
     if (shared === "true") {
-      list = await List.findOne({
-        _id: listId,
-        sharedWith: {
-          $elemMatch: { email: email },
-        },
-      });
+      // Ensure the email is part of the sharedWith array
+      baseQuery.sharedWith = { $elemMatch: { email } };
     } else {
-      list = await List.findOne({ _id: listId });
+      // For owner operations validate the creatorId
+      baseQuery.creatorId = userId;
     }
+
+    // Fetch the list first to validate permissions & existence
+    const list = await List.findOne(baseQuery);
+
     if (!list) {
-      throw new Error("List not found");
+      return { success: false, error: "List not found or insufficient permissions" };
     }
 
-    const itemIndex = list.items.findIndex((item: any) => item.id === itemId);
-    if (itemIndex === -1) {
-      throw new Error("Item not found");
+    // If this is a shared list, validate permission level ("1" could be read-only)
+    if (shared === "true") {
+      const sharedUser: any = list.sharedWith.find((u: any) => u.email === email);
+      if (!sharedUser) {
+        return { success: false, error: "You are not authorized to modify this list" };
+      }
+      if (sharedUser.permission === "1") {
+        return { success: false, error: "You do not have permission to delete items" };
+      }
     }
 
-    list.items.splice(itemIndex, 1); // מחיקת הפריט
-    await list.save();
+    // Perform atomic pull operation
+    const updateResult = await List.updateOne(baseQuery, {
+      $pull: { items: { _id: itemId } },
+    });
+
+    if (updateResult.modifiedCount === 0) {
+      return { success: false, error: "Item not found" };
+    }
 
     revalidatePath(`/cart`);
-    const listPlainObject = JSON.parse(JSON.stringify(list));
-    return listPlainObject;
+
+    // Return updated list for client consistency
+    const updatedList = await List.findOne({ _id: listId });
+    const listPlainObject = JSON.parse(JSON.stringify(updatedList));
+    return { success: true, data: listPlainObject };
   } catch (error) {
     console.error("Error deleting item from list:", error);
-    throw error;
+    return { success: false, error: "Failed to delete item" };
   }
 };
 
@@ -506,5 +525,78 @@ export const getListByEmailAndListId = async (
   } catch (error) {
     console.error("Error getting list by email and list id:", error);
     return { success: false, error: "Failed to get list" };
+  }
+};
+
+// ===================== Items bulk actions =====================
+export const addManyItemsToList = async (
+  listId: string,
+  items: ItemFormData[]
+): Promise<ApiResponse> => {
+  // Validate the incoming items array against the existing itemSchema
+  const validation = itemSchema.array().safeParse(items);
+  if (!validation.success) {
+    return {
+      success: false,
+      error:
+        validation.error.errors?.[0]?.message || "Validation of items failed",
+    };
+  }
+
+  try {
+    await connectToDb();
+
+    const list = await List.findOne({ _id: listId });
+    if (!list) {
+      return { success: false, error: "List not found" };
+    }
+
+    const formattedItems = validation.data.map((item) => ({
+      name: item.name,
+      amount: item.amount.toString(),
+      price: item.price,
+      desc: item.desc || "",
+      img: item.img || "",
+    }));
+
+    // Push all items in one atomic operation for performance
+    await List.updateOne(
+      { _id: listId },
+      {
+        $push: {
+          items: { $each: formattedItems },
+        },
+      }
+    );
+
+    revalidatePath(`/cart`);
+
+    const updatedList = await List.findOne({ _id: listId });
+    const listPlainObject = JSON.parse(JSON.stringify(updatedList));
+
+    return { success: true, data: listPlainObject };
+  } catch (error) {
+    console.error("Error adding multiple items to list:", error);
+    return { success: false, error: "Failed to add multiple items" };
+  }
+};
+
+// ===================== Fetch list (read only) =====================
+export const getListById = async (
+  listId: string
+): Promise<ApiResponse<ListType>> => {
+  await connectToDb();
+
+  try {
+    const list = await List.findOne({ _id: listId });
+    if (!list) {
+      return { success: false, error: "List not found" };
+    }
+
+    const listPlainObject = JSON.parse(JSON.stringify(list));
+    return { success: true, data: listPlainObject };
+  } catch (error) {
+    console.error("Error fetching list by id:", error);
+    return { success: false, error: "Failed to fetch list" };
   }
 };
