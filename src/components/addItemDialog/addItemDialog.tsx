@@ -24,7 +24,6 @@ import { itemSchema } from "@/lib/schemas";
 import { OptimisticItem } from "@/types/cart";
 
 interface AddItemDialogProps {
-  userId: string;
   listId: string;
   permissionLevel?: string;
 }
@@ -38,7 +37,6 @@ interface AddItemFormData {
 }
 
 const AddItemDialog = ({
-  userId,
   listId,
   permissionLevel,
 }: AddItemDialogProps) => {

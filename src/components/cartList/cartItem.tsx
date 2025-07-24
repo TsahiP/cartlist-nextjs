@@ -41,8 +41,6 @@ interface CartListProps {
 
 const CartList = (props: CartListProps) => {  
   const { cart, isLoading } = useCartOptimistic();
-  const userId = props.session.user.userId;
-  const userEmail = props.session.user.email;
   const shared = props.shared;
   const permissionLevel = props.data.sharedWith.filter(e => e.email === props.session.user.email);
   
@@ -88,20 +86,15 @@ const CartList = (props: CartListProps) => {
                     <EditItemDialog
                       permissionLevel={permissionLevel[0]?.permission}
                       itemId={item._id}
-                      userId={userId}
                       itemAmount={parseInt(item.amount)}
                       itemPrice={item.price}
                       itemName={item.name}
                       listId={props.data._id}
                       shared={shared}
-                      userEmail={userEmail}
                       disabled={item.isOptimistic || item.isDeleting}
                     />
                     <DeleteItemButton
-                      userId={userId}
-                      listId={props.data._id}
                       itemId={item._id}
-                      userEmail={userEmail}
                       shared={props.shared}
                       permissionLevel={permissionLevel[0]?.permission}
                       disabled={item.isOptimistic || item.isDeleting}

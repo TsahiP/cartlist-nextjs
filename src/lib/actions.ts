@@ -171,47 +171,44 @@ export const addItemToList = async (
 
 export const editItemInList = async (
   listId: string,
-  userId: string,
-  formData: ItemFormData,
-  shared?: string,
-  userEmail?: string
-) => {
-
+  formData: ItemFormData
+): Promise<ApiResponse> => {
   try {
-  await connectToDb();
-    let list = [];
-    if (shared === "true") {
-      list = await List.findOne({
-        _id: listId,
-        sharedWith: { $elemMatch: { email: userEmail } },
-      });
-    } else {
-      list = await List.findOne({ _id: listId });
+    await connectToDb();
+
+    const session = await auth();
+    if (!session?.user?.email) return { success: false, error: "Unauthenticated" };
+
+    const list: any = await List.findOne({ _id: listId });
+    if (!list) return { success: false, error: "List not found" };
+
+    // Authorisation – owner or collaborator with edit permission ("1")
+    const isOwner = String(list.creatorId) === String(session.user.userId ?? "");
+    const collaborator = list.sharedWith.find((u: any) => u.email === session.user.email);
+    const canEdit = collaborator ? collaborator.permission === "1" : false;
+
+    if (!isOwner && !canEdit) {
+      return { success: false, error: "Not authorised" };
     }
-    if (!list) {
-      throw new Error("List not found");
-    }
+
     await List.updateOne(
-      { 
-        _id: listId,
-        "items._id": formData._id 
-      },
+      { _id: listId, "items._id": formData._id },
       {
         $set: {
           "items.$.name": formData.name,
           "items.$.amount": formData.amount,
           "items.$.price": formData.price,
           "items.$.desc": formData.desc || "",
-          "items.$.img": formData.img || ""
-        }
+          "items.$.img": formData.img || "",
+        },
       }
     );
 
     revalidatePath(`/cart`);
-    const listPlainObject = JSON.parse(JSON.stringify(list));
-    return listPlainObject;
+    return { success: true };
   } catch (error) {
-    return { error: error };
+    console.error("Error editing item:", error);
+    return { success: false, error: "Failed to edit item" };
   }
 };
 
@@ -249,56 +246,36 @@ export const deleteList = async (listId: string) => {
 };
 
 export const deleteItemFromList = async (
-  userId: string,
   listId: string,
-  itemId: string,
-  email: string,
-  shared?: string
+  itemId: string
 ): Promise<ApiResponse> => {
-  await connectToDb();
-
   try {
-    // Build query based on ownership vs. shared access
-    let baseQuery: any = { _id: listId };
+    await connectToDb();
 
-    if (shared === "true") {
-      // Ensure the email is part of the sharedWith array
-      baseQuery.sharedWith = { $elemMatch: { email } };
-    } else {
-      // For owner operations validate the creatorId
-      baseQuery.creatorId = userId;
+    const session = await auth();
+    if (!session?.user?.email) return { success: false, error: "Unauthenticated" };
+
+    const list: any = await List.findOne({ _id: listId });
+    if (!list) return { success: false, error: "List not found" };
+
+    const isOwner = String(list.creatorId) === String(session.user.userId ?? "");
+    const collaborator = list.sharedWith.find((u: any) => u.email === session.user.email);
+    const canEdit = collaborator ? collaborator.permission === "1" : false;
+
+    if (!isOwner && !canEdit) {
+      return { success: false, error: "Not authorised" };
     }
 
-    // Fetch the list first to validate permissions & existence
-    const list = await List.findOne(baseQuery);
-
-    if (!list) {
-      return { success: false, error: "List not found or insufficient permissions" };
-    }
-
-    // If this is a shared list, validate permission level ("1" could be read-only)
-    if (shared === "true") {
-      const sharedUser: any = list.sharedWith.find((u: any) => u.email === email);
-      if (!sharedUser) {
-        return { success: false, error: "You are not authorized to modify this list" };
-      }
-      if (sharedUser.permission === "1") {
-        return { success: false, error: "You do not have permission to delete items" };
-      }
-    }
-
-    // Perform atomic pull operation
-    const updateResult = await List.updateOne(baseQuery, {
-      $pull: { items: { _id: itemId } },
-    });
+    const updateResult = await List.updateOne(
+      { _id: listId },
+      { $pull: { items: { _id: itemId } } }
+    );
 
     if (updateResult.modifiedCount === 0) {
       return { success: false, error: "Item not found" };
     }
 
     revalidatePath(`/cart`);
-
-    // Return updated list for client consistency
     const updatedList = await List.findOne({ _id: listId });
     const listPlainObject = JSON.parse(JSON.stringify(updatedList));
     return { success: true, data: listPlainObject };

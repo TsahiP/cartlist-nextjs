@@ -29,16 +29,13 @@ export default function CartContent({
   permissionLevel 
 }: CartContentProps) {
   // const userEmail = session?.user?.email;
-  const {userId, email} = session?.user;
+  // Not needed for item actions
   const listId = searchParams.listId.toString();
 
   return (
     <CartOptimisticProvider
       initialCart={listData}
       listId={listId}
-      userId={searchParams.shared === "true" ? listData.creatorId : email}
-      userEmail={email}
-      shared={searchParams.shared}
     >
       <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm">
         <Suspense fallback={<div>Loading...</div>}>
@@ -55,7 +52,6 @@ export default function CartContent({
         {/* Desktop buttons */}
         <div className="hidden items-center flex-col md:flex-row justify-center gap-5 md:flex">
           <AddItemDialog
-            userId={searchParams.shared === "true" ? listData.creatorId : email}
             listId={listId}
             permissionLevel={permissionLevel}
           />
@@ -80,10 +76,8 @@ export default function CartContent({
       
       {/* Mobile FAB menu */}
       <MobileFabMenu
-        userId={searchParams.shared === "true" ? listData.creatorId : email }
         listId={listId}
         permissionLevel={permissionLevel}
-        userEmail={email}
         data={listData}
         searchParams={searchParams}
       />

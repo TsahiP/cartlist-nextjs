@@ -14,10 +14,7 @@ import {
 import { useCartOptimistic } from "@/contexts/CartOptimisticProvider";
 
 interface DeleteItemButtonProps {
-  listId: string;
-  userId: string;
   itemId: string;
-  userEmail: string;
   shared?: string;
   permissionLevel?: string;
   disabled?: boolean;

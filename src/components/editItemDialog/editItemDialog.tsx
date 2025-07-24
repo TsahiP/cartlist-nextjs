@@ -24,10 +24,8 @@ interface EditItemDialogProps {
   itemName: string;
   itemAmount: number;
   listId: string;
-  userId: string;
   itemId: string;
   shared?: string;
-  userEmail?: string;
   permissionLevel?: string;
   disabled?: boolean;
 }
@@ -45,10 +43,8 @@ const EditItemDialog = (props: EditItemDialogProps) => {
     itemPrice,
     itemName,
     listId,
-    userId,
     itemId,
     shared,
-    userEmail,
     permissionLevel,
     disabled = false,
   } = props;
@@ -75,7 +71,7 @@ const EditItemDialog = (props: EditItemDialogProps) => {
 
   const onSubmit = async (data: ItemFormData) => {
     try {
-      await editItemInList(listId, userId, data, shared, userEmail);
+      await editItemInList(listId, data);
       toast.success("מוצר עודכן בהצלחה");
       reset();
       closeDialog();
