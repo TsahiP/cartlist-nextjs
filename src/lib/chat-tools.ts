@@ -3,14 +3,6 @@ import { auth } from '@/lib/auth';
 import { ItemFormData } from '@/lib/types';
 import { z } from 'zod';
 import { itemSchema } from './schemas';
-// Define a relaxed schema specifically for chat input where price/amount may be omitted.
-const itemInputSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    // Amount can be omitted. Accept both number and string so the LLM can decide the representation.
-    amount: z.union([z.number().nonnegative(), z.string()]).optional(),
-    // Price can be omitted and may be 0.
-    price: z.number().min(0).optional(),
-});
 
 export const chatTools = {
     add_item_to_list: {
