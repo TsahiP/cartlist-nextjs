@@ -547,7 +547,7 @@ export const addManyItemsToList = async (
 
     const formattedItems = validation.data.map((item) => ({
       name: item.name,
-      amount: item.amount?.toString(),
+      amount: item.amount?.toString() ?? "1",
       price: item.price,
       desc: item.desc || "",
       img: item.img || "",
