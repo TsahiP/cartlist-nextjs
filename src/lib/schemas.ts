@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { union, z } from "zod";
 
 // User schemas
 export const userSchema = z.object({
@@ -32,8 +32,8 @@ export const registerSchema = z.object({
 // Item schemas
 export const itemSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  amount: z.number().positive("Amount must be positive"),
-  price: z.number().positive("Price must be positive"),
+  amount:  z.string(),
+  price: z.number().nonnegative("Price must be positive or 0"),
   desc: z.string().optional(),
   img: z.string().optional(),
   _id: z.string().optional(),

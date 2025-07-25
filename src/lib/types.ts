@@ -1,7 +1,7 @@
 // ======================== items actions ========================
 export interface ItemFormData {
     name: string;
-    amount: number;
+    amount: number | string;
     price: number;
     desc?: string;
     img?: string;

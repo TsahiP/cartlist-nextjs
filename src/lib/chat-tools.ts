@@ -2,20 +2,25 @@ import { addItemToList, addManyItemsToList, getListById, deleteItemFromList } fr
 import { auth } from '@/lib/auth';
 import { ItemFormData } from '@/lib/types';
 import { z } from 'zod';
+import { itemSchema } from './schemas';
+// Define a relaxed schema specifically for chat input where price/amount may be omitted.
+const itemInputSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    // Amount can be omitted. Accept both number and string so the LLM can decide the representation.
+    amount: z.union([z.number().nonnegative(), z.string()]).optional(),
+    // Price can be omitted and may be 0.
+    price: z.number().min(0).optional(),
+});
 
 export const chatTools = {
     add_item_to_list: {
         description: "Add an item to an existing shopping list",
-        parameters: z.object({
-            name: z.string(),
-            amount: z.string(),
-            price: z.number()
-        }),
+        parameters: itemSchema,
         execute: async ({ name, amount, price }: ItemFormData, listId: string) => {
             try {
                 const result = await addItemToList(listId, { 
                     name: name, 
-                    amount: Number(amount), 
+                    amount: amount, 
                     price: price
                 });
                 
@@ -31,9 +36,10 @@ export const chatTools = {
         }
     },
     add_many_items_to_list: {
-        description: "Add multiple items to an existing shopping list, use this tool when the user asks to add multiple items to the list,or the user ask to add a list of items from recipe or other source",
+        description: "Add multiple items to an existing shopping list, use this tool when the user asks to add multiple items to the list,or the user ask to add a list of items from recipe or other source, if no amount is provided, use 1 as default. if no price is provided, use 0 as default.",
         parameters: z.object({
-            items: z.array(z.object({ name: z.string(), amount: z.string().optional(), price: z.number().optional() }))
+            // Use the relaxed input schema so that missing price/amount are allowed.
+            items: z.array(itemInputSchema).min(1).describe("List of items to add to the list")
         }),
         execute: async (
             { items }: { items: { name: string; amount?: string; price?: number }[] },
@@ -43,11 +49,12 @@ export const chatTools = {
                 // Normalise & type-cast incoming data
                 const normalisedItems = items.map((item) => ({
                     name: item.name,
-                    amount: Number(item.amount ?? 1),
+                    amount: String(item.amount ?? 1),
                     price: item.price ?? 0,
                     desc: "",
                     img: "",
                 }));
+                console.log("🚀 ~ normalisedItems ~ normalisedItems:", normalisedItems)
 
                 const result = await addManyItemsToList(listId, normalisedItems);
 

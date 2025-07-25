@@ -527,6 +527,7 @@ export const addManyItemsToList = async (
   listId: string,
   items: ItemFormData[]
 ): Promise<ApiResponse> => {
+  console.log("🚀 ~ items:", items)
   // Validate the incoming items array against the existing itemSchema
   const validation = itemSchema.array().safeParse(items);
   if (!validation.success) {
