@@ -1,4 +1,4 @@
-import { union, z } from "zod";
+import { z } from "zod";
 
 // User schemas
 export const userSchema = z.object({
