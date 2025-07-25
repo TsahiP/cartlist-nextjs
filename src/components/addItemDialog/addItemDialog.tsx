@@ -85,7 +85,7 @@ const AddItemDialog = ({
       const optimisticItem: Omit<OptimisticItem, '_id'> = {
         name: data.name,
         amount: data.amount?.toString() ?? "1",
-        price: data.price,
+        price: data.price ?? 0,
         desc: data.desc || "",
         img: data.img || "",
       };
