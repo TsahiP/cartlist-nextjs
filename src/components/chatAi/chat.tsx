@@ -86,7 +86,7 @@ export default function Page({ listId, isInDialog = false }: ChatProps) {
       {/* Input Form */}
       <div className="bg-white border-t border-gray-200 px-6 py-4">
         <form onSubmit={handleSubmit} className="flex space-x-4 space-x-reverse">
-          <div className="flex-1 relative">
+          <div className="flex-1 relative flex items-center">
             <input
               name="prompt"
               value={input}

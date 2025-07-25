@@ -22,22 +22,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { itemSchema } from "@/lib/schemas";
 import { OptimisticItem } from "@/types/cart";
+import z from "zod";
 
 interface AddItemDialogProps {
   listId: string;
   permissionLevel?: string;
 }
 
-interface AddItemFormData {
-  name: string;
-  amount: number;
-  price: number;
-  desc?: string;
-  img?: string;
-}
+
+type AddItemFormData = z.infer<typeof itemSchema>;
 
 const AddItemDialog = ({
-  listId,
   permissionLevel,
 }: AddItemDialogProps) => {
   const { addItemOptimistic, isLoading } = useCartOptimistic();
