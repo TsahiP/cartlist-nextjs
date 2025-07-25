@@ -1,12 +1,9 @@
+import { z } from "zod";
+import { itemSchema } from "./schemas";
 // ======================== items actions ========================
-export interface ItemFormData {
-    name: string;
-    amount: number;
-    price: number;
-    desc?: string;
-    img?: string;
-    _id?: string;
-  }
+// Derive ItemFormData directly from itemSchema so it stays in sync and
+// remains exactly the same type that zodResolver will infer.
+export type ItemFormData = z.infer<typeof itemSchema>;
   
   //========================= user actions =================
   export interface UserFormData {
