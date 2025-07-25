@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { itemSchema } from "@/lib/schemas";
 import { OptimisticItem } from "@/types/cart";
-import z from "zod";
+import { z } from "zod";
 
 interface AddItemDialogProps {
   listId: string;
