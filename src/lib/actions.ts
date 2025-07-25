@@ -150,7 +150,7 @@ export const addItemToList = async (
 
     const newItem = {
       name: itemData.name,
-      amount: itemData.amount.toString(),
+      amount: itemData.amount?.toString() ?? "1",
       price: itemData.price,
       desc: itemData.desc || "",
       img: itemData.img || "",
@@ -547,7 +547,7 @@ export const addManyItemsToList = async (
 
     const formattedItems = validation.data.map((item) => ({
       name: item.name,
-      amount: item.amount.toString(),
+      amount: item.amount?.toString() ?? "1",
       price: item.price,
       desc: item.desc || "",
       img: item.img || "",
