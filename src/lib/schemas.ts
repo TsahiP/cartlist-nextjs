@@ -32,8 +32,11 @@ export const registerSchema = z.object({
 // Item schemas
 export const itemSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  amount:  z.string(),
-  price: z.number().nonnegative("Price must be positive or 0"),
+    // Amount can be omitted. Accept both number and string so the LLM can decide the representation.
+    amount: z.union([z.number().nonnegative('amount must be positive or 0'), z.string()]).optional(),
+    // Price can be omitted and may be 0.
+    price: z.number().min(0,'price must be positive or 0').optional(),
+
   desc: z.string().optional(),
   img: z.string().optional(),
   _id: z.string().optional(),

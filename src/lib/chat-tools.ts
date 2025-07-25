@@ -39,7 +39,7 @@ export const chatTools = {
         description: "Add multiple items to an existing shopping list, use this tool when the user asks to add multiple items to the list,or the user ask to add a list of items from recipe or other source, if no amount is provided, use 1 as default. if no price is provided, use 0 as default.",
         parameters: z.object({
             // Use the relaxed input schema so that missing price/amount are allowed.
-            items: z.array(itemInputSchema).min(1).describe("List of items to add to the list")
+            items: z.array(itemSchema).min(1).describe("List of items to add to the list")
         }),
         execute: async (
             { items }: { items: { name: string; amount?: string; price?: number }[] },
