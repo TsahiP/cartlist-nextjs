@@ -1,12 +1,13 @@
 // ======================== items actions ========================
+// Align ItemFormData with itemSchema so that Zod resolver types match
 export interface ItemFormData {
-    name: string;
-    amount: number | string;
-    price: number;
-    desc?: string;
-    img?: string;
-    _id?: string;
-  }
+  name: string;
+  amount?: number | string;
+  price?: number;
+  desc?: string;
+  img?: string;
+  _id?: string;
+}
   
   //========================= user actions =================
   export interface UserFormData {
