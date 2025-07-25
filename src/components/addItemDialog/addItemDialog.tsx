@@ -33,6 +33,7 @@ interface AddItemDialogProps {
 type AddItemFormData = z.infer<typeof itemSchema>;
 
 const AddItemDialog = ({
+  listId,
   permissionLevel,
 }: AddItemDialogProps) => {
   const { addItemOptimistic, isLoading } = useCartOptimistic();
