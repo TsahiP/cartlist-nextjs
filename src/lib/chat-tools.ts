@@ -46,7 +46,7 @@ export const chatTools = {
                     desc: "",
                     img: "",
                 }));
-                console.log("🚀 ~ normalisedItems ~ normalisedItems:", normalisedItems)
+                
 
                 const result = await addManyItemsToList(listId, normalisedItems);
 
