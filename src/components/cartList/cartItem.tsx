@@ -96,7 +96,7 @@ const MobileCartItem = ({
         <EditItemDialog
           permissionLevel={permissionLevel}
           itemId={item._id}
-          itemAmount={parseInt(item.amount)}
+          itemAmount={parseInt(item.amount, 10)}
           itemPrice={item.price}
           itemName={item.name}
           listId={dataId}
