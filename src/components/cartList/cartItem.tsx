@@ -15,6 +15,7 @@ import DeleteItemButton from "../deleteItemButton/deleteItemButton";
 import DeletePopup from "./popup/deletePopup";
 import { useCartOptimistic } from "@/contexts/CartOptimisticProvider";
 import { cn } from "@/lib/utils";
+import { Cart, OptimisticItem } from "@/types/cart";
 
 interface SharedWith {
   email: string;
@@ -47,9 +48,9 @@ const MobileCartItem = ({
   shared, 
   dataId 
 }: {
-  item: any;
+  item: OptimisticItem;
   index: number;
-  permissionLevel: any;
+  permissionLevel: string | undefined;
   shared?: string;
   dataId: string;
 }) => (
@@ -93,7 +94,7 @@ const MobileCartItem = ({
     <div className="flex items-center justify-center gap-3 pt-4 border-t border-gray-100">
       <div className="transform hover:scale-105 transition-transform duration-200">
         <EditItemDialog
-          permissionLevel={permissionLevel?.permission}
+          permissionLevel={permissionLevel}
           itemId={item._id}
           itemAmount={parseInt(item.amount)}
           itemPrice={item.price}
@@ -107,7 +108,7 @@ const MobileCartItem = ({
         <DeleteItemButton
           itemId={item._id}
           shared={shared}
-          permissionLevel={permissionLevel?.permission}
+          permissionLevel={permissionLevel}
           disabled={item.isOptimistic || item.isDeleting}
         />
       </div>
@@ -137,7 +138,7 @@ const CartList = (props: CartListProps) => {
           </TableHeader>
           <TableBody>
             {Array.isArray(cart.items)
-              ? cart.items.map((item: any, index) => (
+              ? cart.items.map((item: OptimisticItem, index) => (
                   <TableRow 
                     key={item._id} 
                     className={cn(
@@ -198,12 +199,12 @@ const CartList = (props: CartListProps) => {
       <div className="block md:hidden">
         <div className="space-y-4">
           {Array.isArray(cart.items) && cart.items.length > 0 ? (
-            cart.items.map((item: any, index) => (
+            cart.items.map((item: OptimisticItem, index) => (
               <MobileCartItem
                 key={item._id}
                 item={item}
                 index={index}
-                permissionLevel={permissionLevel[0]}
+                permissionLevel={permissionLevel[0]?.permission}
                 shared={shared}
                 dataId={props.data._id}
               />
