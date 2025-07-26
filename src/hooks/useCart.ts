@@ -4,14 +4,33 @@ import { OptimisticCart, OptimisticItem } from '@/types/cart';
 // Actions are now called via API routes from the client.
 import { toast } from 'sonner';
 
+// Define the interface for the raw server data structure.
+interface ServerCartItem {
+  _id: string;
+  name: string;
+  amount: number;
+  price: number;
+  desc?: string;
+  img?: string;
+}
+
+interface ServerCart {
+  _id: string;
+  title: string;
+  amount: number;
+  creatorId: string;
+  items?: ServerCartItem[];
+  sharedWith?: string[];
+}
+
 // Transform server list data to an OptimisticCart with default flags.
-function toOptimisticCart(data: any): OptimisticCart {
+function toOptimisticCart(data: ServerCart): OptimisticCart {
   return {
     _id: data._id,
     title: data.title,
     amount: data.amount,
     creatorId: data.creatorId,
-    items: (data.items || []).map((item: any) => ({
+    items: (data.items || []).map((item: ServerCartItem) => ({
       _id: item._id,
       name: item.name,
       amount: item.amount,

@@ -117,7 +117,7 @@ const Links = ({ session }) => {
                       alt={user?.name || "User"}
                     />
                     <AvatarFallback className="text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-                      {user?.name ? (user.name[0] + (user.name[1] || '')).toUpperCase() : 'U'}sadasd
+                      {user?.name ? (user.name[0] + (user.name[1] || '')).toUpperCase() : 'U'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
