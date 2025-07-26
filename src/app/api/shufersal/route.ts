@@ -51,7 +51,6 @@ export const GET = async (req:any) => {
     const response = await axios.get(`https://www.shufersal.co.il/online/he/search/results?q=${encodeURIComponent(name)}%3Arelevance&limit=100000`);
     // console.log("🚀 ~ GET ~ response:", response.data)
     
-    // רק מחזיר את הנתונים עצמם, לא את כל אובייקט ה-Axios
     return NextResponse.json(response.data);
   } catch (err) {
     console.error('Error fetching data:', err);
