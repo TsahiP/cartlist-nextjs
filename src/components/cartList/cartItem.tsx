@@ -8,8 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import AddItemDialog from "../addItemDialog/addItemDialog";
-import { TbEdit } from "react-icons/tb";
 import EditItemDialog from "../editItemDialog/editItemDialog";
 import DeleteItemButton from "../deleteItemButton/deleteItemButton";
 import { useCart, useCartActions } from "@/hooks/useCart";
@@ -58,7 +56,7 @@ const CartList = (props: CartListProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Array.isArray(cart.items)
+        {Array.isArray(cart?.items)
           ? cart.items.map((item: any, index) => (
               <TableRow 
                 key={item._id} 
