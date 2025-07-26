@@ -1,6 +1,7 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ChatProps {
   listId: string;
@@ -8,9 +9,25 @@ interface ChatProps {
 }
 
 export default function Page({ listId, isInDialog = false }: ChatProps) {
+  const queryClient = useQueryClient();
+  
   const { messages, input, handleInputChange, handleSubmit, status, stop, data } = useChat({
     maxSteps: 5,
-    api: `/api/chat/${listId}`
+    api: `/api/chat/${listId}`,
+    onFinish: (message, options) => {
+      // Check if the AI message contains tool calls that modify the cart
+      const hasCartModifyingTools = message.parts?.some(part => 
+        part.type === 'tool-invocation' && 
+        (part.toolInvocation?.toolName === 'add_item_to_list' || 
+         part.toolInvocation?.toolName === 'add_many_items_to_list' ||
+         part.toolInvocation?.toolName === 'delete_item_from_list')
+      );
+      
+      // If AI modified the cart, invalidate the cache to refresh the UI
+      if (hasCartModifyingTools) {
+        queryClient.invalidateQueries({ queryKey: ['cart', listId] });
+      }
+    }
   });
 
   return (

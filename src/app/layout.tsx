@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,7 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={'bg-gradient-to-br from-blue-50 via-white to-orange-50'}>
-        {children}
+        <ReactQueryProvider>
+          <Navbar />
+          {children}
+        </ReactQueryProvider>
         <Toaster position="top-right" />
       </body>
     </html>

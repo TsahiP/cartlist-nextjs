@@ -8,12 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import AddItemDialog from "../addItemDialog/addItemDialog";
-import { TbEdit } from "react-icons/tb";
 import EditItemDialog from "../editItemDialog/editItemDialog";
 import DeleteItemButton from "../deleteItemButton/deleteItemButton";
-import DeletePopup from "./popup/deletePopup";
-import { useCartOptimistic } from "@/contexts/CartOptimisticProvider";
+import { useCart, useCartActions } from "@/hooks/useCart";
 import { cn } from "@/lib/utils";
 
 interface SharedWith {
@@ -40,7 +37,9 @@ interface CartListProps {
 }
 
 const CartList = (props: CartListProps) => {  
-  const { cart, isLoading } = useCartOptimistic();
+  const listId = props.data._id;
+  const { data: cart } = useCart(listId, props.data as any);
+  const { isLoading } = useCartActions(listId);
   const shared = props.shared;
   const permissionLevel = props.data.sharedWith.filter(e => e.email === props.session.user.email);
   
@@ -57,7 +56,7 @@ const CartList = (props: CartListProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Array.isArray(cart.items)
+        {Array.isArray(cart?.items)
           ? cart.items.map((item: any, index) => (
               <TableRow 
                 key={item._id} 
@@ -94,6 +93,7 @@ const CartList = (props: CartListProps) => {
                       disabled={item.isOptimistic || item.isDeleting}
                     />
                     <DeleteItemButton
+                      listId={listId}
                       itemId={item._id}
                       shared={props.shared}
                       permissionLevel={permissionLevel[0]?.permission}

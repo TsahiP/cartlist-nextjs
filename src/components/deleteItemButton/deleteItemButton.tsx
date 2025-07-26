@@ -11,9 +11,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useCartOptimistic } from "@/contexts/CartOptimisticProvider";
+import { useCartActions } from "@/hooks/useCart";
 
 interface DeleteItemButtonProps {
+  listId: string;
   itemId: string;
   shared?: string;
   permissionLevel?: string;
@@ -21,7 +22,7 @@ interface DeleteItemButtonProps {
 }
 
 const DeleteItemButton = (props: DeleteItemButtonProps) => {
-  const { deleteItemOptimistic, isLoading } = useCartOptimistic();
+  const { deleteItemOptimistic, isLoading } = useCartActions(props.listId);
   const [showWindow, setShowWindow] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
