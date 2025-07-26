@@ -1,6 +1,6 @@
 'use client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { OptimisticCart, OptimisticItem } from '@/types/cart';
+import { OptimisticCart, OptimisticItem, SharedWith } from '@/types/cart';
 // Actions are now called via API routes from the client.
 import { toast } from 'sonner';
 
@@ -20,7 +20,7 @@ interface ServerCart {
   amount: number;
   creatorId: string;
   items?: ServerCartItem[];
-  sharedWith?: string[];
+  sharedWith?: SharedWith[];
 }
 
 // Transform server list data to an OptimisticCart with default flags.
@@ -33,7 +33,7 @@ function toOptimisticCart(data: ServerCart): OptimisticCart {
     items: (data.items || []).map((item: ServerCartItem) => ({
       _id: item._id,
       name: item.name,
-      amount: item.amount,
+      amount: item.amount.toString(),
       price: item.price,
       desc: item.desc || '',
       img: item.img || '',
