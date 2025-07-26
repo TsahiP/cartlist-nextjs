@@ -18,6 +18,7 @@ import { ItemFormData } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EditItemDialogProps {
   itemPrice: number;
@@ -49,6 +50,7 @@ const EditItemDialog = (props: EditItemDialogProps) => {
     disabled = false,
   } = props;
   const [errorFlag, setErrorFlag] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   
   const {
     register,
@@ -71,10 +73,17 @@ const EditItemDialog = (props: EditItemDialogProps) => {
 
   const onSubmit = async (data: ItemFormData) => {
     try {
-      await editItemInList(listId, data);
-      toast.success("מוצר עודכן בהצלחה");
-      reset();
-      closeDialog();
+      const result = await editItemInList(listId, data);
+      
+      if (result.success) {
+        toast.success("מוצר עודכן בהצלחה");
+        // Invalidate React Query cache to refresh the UI
+        queryClient.invalidateQueries({ queryKey: ['cart', listId] });
+        reset();
+        closeDialog();
+      } else {
+        throw new Error(result.error || "Failed to update item");
+      }
     } catch (error) {
       console.error("Error updating item:", error);
       setErrorFlag(true);
@@ -93,7 +102,13 @@ const EditItemDialog = (props: EditItemDialogProps) => {
               <DialogTrigger
                 disabled={isButtonDisabled}
                 onClick={() => {
-                  reset();
+                  // Reset form with current values when dialog opens
+                  reset({
+                    name: itemName,
+                    amount: itemAmount,
+                    price: itemPrice,
+                    _id: itemId,
+                  });
                 }}
               >
                 <TbEdit size={20} />

@@ -17,7 +17,7 @@ import axios from "axios";
 import { Input } from "../ui/input";
 import AutocompleteInput from "./autocomplete";
 import { Result, Root } from "../../../types/shufersal";
-import { useCartOptimistic } from "@/contexts/CartOptimisticProvider";
+import { useCartActions } from "@/hooks/useCart";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { itemSchema } from "@/lib/schemas";
@@ -36,7 +36,7 @@ const AddItemDialog = ({
   listId,
   permissionLevel,
 }: AddItemDialogProps) => {
-  const { addItemOptimistic, isLoading } = useCartOptimistic();
+  const { addItemOptimistic, isLoading } = useCartActions(listId);
   const [suggestions, setSuggestions] = useState<Root>();
   const [isOpen, setIsOpen] = useState(false);
 
