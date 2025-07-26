@@ -1,6 +1,8 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface ChatProps {
   listId: string;
@@ -8,10 +10,39 @@ interface ChatProps {
 }
 
 export default function Page({ listId, isInDialog = false }: ChatProps) {
-  const { messages, input, handleInputChange, handleSubmit, status, stop, data } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, status, stop } = useChat({
     maxSteps: 5,
-    api: `/api/chat/${listId}`
+    api: `/api/chat/${listId}`,
+    streamProtocol: "data", // ensure structured stream parts reach the client
   });
+
+  const router = useRouter();
+
+
+  useEffect(() => {
+    if (messages.length === 0) return;
+
+    const last = messages[messages.length - 1] as any;
+
+    // AI-SDK embeds tool results inside assistant messages as `toolInvocations`
+    const invocations: any[] | undefined = last.toolInvocations;
+    if (!invocations || invocations.length === 0) return;
+
+    const mutatingTools = [
+      "add_item_to_list",
+      "add_many_items_to_list",
+      "delete_item_from_list",
+    ];
+
+    const hasMutation = invocations.some(
+      (inv) =>
+        inv.state === "result" && mutatingTools.includes(inv.toolName)
+    );
+
+    if (hasMutation) {
+      router.refresh();
+    }
+  }, [messages, router]);
 
   return (
     <div className={`flex flex-col bg-gray-50 ${isInDialog ? 'h-full' : 'h-screen'}`} dir="rtl">
