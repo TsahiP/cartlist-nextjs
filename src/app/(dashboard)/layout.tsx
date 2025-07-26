@@ -10,7 +10,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       <Navbar />
-      <main className="pt-16">
+      <main className="pt-20 md:pt-24">
         {children}
       </main>
     </div>
