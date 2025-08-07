@@ -7,7 +7,9 @@ const getUserInitials = (name) => {
   const trimmed = name.trim();
   if (trimmed.length === 0) return "U";
   const first = trimmed[0] || "";
-  const second = trimmed[1] || "";
+  const words = trimmed.split(" ");
+  const first = words[0]?.[0] || "";
+  const second = words[1]?.[0] || "";
   return (first + second).toUpperCase();
 };
 
