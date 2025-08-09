@@ -97,7 +97,12 @@ const EditItemDialog = (props: EditItemDialogProps) => {
               <DialogTrigger
                 disabled={isButtonDisabled}
                 onClick={() => {
-                  reset();
+                  reset({
+                    name: itemName,
+                    amount: itemAmount,
+                    price: itemPrice,
+                    _id: itemId,
+                  });
                 }}
               >
                 <TbEdit size={20} />
