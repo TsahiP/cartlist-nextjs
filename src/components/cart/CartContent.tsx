@@ -9,11 +9,11 @@ import { ShareWithDialog } from "@/components/shareWithDialog/shareWithDialog";
 import { IoMdListBox } from "react-icons/io";
 import WhatsappBtn from "@/components/cartList/WhatsappShareBtn";
 import MobileFabMenu from "@/components/cartList/MobileFabMenu";
-import { CartOptimisticProvider } from "@/contexts/CartOptimisticProvider";
-import { OptimisticCart } from "@/types/cart";
-
+import { OptimisticCart  } from "@/types/cart";
+import { useCart } from "../addItemDialog/use-cart";
+import { List } from "@/lib/schemas";
 interface CartContentProps {
-  listData: OptimisticCart;
+  listData: List;
   session: any;
   searchParams: {
     listId: string;
@@ -28,20 +28,18 @@ export default function CartContent({
   searchParams, 
   permissionLevel 
 }: CartContentProps) {
-
+  const {data,isLoading} = useCart({listId:listData._id,listData:listData})
   const listId = searchParams.listId.toString();
   
   return (
-    <CartOptimisticProvider
-      initialCart={listData}
-      listId={listId}
-    >
-      <div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm">
-        <Suspense fallback={<div>Loading...</div>}>
+
+<>
+<div className="bg-white opacity-70 w-full md:w-2/3 sm:w-full p-4 border bor rounded-sm">
+        <Suspense  fallback={<div>Loading...</div>}>
           <CartList
             shared={searchParams.shared}
             session={session}
-            data={listData}
+            data={data as OptimisticCart}
           />
           <div className="mt-4">
             <ChatDialog listId={listId} />
@@ -73,13 +71,12 @@ export default function CartContent({
         </div>
       </div>
       
-      {/* Mobile FAB menu */}
       <MobileFabMenu
         listId={listId}
         permissionLevel={permissionLevel}
         data={listData}
         searchParams={searchParams}
       />
-    </CartOptimisticProvider>
+      </>
   );
 } 

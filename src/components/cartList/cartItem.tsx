@@ -8,34 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import AddItemDialog from "../addItemDialog/addItemDialog";
-import { TbEdit } from "react-icons/tb";
 import EditItemDialog from "../editItemDialog/editItemDialog";
 import DeleteItemButton from "../deleteItemButton/deleteItemButton";
-import DeletePopup from "./popup/deletePopup";
-import { useCartOptimistic } from "@/contexts/CartOptimisticProvider";
 import { cn } from "@/lib/utils";
-import { Cart, OptimisticItem } from "@/types/cart";
+import { OptimisticCart, OptimisticItem } from "@/types/cart";
+import { useCart } from "../addItemDialog/use-cart";
 
-interface SharedWith {
-  email: string;
-  permission: string;
-  fullName: string;
-  lastName: string;
-  firstName: string;
-}
-
-interface Data {
-  _id: string;
-  title: string;
-  amount: number;
-  creatorId: string;
-  items: Array<{}>;
-  sharedWith: Array<SharedWith>;
-}
 
 interface CartListProps {
-  data: Data;
+  data: OptimisticCart;
   session: any;
   shared?: string;
 }
@@ -95,9 +76,9 @@ const MobileCartItem = ({
       <div className="transform hover:scale-105 transition-transform duration-200">
         <EditItemDialog
           permissionLevel={permissionLevel}
-          itemId={item._id}
-          itemAmount={parseInt(item.amount, 10)}
-          itemPrice={item.price}
+          itemId={item._id ?? ""}
+          itemAmount={parseInt(item.amount as string, 10)}
+          itemPrice={item.price ?? 0}
           itemName={item.name}
           listId={dataId}
           shared={shared}
@@ -106,10 +87,11 @@ const MobileCartItem = ({
       </div>
       <div className="transform hover:scale-105 transition-transform duration-200">
         <DeleteItemButton
-          itemId={item._id}
+          itemId={item._id ?? ""}
           shared={shared}
           permissionLevel={permissionLevel}
           disabled={item.isOptimistic || item.isDeleting}
+          listId={dataId}
         />
       </div>
     </div>
@@ -117,7 +99,7 @@ const MobileCartItem = ({
 );
 
 const CartList = (props: CartListProps) => {  
-  const { cart, isLoading } = useCartOptimistic();
+  const { data : cart, isLoading } = useCart({listId:props.data._id,listData:props.data});
   const shared = props.shared;
   const permissionLevel = props.data.sharedWith.filter(e => e.email === props.session.user.email);
   
@@ -137,8 +119,8 @@ const CartList = (props: CartListProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.isArray(cart.items)
-              ? cart.items.map((item: OptimisticItem, index) => (
+            {Array.isArray(cart?.items)
+              ? cart.items.map((item: OptimisticItem, index: number) => (
                   <TableRow 
                     key={item._id} 
                     className={cn(
@@ -165,19 +147,20 @@ const CartList = (props: CartListProps) => {
                       <div className="flex items-center justify-center gap-4">
                         <EditItemDialog
                           permissionLevel={permissionLevel[0]?.permission}
-                          itemId={item._id}
-                          itemAmount={parseInt(item.amount)}
-                          itemPrice={item.price}
+                          itemId={item?._id ?? ""}
+                          itemAmount={parseInt(item.amount as string, 10)}
+                          itemPrice={item.price ?? 0}
                           itemName={item.name}
                           listId={props.data._id}
                           shared={shared}
                           disabled={item.isOptimistic || item.isDeleting}
                         />
                         <DeleteItemButton
-                          itemId={item._id}
+                          itemId={item?._id ?? ""}
                           shared={props.shared}
                           permissionLevel={permissionLevel[0]?.permission}
                           disabled={item.isOptimistic || item.isDeleting}
+                          listId={props.data._id}
                         />
                       </div>
                     </TableCell>
@@ -198,8 +181,8 @@ const CartList = (props: CartListProps) => {
       {/* Mobile Card View */}
       <div className="block md:hidden">
         <div className="space-y-4">
-          {Array.isArray(cart.items) && cart.items.length > 0 ? (
-            cart.items.map((item: OptimisticItem, index) => (
+          {Array.isArray(cart?.items) && cart?.items.length > 0 ? (
+            cart?.items.map((item: OptimisticItem, index: number) => (
               <MobileCartItem
                 key={item._id}
                 item={item}

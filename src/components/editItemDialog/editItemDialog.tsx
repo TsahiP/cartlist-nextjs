@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { TbEdit } from "react-icons/tb";
-import { editItemInList } from "@/lib/actions";
 import { Input } from "../ui/input";
-import { itemSchema, type Item } from "@/lib/schemas";
+import { itemSchema } from "@/lib/schemas";
 import { ItemFormData } from "@/lib/types";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -36,10 +36,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useCart } from "../addItemDialog/use-cart";
 
 const EditItemDialog = (props: EditItemDialogProps) => {
   const {
-    itemAmount,
+    itemAmount = '0',
     itemPrice,
     itemName,
     listId,
@@ -49,13 +50,13 @@ const EditItemDialog = (props: EditItemDialogProps) => {
     disabled = false,
   } = props;
   const [errorFlag, setErrorFlag] = useState<boolean>(false);
-  
+  const { editItem } = useCart({ listId });
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<ItemFormData>({
+  } = useForm<z.input<typeof itemSchema>>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
       name: itemName,
@@ -71,7 +72,10 @@ const EditItemDialog = (props: EditItemDialogProps) => {
 
   const onSubmit = async (data: ItemFormData) => {
     try {
-      await editItemInList(listId, data);
+      await editItem({
+        ...data,
+        amount: data.amount || 0,
+      });
       toast.success("מוצר עודכן בהצלחה");
       reset();
       closeDialog();

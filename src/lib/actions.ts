@@ -6,21 +6,14 @@ import { auth, signIn, signOut } from "./auth";
 // import { signIn, signOut } from "./auth";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
-import { redirect } from "next/navigation";
 import {
   registerSchema,
   loginSchema,
   itemSchema,
-  createListSchema,
-  shareListSchema,
-  changePermissionSchema,
   type RegisterData,
   type LoginData,
   type Item,
   type List as ListType,
-  type CreateListData,
-  type ShareListData,
-  type ChangePermissionData,
 } from "./schemas";
 import { ApiResponse, ItemFormData } from "@/lib/types";
 export const handleGithubSignOut = async () => {
@@ -53,6 +46,10 @@ function validateData<T>(schema: any, data: any): ApiResponse<T> {
       error: error.errors?.[0]?.message || "Validation failed" 
     };
   }
+}
+
+function toPlain(input: FormData | Record<string, any>) {
+  return input instanceof FormData ? Object.fromEntries(input) : input;
 }
 
 export const register = async (previousState: any, formData: FormData): Promise<ApiResponse> => {
@@ -129,11 +126,14 @@ export const login = async (prevState: any, formData: FormData): Promise<ApiResp
 
 export const addItemToList = async (
   listId: string,
-  formData: FormData|ItemFormData
+  input: FormData | ItemFormData
 ): Promise<ApiResponse> => {
   // Convert FormData to plain object first
-  const user = await auth();
-  const validation = validateData(itemSchema, formData);
+  const session = await auth();
+  if(!session?.user?.email) return { success: false, error: "Unauthenticated" };
+  
+  const raw = toPlain(input);
+  const validation = validateData(itemSchema, raw);
   if (!validation.success) {
     return validation;
   }
@@ -171,15 +171,21 @@ export const addItemToList = async (
 
 export const editItemInList = async (
   listId: string,
-  formData: ItemFormData
+  input: FormData | ItemFormData
 ): Promise<ApiResponse> => {
   try {
     await connectToDb();
-
     const session = await auth();
     if (!session?.user?.email) return { success: false, error: "Unauthenticated" };
 
-    const list: any = await List.findOne({ _id: listId });
+    const raw = toPlain(input);
+    const validation = validateData(itemSchema, raw);
+    if (!validation.success) {
+      return validation;
+    }
+
+    const itemData = validation.data as Item;
+    const list = await List.findOne({ _id: listId });
     if (!list) return { success: false, error: "List not found" };
 
     // Authorisation – owner or collaborator with edit permission ("1")
@@ -192,14 +198,14 @@ export const editItemInList = async (
     }
 
     await List.updateOne(
-      { _id: listId, "items._id": formData._id },
+      { _id: listId, "items._id": itemData._id },
       {
         $set: {
-          "items.$.name": formData.name,
-          "items.$.amount": formData.amount,
-          "items.$.price": formData.price,
-          "items.$.desc": formData.desc || "",
-          "items.$.img": formData.img || "",
+          "items.$.name": itemData.name,
+          "items.$.amount": itemData.amount,
+          "items.$.price": itemData.price,
+          "items.$.desc": itemData.desc || "",
+          "items.$.img": itemData.img || "",
         },
       }
     );
