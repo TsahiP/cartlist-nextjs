@@ -60,7 +60,8 @@ export const useCart = ({
             items: (base.items ?? []).map((it) =>
               it._id === updated._id ? temp : it
             ),
-          } as OptimisticCart;        },
+          } as OptimisticCart;        
+        },
         rollbackOnError: true,
         revalidate: false,
       

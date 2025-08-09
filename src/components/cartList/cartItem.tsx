@@ -120,7 +120,7 @@ const CartList = (props: CartListProps) => {
           </TableHeader>
           <TableBody>
             {Array.isArray(cart?.items)
-              ? cart.items.map((item: OptimisticItem, index:number) => (
+              ? cart.items.map((item: OptimisticItem, index: number) => (
                   <TableRow 
                     key={item._id} 
                     className={cn(
@@ -182,7 +182,7 @@ const CartList = (props: CartListProps) => {
       <div className="block md:hidden">
         <div className="space-y-4">
           {Array.isArray(cart?.items) && cart?.items.length > 0 ? (
-            cart?.items.map((item: OptimisticItem, index:number) => (
+            cart?.items.map((item: OptimisticItem, index: number) => (
               <MobileCartItem
                 key={item._id}
                 item={item}
