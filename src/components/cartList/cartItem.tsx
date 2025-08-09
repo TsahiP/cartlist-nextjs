@@ -37,14 +37,17 @@ const MobileCartItem = ({
 }) => (
   <div 
     className={cn(
-      "border border-gray-200 rounded-xl p-5 mb-4 bg-white shadow-sm hover:shadow-md transition-all duration-300",
+      "border border-gray-200 rounded-xl p-5  bg-white shadow-sm hover:shadow-md transition-all duration-300",
       item.isOptimistic && "bg-blue-50 dark:bg-blue-900/20 border-blue-300 shadow-blue-100",
       item.isDeleting && "opacity-60 bg-red-50 dark:bg-red-900/20 border-red-300 shadow-red-100"
     )}
   >
-    <div className="flex justify-between items-start mb-4">
+    <div className="flex justify-between items-start ">
       <div className="flex-1">
         <div className="flex items-center justify-between mb-3">
+          <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
+            #{index + 1}
+          </div>
           <div className="relative">
             <h3 className="font-bold text-xl text-right text-gray-800 leading-tight">{item.name}</h3>
             {item.isOptimistic && (
@@ -54,11 +57,6 @@ const MobileCartItem = ({
               <span className="absolute -top-2 -right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg"></span>
             )}
           </div>
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
-            #{index + 1}
-          </div>
-        </div>
-        
         <div className="grid grid-cols-2 gap-6">
           <div className="text-right bg-gray-50 rounded-lg p-3">
             <span className="text-sm text-gray-500 block font-medium mb-1">מחיר</span>
@@ -69,10 +67,12 @@ const MobileCartItem = ({
             <span className="font-bold text-2xl text-blue-600">{item.amount}</span>
           </div>
         </div>
+        </div>
+        
       </div>
     </div>
     
-    <div className="flex items-center justify-center gap-3 pt-4 border-t border-gray-100">
+    <div className="flex items-center justify-center   border-t border-gray-100">
       <div className="transform hover:scale-105 transition-transform duration-200">
         <EditItemDialog
           permissionLevel={permissionLevel}
