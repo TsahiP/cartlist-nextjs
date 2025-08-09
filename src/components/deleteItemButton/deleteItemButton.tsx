@@ -11,24 +11,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useCartOptimistic } from "@/contexts/CartOptimisticProvider";
+import { useCart } from "../addItemDialog/use-cart";
 
 interface DeleteItemButtonProps {
   itemId: string;
   shared?: string;
   permissionLevel?: string;
   disabled?: boolean;
+  listId: string;
 }
 
 const DeleteItemButton = (props: DeleteItemButtonProps) => {
-  const { deleteItemOptimistic, isLoading } = useCartOptimistic();
+  const { deleteItem , isLoading } = useCart({listId:props.listId});
   const [showWindow, setShowWindow] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const deleteItem = async () => {
+  const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteItemOptimistic(props.itemId);
+      await deleteItem(props.itemId);
       setShowWindow(false);
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -73,7 +74,7 @@ const DeleteItemButton = (props: DeleteItemButtonProps) => {
       {showWindow && !isDeleting && (
         <div className="popup left-16">
           <button 
-            onClick={deleteItem} 
+            onClick={handleDelete} 
             className="popup-button agree"
             disabled={isDeleting}
           >

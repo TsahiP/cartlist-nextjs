@@ -20,10 +20,10 @@ export interface CartFilters {
 
 // Optimistic state types
 export interface OptimisticItem {
-  _id: string;
+  _id?: string;
   name: string;
-  amount: string;
-  price: number;
+  amount: string | number ;
+  price?: number;
   desc?: string;
   img?: string;
   isOptimistic?: boolean;
@@ -33,7 +33,6 @@ export interface OptimisticItem {
 export interface OptimisticCart {
   _id: string;
   title: string;
-  amount: number;
   creatorId: string;
   items: OptimisticItem[];
   sharedWith: SharedWith[];

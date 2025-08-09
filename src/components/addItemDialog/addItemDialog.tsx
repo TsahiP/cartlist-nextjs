@@ -17,12 +17,12 @@ import axios from "axios";
 import { Input } from "../ui/input";
 import AutocompleteInput from "./autocomplete";
 import { Result, Root } from "../../../types/shufersal";
-import { useCartOptimistic } from "@/contexts/CartOptimisticProvider";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { itemSchema } from "@/lib/schemas";
 import { OptimisticItem } from "@/types/cart";
 import { z } from "zod";
+import { useCart } from "./use-cart";
 
 interface AddItemDialogProps {
   listId: string;
@@ -30,13 +30,13 @@ interface AddItemDialogProps {
 }
 
 
-type AddItemFormData = z.infer<typeof itemSchema>;
+type AddItemFormData = z.input<typeof itemSchema>;
 
 const AddItemDialog = ({
   listId,
   permissionLevel,
 }: AddItemDialogProps) => {
-  const { addItemOptimistic, isLoading } = useCartOptimistic();
+  const { addItem, isLoading } = useCart({listId});
   const [suggestions, setSuggestions] = useState<Root>();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -89,8 +89,9 @@ const AddItemDialog = ({
         desc: data.desc || "",
         img: data.img || "",
       };
+      console.log("🚀 ~ onSubmit ~ optimisticItem:", optimisticItem)
 
-      await addItemOptimistic(optimisticItem);
+      await addItem(optimisticItem);
       
       // Reset form and close dialog
       reset();

@@ -1,9 +1,8 @@
 import { z } from "zod";
 import { itemSchema } from "./schemas";
 // ======================== items actions ========================
-// Derive ItemFormData directly from itemSchema so it stays in sync and
-// remains exactly the same type that zodResolver will infer.
-export type ItemFormData = z.infer<typeof itemSchema>;
+// Use Zod input type so resolver (which treats defaults as optional inputs) aligns with the form values
+export type ItemFormData = z.input<typeof itemSchema>;
   
   //========================= user actions =================
   export interface UserFormData {
@@ -45,11 +44,4 @@ export interface ApiResponse<T = any> {
   error?: string;
   data?: T;
   status?: "success" | "error";
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
 }

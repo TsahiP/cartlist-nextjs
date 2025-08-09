@@ -7,7 +7,7 @@ import { isMobile } from 'react-device-detect'
 interface IWhatsappBtnProps {
     items: {
         name: string;
-        amount: string;
+        amount: string | number;
     }[];
 }
 
@@ -21,7 +21,7 @@ const WhatsappBtn = ({ items }: IWhatsappBtnProps) => {
 
   const handleSend = () => {
     // Format the items into a string
-    const message = items.map(item => `מוצר: ${item.name}, כמות: ${item.amount}`).join('\n');
+    const message = items.map(item => `מוצר: ${item.name}, כמות: ${String(item.amount)}`).join('\n');
     const formattedPhoneNumber = phoneNumber.substring(1);
     // Create a WhatsApp URL with the formatted string
     const whatsappLink = isMobile
