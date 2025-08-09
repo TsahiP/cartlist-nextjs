@@ -89,7 +89,6 @@ const AddItemDialog = ({
         desc: data.desc || "",
         img: data.img || "",
       };
-      console.log("🚀 ~ onSubmit ~ optimisticItem:", optimisticItem)
 
       await addItem(optimisticItem);
       
