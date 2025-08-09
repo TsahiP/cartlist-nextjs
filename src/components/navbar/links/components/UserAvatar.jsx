@@ -9,7 +9,6 @@ const getUserInitials = (name) => {
   const words = trimmed.split(" ");
   const first = words[0]?.[0] || "";
   const second = words[1]?.[0] || "";
-  console.log("🚀 ~ getUserInitials ~ first + second:", first + second)
   return (first + second).toUpperCase();
 };
 

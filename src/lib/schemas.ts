@@ -33,7 +33,7 @@ export const registerSchema = z.object({
 export const itemSchema = z.object({
   name: z.string().min(1, "Name is required"),
     // Amount can be omitted. Accept both number and string so the LLM can decide the representation.
-    amount: z.union([z.number().nonnegative('amount must be positive or 0'), z.string()]).optional(),
+    amount: z.union([z.number().nonnegative('amount must be positive or 0'), z.string()]).default(0),
     // Price can be omitted and may be 0.
     price: z.number().min(0,'price must be positive or 0').optional(),
 
@@ -53,6 +53,7 @@ export const sharedWithSchema = z.object({
 
 // List/Cart schemas
 export const listSchema = z.object({
+  _id: z.string(),
   title: z.string().min(1, "Title is required"),
   creatorId: z.string(),
   items: z.array(itemSchema),

@@ -43,7 +43,6 @@ function transformToOptimisticCart(data: CartData): OptimisticCart {
   return {
     _id: data._id,
     title: data.title,
-    amount: data.amount,
     creatorId: data.creatorId,
     items: data.items.map(item => ({
       _id: item._id,
